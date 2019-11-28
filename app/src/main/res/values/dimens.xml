@@ -2,4 +2,5 @@
 <resources>
     <dimen name="margin_standard">16dp</dimen>
     <dimen name="avatar_size">60dp</dimen>
+    <dimen name="margin_huge">64dp</dimen>
 </resources>
