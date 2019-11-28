@@ -3,10 +3,9 @@ package com.hast.norvialle.gui
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.Event
 import com.hast.norvialle.R
 import com.hast.norvialle.gui.utils.AddContactDialog
@@ -34,7 +33,9 @@ class AddEventActivity : AppCompatActivity() {
 
 
         contact.setText(if (!event.name.equals("")) event.name else getString(R.string.name))
-        studio.setOnCheckedChangeListener{ button, isChecked -> studioData.visibility = if(isChecked) View.VISIBLE else View.GONE }
+        studio.setOnCheckedChangeListener { button, isChecked ->
+            studioData.visibility = if (isChecked) View.VISIBLE else View.GONE
+        }
         studio.isChecked = event.orderStudio
         dress.isChecked = event.orderDress
         makeup.isChecked = event.orderMakeup
@@ -119,7 +120,8 @@ class AddEventActivity : AppCompatActivity() {
             finish()
         }
     }
-    fun showContactDialog(){
+
+    fun showContactDialog() {
         val dialog =
             AddContactDialog.newInstance(text = "", hint = "Description", isMultiline = true)
         dialog.nameText = event.name

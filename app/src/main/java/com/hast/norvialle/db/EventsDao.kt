@@ -1,6 +1,7 @@
 package com.hast.norvialle.db
 
-import android.arch.persistence.room.*
+
+import androidx.room.*
 import com.hast.norvialle.Event
 
 /**

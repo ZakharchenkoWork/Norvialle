@@ -2,8 +2,8 @@ package com.hast.norvialle.gui
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hast.norvialle.R
 import kotlinx.android.synthetic.main.activity_main.*
 

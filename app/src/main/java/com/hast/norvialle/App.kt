@@ -1,7 +1,8 @@
 package com.hast.norvialle
 
 import android.app.Application
-import android.arch.persistence.room.Room
+import androidx.room.Room
+
 import com.hast.norvialle.db.AppDatabase
 
 

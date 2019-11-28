@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/background"
             android:layout_width="match_parent"
             android:layout_height="92dp"
@@ -63,9 +63,9 @@
                 android:layout_marginRight="@dimen/margin_standard"
                 />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/foregroundLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -146,5 +146,5 @@
             app:layout_constraintRight_toLeftOf="@+id/dress"
             android:layout_marginRight="@dimen/margin_standard"
             android:src="@drawable/makeup"/>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>

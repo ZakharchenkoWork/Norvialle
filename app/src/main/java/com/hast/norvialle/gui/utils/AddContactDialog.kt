@@ -3,9 +3,10 @@ package com.hast.norvialle.gui.utils
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+
 import android.view.WindowManager
 import android.widget.EditText
+import androidx.fragment.app.DialogFragment
 import com.hast.norvialle.R
 import com.hast.norvialle.gui.MainPresenter
 
