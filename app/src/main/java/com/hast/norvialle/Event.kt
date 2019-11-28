@@ -1,11 +1,14 @@
 package com.hast.norvialle
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 import java.io.Serializable
 
 /**
  * Created by Konstantyn Zakharchenko on 28.09.2019.
  */
-class Event(var id: String, var name: String, var time: Long) : Serializable{
+@Entity
+class Event(@PrimaryKey var id: String, var name: String, var time: Long) : Serializable{
 
     var avatar : String = ""
     var link : String = ""

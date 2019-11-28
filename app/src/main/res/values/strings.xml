@@ -7,4 +7,5 @@
     <string name="studioName">Название студии</string>
     <string name="roomName">Название зала</string>
     <string name="address">Адресс</string>
+    <string name="name">Имя контакта</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.hast.norvialle.gui
 
+import com.hast.norvialle.App
 import com.hast.norvialle.Event
 import java.util.*
 import kotlin.collections.ArrayList

@@ -32,7 +32,8 @@ class AddEventActivity : AppCompatActivity() {
 
         event = intent.getSerializableExtra(EVENT_EXTRA) as Event
 
-        contact.setText(event.name)
+
+        contact.setText(if (!event.name.equals("")) event.name else getString(R.string.name))
         studio.setOnCheckedChangeListener{ button, isChecked -> studioData.visibility = if(isChecked) View.VISIBLE else View.GONE }
         studio.isChecked = event.orderStudio
         dress.isChecked = event.orderDress
@@ -100,19 +101,11 @@ class AddEventActivity : AppCompatActivity() {
             tpd.show()
         }
 
-        contact.setMovementMethod(LinkMovementMethod.getInstance());
+        contact.setOnClickListener {
+            showContactDialog()
+        }
         edit.setOnClickListener {
-            val dialog =
-                AddContactDialog.newInstance(text = "", hint = "Description", isMultiline = true)
-            dialog.nameText = event.name
-            dialog.linkText = event.link
-            dialog.onOk = { name, link ->
-                event.name = name
-                event.link = link
-                contact.setText(name)
-                // do something
-            }
-            dialog.show(supportFragmentManager, "editDescription")
+            showContactDialog()
         }
 
         ok.setOnClickListener {
@@ -125,5 +118,18 @@ class AddEventActivity : AppCompatActivity() {
 
             finish()
         }
+    }
+    fun showContactDialog(){
+        val dialog =
+            AddContactDialog.newInstance(text = "", hint = "Description", isMultiline = true)
+        dialog.nameText = event.name
+        dialog.linkText = event.link
+        dialog.onOk = { name, link ->
+            event.name = name
+            event.link = link
+            contact.setText(name)
+            // do something
+        }
+        dialog.show(supportFragmentManager, "editDescription")
     }
 }
