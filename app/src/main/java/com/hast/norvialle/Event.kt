@@ -14,6 +14,10 @@ class Event(@PrimaryKey var id: String, var name: String, var time: Long) : Seri
     var link: String = ""
     var description: String = ""
     var orderStudio: Boolean = false
+    var studioName = ""
+    var studioAddress = ""
+    var studioRoom = ""
+
     var orderDress: Boolean = false
     var orderMakeup: Boolean = false
 

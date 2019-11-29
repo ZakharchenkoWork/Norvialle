@@ -27,7 +27,7 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
 
     init {
         dates = prepareDates()
-        Log.d("tag", dates[1])
+
     }
 
     companion object {

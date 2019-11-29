@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/event"
-                android:icon="@drawable/event"
-            android:title="Добавить событие" />
+                android:id="@+id/calendar"
+                android:icon="@drawable/calendar"
+                android:title="Календарь" />
         <item
-            android:id="@+id/contact"
+                android:id="@+id/addEvent"
+                android:icon="@drawable/plus"
+                android:title="Добавить событие" />
+        <item
+                android:id="@+id/contact"
                 android:icon="@drawable/insta"
-            android:title="Добавить контакт" />
+                android:title="Контакты" />
         <item
-            android:id="@+id/dress"
+                android:id="@+id/dress"
                 android:icon="@drawable/dress"
-            android:title="Добавить платье" />
+                android:title="Платья" />
         <item
-            android:id="@+id/studio"
+                android:id="@+id/studio"
                 android:icon="@drawable/studio"
-            android:title="Добавить студию" />
+                android:title="Студии" />
     </group>
 
 </menu>

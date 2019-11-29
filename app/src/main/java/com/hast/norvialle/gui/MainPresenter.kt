@@ -12,25 +12,16 @@ import kotlin.collections.ArrayList
 object MainPresenter {
 
 
-    val events: ArrayList<Event> = ArrayList()
+    var events: ArrayList<Event> = ArrayList()
     val ONE_HOUR: Long = 60 * 60 * 1000
 
-    init {
-        val time: Long = System.currentTimeMillis()
 
-        events.add(Event(UUID.randomUUID().toString(), "Нюша", time - ONE_HOUR))
-        events.add(Event(UUID.randomUUID().toString(), "Крошик", time - ONE_HOUR * 5))
-        events.add(Event(UUID.randomUUID().toString(), "Пандочка", time - ONE_HOUR * 10))
-        events.add(Event(UUID.randomUUID().toString(), "Нюша", time + ONE_HOUR))
-        events.add(Event(UUID.randomUUID().toString(), "Крошик", time + ONE_HOUR * 5))
-        events.add(Event(UUID.randomUUID().toString(), "Пандочка", time + ONE_HOUR * 10))
-        events.add(Event(UUID.randomUUID().toString(), "Виктория Константиновна", time + ONE_HOUR * 100))
-        events.add(Event(UUID.randomUUID().toString(), "Буба", time + ONE_HOUR * 200))
-        events.add(Event(UUID.randomUUID().toString(), "АмНям", time + ONE_HOUR * 3000))
-        sort()
+fun start(){
 
-    }
+    events = java.util.ArrayList(App.db.eventDao().getAll())
 
+    sort()
+}
     fun sort() {
         events.sortBy { it.time }
     }
@@ -39,19 +30,25 @@ object MainPresenter {
         if (event.id.equals("")) {
             event.id = UUID.randomUUID().toString()
             events.add(event)
+            App.db.eventDao().insert(event)
             sort()
         } else {
+
             for ((index, oldEvent) in events.withIndex()) {
                 if (oldEvent.id.equals(event.id)) {
                     events.set(index, event)
                     sort()
+                    App.db.eventDao().update(event)
                     return
                 }
             }
         }
+
+
     }
 
     fun delete(event: Event) {
+        App.db.eventDao().delete(event)
         events.remove(event)
     }
 

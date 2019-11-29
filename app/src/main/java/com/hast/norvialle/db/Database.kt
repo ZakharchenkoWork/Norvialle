@@ -11,5 +11,5 @@ import com.hast.norvialle.Event
  */
 @Database(entities = [Event::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun eventDao(): EventsDao?
+    abstract fun eventDao(): EventsDao
 }

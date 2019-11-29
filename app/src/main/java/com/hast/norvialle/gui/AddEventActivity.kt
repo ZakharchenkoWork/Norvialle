@@ -113,6 +113,11 @@ class AddEventActivity : AppCompatActivity() {
             event.time = finalCalendar.timeInMillis
             event.description = description.text.toString()
             event.orderStudio = studio.isChecked
+            if (studio.isChecked){
+                event.studioName= studioName.text.toString()
+                event.studioRoom = studioRoom.text.toString()
+                event.studioAddress = studioAddress.text.toString()
+            }
             event.orderDress = dress.isChecked
             event.orderMakeup = makeup.isChecked
             presenter.addEvent(event)

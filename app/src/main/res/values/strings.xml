@@ -9,4 +9,6 @@
     <string name="address">Адресс</string>
     <string name="name">Имя контакта</string>
     <string name="norvialle">Norvialle</string>
+    <string name="navigation_drawer_open">open</string>
+    <string name="navigation_drawer_close">close</string>
 </resources>
