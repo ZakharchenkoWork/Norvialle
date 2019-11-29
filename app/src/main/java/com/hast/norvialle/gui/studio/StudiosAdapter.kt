@@ -1,16 +1,15 @@
-package com.hast.norvialle.gui
+package com.hast.norvialle.gui.studio
 
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.hast.norvialle.Event
+import com.hast.norvialle.data.Event
 import com.hast.norvialle.R
 import com.hast.norvialle.utils.getDate
 import com.hast.norvialle.utils.getMillis
@@ -18,7 +17,7 @@ import com.hast.norvialle.utils.getTime
 import kotlinx.android.synthetic.main.item_date.view.*
 import kotlinx.android.synthetic.main.item_event.view.*
 
-class EventsAdapter(val items: ArrayList<Event>, private val context: Context) : RecyclerView.Adapter<EventsAdapter.BaseViewHolder<*>>() {
+class StudiosAdapter(val items: ArrayList<Event>, private val context: Context) : RecyclerView.Adapter<StudiosAdapter.BaseViewHolder<*>>() {
     var dates: ArrayList<String>
     var onAddEventListener: OnAddEventListener =
         OnAddEventListener {}

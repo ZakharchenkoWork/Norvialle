@@ -2,7 +2,7 @@ package com.hast.norvialle.db
 
 
 import androidx.room.*
-import com.hast.norvialle.Event
+import com.hast.norvialle.data.Event
 
 /**
  * Created by Konstantyn Zakharchenko on 28.11.2019.

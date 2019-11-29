@@ -10,7 +10,7 @@
             android:supportsRtl="true"
             android:name=".App"
             android:theme="@style/AppTheme">
-        <activity android:name=".gui.MainActivity">
+        <activity android:name=".gui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -18,6 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".gui.AddEventActivity"/>
+        <activity android:name=".gui.CalendarActivity"/>
+        <activity android:name=".gui.studio.StudiosListActivity"/>
     </application>
 
 </manifest>

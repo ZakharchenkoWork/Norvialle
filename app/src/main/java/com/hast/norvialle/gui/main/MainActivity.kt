@@ -1,4 +1,4 @@
-package com.hast.norvialle.gui
+package com.hast.norvialle.gui.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,14 +8,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
-import com.hast.norvialle.Event
+import com.hast.norvialle.data.Event
 import com.hast.norvialle.R
+import com.hast.norvialle.gui.AddEventActivity
+import com.hast.norvialle.gui.CalendarActivity
+import com.hast.norvialle.gui.MainPresenter
+import com.hast.norvialle.gui.studio.StudiosListActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener{
 
-    val presenter: MainPresenter = MainPresenter
+    val presenter: MainPresenter =
+        MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +40,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout.closeDrawer(GravityCompat.START)
 
 
-        presenter.start()
+        MainPresenter.start()
         navigationView.setNavigationItemSelectedListener(this)
         list.layoutManager = LinearLayoutManager(this)
 
@@ -47,13 +52,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun prepareAdapter() {
-        val adapter = EventsAdapter(presenter.events, this)
+        val adapter = EventsAdapter(
+            MainPresenter.events,
+            this
+        )
         list.adapter = adapter
-        adapter.onAddEventListener = EventsAdapter.OnAddEventListener { openEventEditor(it) }
-        adapter.onDeleteEventListener = EventsAdapter.OnAddEventListener { event ->
-            presenter.delete(event)
-            prepareAdapter()
-        }
+        adapter.onAddEventListener =
+            EventsAdapter.OnAddEventListener {
+                openEventEditor(it)
+            }
+        adapter.onDeleteEventListener =
+            EventsAdapter.OnAddEventListener { event ->
+                MainPresenter.delete(event)
+                prepareAdapter()
+            }
     }
     fun openEventEditor(event: Event){
         val intent = Intent(this, AddEventActivity::class.java)
@@ -62,8 +74,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
     override fun onNavigationItemSelected(item: MenuItem): Boolean { // Handle navigation view item clicks here.
         when (item.getItemId()) {
+            R.id.calendar-> {
+                startActivity(Intent(this, CalendarActivity::class.java))
+            }
+            R.id.studio-> {
+                startActivity(Intent(this, StudiosListActivity::class.java))
+            }
             R.id.addEvent-> {
-                openEventEditor(Event("", "", System.currentTimeMillis()))
+                openEventEditor(
+                    Event(
+                        "",
+                        "",
+                        System.currentTimeMillis()
+                    )
+                )
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)

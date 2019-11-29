@@ -1,4 +1,4 @@
-package com.hast.norvialle
+package com.hast.norvialle.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

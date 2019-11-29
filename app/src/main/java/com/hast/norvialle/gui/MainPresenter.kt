@@ -1,7 +1,8 @@
 package com.hast.norvialle.gui
 
 import com.hast.norvialle.App
-import com.hast.norvialle.Event
+import com.hast.norvialle.data.Event
+import com.hast.norvialle.data.Studio
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -13,12 +14,12 @@ object MainPresenter {
 
 
     var events: ArrayList<Event> = ArrayList()
-    val ONE_HOUR: Long = 60 * 60 * 1000
-
+    var studios: ArrayList<Studio> = ArrayList()
 
 fun start(){
 
     events = java.util.ArrayList(App.db.eventDao().getAll())
+    studios = java.util.ArrayList(App.db.studioDao().getAll())
 
     sort()
 }
