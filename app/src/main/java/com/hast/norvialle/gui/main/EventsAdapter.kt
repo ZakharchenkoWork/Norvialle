@@ -16,6 +16,10 @@ import com.hast.norvialle.utils.getMillis
 import com.hast.norvialle.utils.getTime
 import kotlinx.android.synthetic.main.item_date.view.*
 import kotlinx.android.synthetic.main.item_event.view.*
+import kotlinx.android.synthetic.main.item_event.view.arrow
+import kotlinx.android.synthetic.main.item_event.view.delete
+import kotlinx.android.synthetic.main.item_event.view.edit
+import kotlinx.android.synthetic.main.item_studio.view.*
 
 class EventsAdapter(val items: ArrayList<Event>, private val context: Context) : RecyclerView.Adapter<EventsAdapter.BaseViewHolder<*>>() {
     var dates: ArrayList<String>
@@ -154,9 +158,16 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
     inner class EventViewHolder(itemView: View) : BaseViewHolder<Event>(itemView) {
 
         override fun bind(event: Event) {
-            itemView.name.setText(event.name)
+            itemView.locationName.setText(event.studioName)
+            itemView.locationRoom.setText(event.studioAddress)
+            /*if (!studio.link.equals("")) {
+                itemView.address.setOnClickListener { open2gis(studio.link) }
+                itemView.address.setTextColor(context.resources.getColor(R.color.blue))
+            } else{
+                itemView.address.setOnClickListener { }
+                itemView.address.setTextColor(context.resources.getColor(R.color.black))
+            }*/
             itemView.time.setText(getTime(event.time))
-            itemView.description.setText(event.description)
             itemView.studio.visibility = if(event.orderStudio) View.VISIBLE else View.GONE
             itemView.dress.visibility = if(event.orderDress) View.VISIBLE else View.GONE
             itemView.makeup.visibility = if(event.orderMakeup) View.VISIBLE else View.GONE

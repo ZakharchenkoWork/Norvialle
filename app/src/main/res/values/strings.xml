@@ -9,6 +9,14 @@
     <string name="address">Адресс</string>
     <string name="name">Имя контакта</string>
     <string name="norvialle">Norvialle</string>
+    <string name="studios">Студии</string>
+    <string name="add_studio">Добавление студии</string>
+    <string name="add">Добавить</string>
     <string name="navigation_drawer_open">open</string>
     <string name="navigation_drawer_close">close</string>
+    <string name="ok">ok</string>
+    <string name="currency">грн.</string>
+    <string name="roomPrice">Цена зала</string>
+    <string name="roomPriceWithDiscount">Цена со скидкой</string>
+
 </resources>

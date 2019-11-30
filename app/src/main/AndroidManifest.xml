@@ -17,9 +17,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".gui.AddEventActivity"/>
+        <activity android:name=".gui.main.AddEventActivity"/>
         <activity android:name=".gui.CalendarActivity"/>
         <activity android:name=".gui.studio.StudiosListActivity"/>
+        <activity android:name=".gui.studio.AddStudioActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

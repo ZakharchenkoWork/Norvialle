@@ -52,5 +52,26 @@ fun start(){
         App.db.eventDao().delete(event)
         events.remove(event)
     }
+    fun deleteStudio(studio: Studio) {
+        App.db.studioDao().delete(studio)
+        studios.remove(studio)
+    }
+    fun addStudio(studio: Studio) {
+        if (studio.id.equals("")) {
+            studio.id = UUID.randomUUID().toString()
+
+            App.db.studioDao().insert(studio)
+            studios.add(studio)
+        } else{
+            App.db.studioDao().update(studio)
+            for ((index, oldStudio) in studios.withIndex()) {
+                if(oldStudio.id.equals(studio.id)){
+                    studios.set(index, studio)
+                    return
+                }
+            }
+            studios.add(studio)
+        }
+    }
 
 }

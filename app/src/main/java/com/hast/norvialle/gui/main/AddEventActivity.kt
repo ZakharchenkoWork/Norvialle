@@ -1,4 +1,4 @@
-package com.hast.norvialle.gui
+package com.hast.norvialle.gui.main
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.data.Event
 import com.hast.norvialle.R
+import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.utils.AddContactDialog
 import kotlinx.android.synthetic.main.activity_add_event.*
 import java.text.SimpleDateFormat
@@ -18,7 +19,8 @@ import java.util.*
  */
 class AddEventActivity : AppCompatActivity() {
     //var  event : Event? = Event()
-    val presenter: MainPresenter = MainPresenter
+    val presenter: MainPresenter =
+        MainPresenter
     lateinit var event: Event
 
     companion object {
@@ -36,6 +38,7 @@ class AddEventActivity : AppCompatActivity() {
         studio.setOnCheckedChangeListener { button, isChecked ->
             studioData.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
+        description.setText(event.description)
         studio.isChecked = event.orderStudio
         dress.isChecked = event.orderDress
         makeup.isChecked = event.orderMakeup
@@ -120,7 +123,7 @@ class AddEventActivity : AppCompatActivity() {
             }
             event.orderDress = dress.isChecked
             event.orderMakeup = makeup.isChecked
-            presenter.addEvent(event)
+            MainPresenter.addEvent(event)
 
             finish()
         }

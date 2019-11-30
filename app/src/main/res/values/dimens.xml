@@ -4,4 +4,10 @@
     <dimen name="avatar_size">60dp</dimen>
     <dimen name="margin_huge">64dp</dimen>
     <dimen name="margin_small">8dp</dimen>
+    <dimen name="icon_size_standard">40dp</dimen>
+    <dimen name="icon_size_small">20dp</dimen>
+    <dimen name="text_normal">16dp</dimen>
+    <dimen name="text_big_ish">20dp</dimen>
+    <dimen name="text_big">24dp</dimen>
+
 </resources>

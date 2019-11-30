@@ -13,24 +13,24 @@ import java.lang.reflect.Type
 class StudioDataConverter {
 
     @TypeConverter
-    fun fromCountryLangList(countryLang: List<PhotoRoom?>?): String? {
+    fun fromCountryLangList(countryLang: ArrayList<PhotoRoom?>?): String? {
         if (countryLang == null) {
             return null
         }
         val gson = Gson()
         val type: Type =
-            object : TypeToken<List<PhotoRoom?>?>() {}.getType()
+            object : TypeToken<ArrayList<PhotoRoom?>?>() {}.getType()
         return gson.toJson(countryLang, type)
     }
 
     @TypeConverter
-    fun toCountryLangList(countryLangString: String?): List<PhotoRoom>? {
+    fun toCountryLangList(countryLangString: String?): ArrayList<PhotoRoom>? {
         if (countryLangString == null) {
             return null
         }
         val gson = Gson()
         val type: Type =
-            object : TypeToken<List<PhotoRoom?>?>() {}.getType()
+            object : TypeToken<ArrayList<PhotoRoom?>?>() {}.getType()
         return gson.fromJson(countryLangString, type)
     }
 }

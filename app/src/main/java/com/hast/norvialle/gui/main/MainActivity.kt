@@ -2,7 +2,9 @@ package com.hast.norvialle.gui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -10,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.hast.norvialle.data.Event
 import com.hast.norvialle.R
-import com.hast.norvialle.gui.AddEventActivity
 import com.hast.norvialle.gui.CalendarActivity
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.studio.StudiosListActivity
@@ -93,5 +94,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
+
+
+
 
 }
