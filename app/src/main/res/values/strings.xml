@@ -18,5 +18,8 @@
     <string name="currency">грн.</string>
     <string name="roomPrice">Цена зала</string>
     <string name="roomPriceWithDiscount">Цена со скидкой</string>
+    <string name="totalPrice">Общая цена</string>
+    <string name="paid">Сумма залога</string>
+    <string name="monyLeft">Остаток: %1$d</string>
 
 </resources>

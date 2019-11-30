@@ -4,78 +4,127 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         >
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/background"
             android:layout_width="match_parent"
-            android:layout_height="92dp"
-
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@id/foregroundLayout"
+android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_small"
+            android:background="@drawable/background_plate"
             >
 
         <ImageView
                 android:id="@+id/arrow"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/icon_size_small"
+                android:layout_height="@dimen/icon_size_small"
                 android:src="@drawable/arrow"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@id/edit"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+
                 android:layout_marginLeft="@dimen/margin_standard"
                 />
         <ImageView
                 android:id="@+id/insta"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/icon_size_small"
+                android:layout_height="@dimen/icon_size_small"
                 android:src="@drawable/insta"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@id/edit"
                 app:layout_constraintLeft_toRightOf="@+id/arrow"
-                app:layout_constraintBottom_toBottomOf="parent"
+
                 android:layout_marginLeft="@dimen/margin_standard"
                 />
         <ImageView
                 android:id="@+id/delete"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/icon_size_small"
+                android:layout_height="@dimen/icon_size_small"
                 android:src="@drawable/delete"
-                app:layout_constraintTop_toTopOf="parent"
+
+                app:layout_constraintTop_toTopOf="@id/edit"
                 app:layout_constraintRight_toLeftOf="@id/copy"
-                app:layout_constraintBottom_toBottomOf="parent"
+
                 android:layout_marginRight="@dimen/margin_standard"
                 />
         <ImageView
                 android:id="@+id/copy"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/icon_size_small"
+                android:layout_height="@dimen/icon_size_small"
                 android:src="@drawable/copy"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@id/edit"
                 app:layout_constraintRight_toLeftOf="@id/edit"
-                app:layout_constraintBottom_toBottomOf="parent"
+
                 android:layout_marginRight="@dimen/margin_standard"
                 />
         <ImageView
                 android:id="@+id/edit"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/icon_size_small"
+                android:layout_height="@dimen/icon_size_small"
                 android:src="@drawable/edit"
 
                 app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/margin_standard"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+
                 android:layout_marginRight="@dimen/margin_standard"
                 />
 
+        <TextView
+                android:id="@+id/contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/edit"
+                app:layout_constraintLeft_toLeftOf="@id/arrow"
+                app:layout_constraintRight_toRightOf="@id/edit"
+                android:text="Контакт"
+                android:layout_marginTop="@dimen/margin_small"
+                app:layout_constraintHorizontal_bias="0"/>
+        <TextView
+                android:id="@+id/phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/contact"
+                app:layout_constraintLeft_toLeftOf="@id/arrow"
+                app:layout_constraintRight_toRightOf="@id/edit"
+                android:text="Телефон"
+                android:layout_marginTop="@dimen/margin_small"
+                app:layout_constraintHorizontal_bias="0"/>
+        <ImageView
+                android:id="@+id/call"
+                android:layout_width="@dimen/icon_size_small"
+                android:layout_height="@dimen/icon_size_small"
+                app:layout_constraintBottom_toBottomOf="@id/phone"
+                app:layout_constraintRight_toRightOf="@id/edit"
+                android:src="@drawable/call"/>
+        <TextView
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/phone"
+                app:layout_constraintLeft_toLeftOf="@id/arrow"
+                app:layout_constraintRight_toRightOf="@id/edit"
+                android:layout_marginBottom="@dimen/margin_standard"
+                android:text="Адресс"
+                android:layout_marginTop="@dimen/margin_small"
+                app:layout_constraintHorizontal_bias="0"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/foregroundLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/items_back">
+        android:layout_margin="@dimen/margin_small"
+        android:background="@drawable/background_plate"
+
+      >
 <LinearLayout
         android:id="@+id/orders"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="@dimen/margin_standard"
@@ -110,6 +159,8 @@
             android:layout_marginLeft="@dimen/margin_standard"
             android:text="Локация"
             android:textSize="@dimen/text_big_ish"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintLeft_toRightOf="@id/orders"
             app:layout_constraintRight_toLeftOf="@id/time"
             app:layout_constraintStart_toEndOf="@+id/orders"
@@ -123,13 +174,88 @@
             android:layout_marginLeft="@dimen/margin_standard"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="@dimen/text_normal"
+            android:textSize="@dimen/text_big_ish"
             android:text="Зал"
             app:layout_constraintLeft_toRightOf="@id/orders"
             app:layout_constraintRight_toLeftOf="@id/time"
             app:layout_constraintStart_toEndOf="@+id/orders"
             app:layout_constraintTop_toBottomOf="@id/locationName" />
+    <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
+            android:layout_marginLeft="@dimen/margin_standard"
+            android:ellipsize="end"
+            android:maxLines="1"
+
+            android:textSize="@dimen/text_normal"
+            android:text="Комментарий"
+            app:layout_constraintLeft_toRightOf="@id/orders"
+            app:layout_constraintRight_toLeftOf="@id/time"
+            app:layout_constraintStart_toEndOf="@+id/orders"
+            app:layout_constraintTop_toBottomOf="@id/locationRoom" />
+    <LinearLayout
+            android:id="@+id/pricesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_marginTop="@dimen/margin_standard"
+            app:layout_constraintTop_toBottomOf="@id/orders">
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Цена"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_big_ish"
+                    android:textColor="@color/black"/>
+            <TextView
+                    android:id="@+id/totalPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_big"
+                    android:textColor="@color/black"/>
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Залог"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_big_ish"
+                    android:textColor="@color/black"/>
+            <TextView
+                    android:id="@+id/paid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_big"
+                    android:textColor="@color/black"/>
+        </LinearLayout>
+    </LinearLayout>
+    <TextView
+            android:id="@+id/moneyLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/pricesContainer"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+             android:textSize="@dimen/text_big"
+            android:textColor="@color/black"
+            android:text="@string/monyLeft"/>
     <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"

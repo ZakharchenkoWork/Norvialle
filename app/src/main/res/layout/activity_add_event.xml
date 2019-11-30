@@ -4,41 +4,59 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <ImageView
-            android:id="@+id/avatar"
-            android:layout_width="@dimen/avatar_size"
-            android:layout_height="@dimen/avatar_size"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="@dimen/margin_standard"
-            android:src="@drawable/icon"/>
+    <androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toLeftOf="parent"
+    android:background="?attr/colorPrimary"
+    android:minHeight="?attr/actionBarSize" />
     <TextView
             android:id="@+id/contact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
             android:layout_marginTop="@dimen/margin_standard"
             android:gravity="center_horizontal"
-
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textSize="20sp"
             android:text="@string/name"
     />
     <ImageView
-            android:id="@+id/edit"
-            android:layout_width="@dimen/margin_standard"
-            android:layout_height="@dimen/margin_standard"
+            android:id="@+id/contactsList"
+            android:layout_width="@dimen/icon_size_standard"
+            android:layout_height="@dimen/icon_size_standard"
             app:layout_constraintLeft_toRightOf="@id/contact"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/contact"
             app:layout_constraintBottom_toBottomOf="@id/contact"
             app:layout_constraintStart_toEndOf="@id/contact"
             android:layout_marginLeft="@dimen/margin_standard"
-            android:layout_marginTop="@dimen/margin_standard"
-            android:src="@drawable/pen"
-    />
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:src="@drawable/contacts"
+            />
+
+    <EditText
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contact"
+            android:layout_marginTop="@dimen/margin_small"
+            android:gravity="center_horizontal"
+            android:hint="Номер телефона"
+            android:textSize="20sp"
+            android:minEms="14"
+            android:inputType="phone"
+            />
+
 
     <TextView
             android:id="@+id/date"
@@ -46,7 +64,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/time"
-            app:layout_constraintTop_toBottomOf="@id/contact"
+            app:layout_constraintTop_toBottomOf="@id/phone"
             android:layout_marginTop="@dimen/margin_standard"
             android:textSize="20sp"
             android:text="30.04.1987"
@@ -58,7 +76,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toRightOf="@id/date"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/contact"
+            app:layout_constraintTop_toBottomOf="@id/phone"
             android:layout_marginTop="@dimen/margin_standard"
             android:textSize="20sp"
             android:text="00:00"
@@ -68,6 +86,8 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:layout_constraintTop_toBottomOf="@id/time"
             android:layout_margin="@dimen/margin_standard"
             android:hint="@string/description"
@@ -91,23 +111,48 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginLeft="@dimen/margin_standard"
-            android:visibility="gone"
-            >
+            android:layout_marginRight="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+             android:visibility="gone">
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
         <EditText
                 android:id="@+id/studioName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/studiosList"
                 android:hint="@string/studioName"/>
+            <ImageView
+                    android:id="@+id/studiosList"
+                    android:layout_width="@dimen/icon_size_standard"
+                    android:layout_height="@dimen/icon_size_standard"
+                    android:layout_alignParentRight="true"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:src="@drawable/list"/>
+        </RelativeLayout>
         <EditText
                 android:id="@+id/studioRoom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:hint="@string/roomName"/>
         <EditText
                 android:id="@+id/studioAddress"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/address"/>
+        <TextView
+                android:id="@+id/studioGeo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
     </LinearLayout>
     <CheckBox
             android:id="@+id/dress"
@@ -129,14 +174,55 @@
             android:layout_marginLeft="@dimen/margin_standard"
             android:text="@string/makeup"
             />
-    <Button
-            android:id="@+id/ok"
-            android:layout_width="wrap_content"
+    <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/makeup"
-            android:layout_marginTop="@dimen/margin_huge"
-            android:text="ok"
-    />
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_marginTop="@dimen/margin_standard"
+            app:layout_constraintTop_toBottomOf="@id/makeup">
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Цена"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_big_ish"
+                    android:textColor="@color/black"/>
+            <TextView
+                    android:id="@+id/totalPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_big"
+                    android:textColor="@color/black"/>
+        </LinearLayout>
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Залог"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_big_ish"
+                    android:textColor="@color/black"/>
+            <TextView
+                    android:id="@+id/paid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_big"
+                    android:textColor="@color/black"/>
+        </LinearLayout>
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

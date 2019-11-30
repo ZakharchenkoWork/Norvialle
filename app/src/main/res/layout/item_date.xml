@@ -13,6 +13,8 @@
             app:layout_constraintTop_toTopOf="@id/plus"
             app:layout_constraintBottom_toBottomOf="@id/plus"
             android:layout_marginLeft="@dimen/margin_standard"
+            android:textSize="@dimen/text_big"
+            android:textColor="@color/black"
             android:text="19.09.2019" />
     <ImageView
             android:id="@+id/plus"

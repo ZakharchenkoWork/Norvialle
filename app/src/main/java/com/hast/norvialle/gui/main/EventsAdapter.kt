@@ -14,12 +14,13 @@ import com.hast.norvialle.R
 import com.hast.norvialle.utils.getDate
 import com.hast.norvialle.utils.getMillis
 import com.hast.norvialle.utils.getTime
+import kotlinx.android.synthetic.main.activity_add_event.*
 import kotlinx.android.synthetic.main.item_date.view.*
 import kotlinx.android.synthetic.main.item_event.view.*
 import kotlinx.android.synthetic.main.item_event.view.arrow
 import kotlinx.android.synthetic.main.item_event.view.delete
 import kotlinx.android.synthetic.main.item_event.view.edit
-import kotlinx.android.synthetic.main.item_studio.view.*
+
 
 class EventsAdapter(val items: ArrayList<Event>, private val context: Context) : RecyclerView.Adapter<EventsAdapter.BaseViewHolder<*>>() {
     var dates: ArrayList<String>
@@ -159,7 +160,27 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
 
         override fun bind(event: Event) {
             itemView.locationName.setText(event.studioName)
-            itemView.locationRoom.setText(event.studioAddress)
+            itemView.locationRoom.setText(event.studioRoom)
+            itemView.totalPrice.setText(""+event.totalPrice)
+            itemView.paid.setText(""+event.paidPrice)
+            itemView.moneyLeft.setText(context.getString(R.string.monyLeft, event.getMoneyLeft()))
+            itemView.contact.setText(event.name)
+            itemView.phone.setText(event.contactPhone)
+            if (!event.contactPhone.equals("")){
+                itemView.call.setOnClickListener { dial(event.contactPhone) }
+                itemView.call.visibility = View.VISIBLE
+            } else{
+                itemView.call.visibility = View.GONE
+            }
+            itemView.address.setText(event.studioAddress)
+
+            if(!event.link.equals("")) {
+                itemView.address.setTextColor(context.resources.getColor(R.color.blue))
+                itemView.address.setOnClickListener { open2gis(event.studioGeo) }
+            } else{
+                itemView.address.setTextColor(context.resources.getColor(R.color.black))
+            }
+
             /*if (!studio.link.equals("")) {
                 itemView.address.setOnClickListener { open2gis(studio.link) }
                 itemView.address.setTextColor(context.resources.getColor(R.color.blue))
@@ -224,6 +245,25 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
         fun doAction(event: Event) {
             onAddeventListener(event)
         }
+    }
+    private fun open2gis(link: String) {
+        val uri = Uri.parse(link.replace("http://", "dgis://"))
+
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+
+        intent.setPackage("ru.dublgis.dgismobile") // Если не планируете работать с публичной бета-версией, эту строчку надо указать
+
+        context.startActivity(intent)
+    }
+
+    private fun dial(phone: String) {
+
+        context.startActivity(
+            Intent(
+                Intent.ACTION_DIAL,
+                Uri.fromParts("tel", phone, null)
+            )
+        )
     }
 }
 

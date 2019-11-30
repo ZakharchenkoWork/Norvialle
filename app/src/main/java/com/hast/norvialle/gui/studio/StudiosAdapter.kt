@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.hast.norvialle.R
+import com.hast.norvialle.data.PhotoRoom
 import com.hast.norvialle.data.Studio
 import kotlinx.android.synthetic.main.item_room_read_only.view.*
 import kotlinx.android.synthetic.main.item_studio.view.*
@@ -22,12 +22,15 @@ class StudiosAdapter(val items: ArrayList<Studio>, private val context: Context)
         OnEditStudioListener {}
     var onDeleteStudioListener: OnEditStudioListener =
         OnEditStudioListener {}
+    var onPickStudioListener: OnPickStudioListener =
+        OnPickStudioListener { studio: Studio, photoRoom: PhotoRoom -> }
 
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         (holder as StudioViewHolder).bind(items[position])
     }
 
+    var isForResult = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         return StudioViewHolder(
@@ -51,13 +54,15 @@ class StudiosAdapter(val items: ArrayList<Studio>, private val context: Context)
             itemView.studioName.setText(studio.name)
             itemView.address.setText(studio.address)
             if (!studio.link.equals("")) {
-                itemView.address.setOnClickListener { open2gis(studio.link) }
+                if (!isForResult) {
+                    itemView.address.setOnClickListener { open2gis(studio.link) }
+                }
                 itemView.address.setTextColor(context.resources.getColor(R.color.blue))
-            } else{
+            } else {
                 itemView.address.setOnClickListener { }
                 itemView.address.setTextColor(context.resources.getColor(R.color.black))
             }
-            if (!studio.phone.equals("")) {
+            if (!studio.phone.equals("") && !isForResult) {
                 itemView.studioPhone.setText(studio.phone)
                 itemView.studioPhone.visibility = View.VISIBLE
                 itemView.call.visibility = View.VISIBLE
@@ -66,10 +71,15 @@ class StudiosAdapter(val items: ArrayList<Studio>, private val context: Context)
                 itemView.studioPhone.visibility = View.GONE
                 itemView.call.visibility = View.GONE
             }
-            itemView.edit.setOnClickListener {
-                onEditStudioListener.doAction(studio)
+            if(!isForResult) {
+                itemView.edit.setOnClickListener {
+                    onEditStudioListener.doAction(studio)
+                }
+                itemView.delete.setOnClickListener { onDeleteStudioListener.doAction(studio) }
+            } else{
+                itemView.edit.visibility = View.GONE
+                itemView.delete.visibility = View.GONE
             }
-            itemView.delete.setOnClickListener { onDeleteStudioListener.doAction(studio) }
 
             var areRoomsShown = false
             itemView.arrow.setOnClickListener {
@@ -108,6 +118,11 @@ class StudiosAdapter(val items: ArrayList<Studio>, private val context: Context)
                             view.roomName.setText(room.name)
                             view.price.setText("" + room.price)
                             view.priceWithDiscount.setText("" + room.priceWithDiscount)
+                            if (isForResult){
+                                view.setOnClickListener { onPickStudioListener.doAction(studio, room) }
+                            } else{
+                                view.setOnClickListener{}
+                            }
                         }
 
                     }
@@ -125,7 +140,7 @@ class StudiosAdapter(val items: ArrayList<Studio>, private val context: Context)
     }
 
     private fun open2gis(link: String) {
-        val uri = Uri.parse(link.replace("http://","dgis://"))
+        val uri = Uri.parse(link.replace("http://", "dgis://"))
 
         val intent = Intent(Intent.ACTION_VIEW, uri)
 
@@ -144,6 +159,7 @@ class StudiosAdapter(val items: ArrayList<Studio>, private val context: Context)
         )
     }
 
+
     abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
         abstract fun bind(item: T)
     }
@@ -152,6 +168,12 @@ class StudiosAdapter(val items: ArrayList<Studio>, private val context: Context)
     class OnEditStudioListener(private val onEditStudioListener: (studio: Studio) -> Unit) {
         fun doAction(studio: Studio) {
             onEditStudioListener(studio)
+        }
+    }
+
+    class OnPickStudioListener(private val onPickStudioListener: (studio: Studio, room: PhotoRoom) -> Unit) {
+        fun doAction(studio: Studio, room: PhotoRoom) {
+            onPickStudioListener(studio, room)
         }
     }
 }

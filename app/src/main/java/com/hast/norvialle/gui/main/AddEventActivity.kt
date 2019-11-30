@@ -1,14 +1,24 @@
 package com.hast.norvialle.gui.main
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.hast.norvialle.data.Event
 import com.hast.norvialle.R
+import com.hast.norvialle.data.Event
+import com.hast.norvialle.data.PhotoRoom
+import com.hast.norvialle.data.Studio
 import com.hast.norvialle.gui.MainPresenter
+import com.hast.norvialle.gui.dialogs.PricePickerDialog
+import com.hast.norvialle.gui.studio.StudiosListActivity
 import com.hast.norvialle.gui.utils.AddContactDialog
 import kotlinx.android.synthetic.main.activity_add_event.*
 import java.text.SimpleDateFormat
@@ -22,6 +32,7 @@ class AddEventActivity : AppCompatActivity() {
     val presenter: MainPresenter =
         MainPresenter
     lateinit var event: Event
+    lateinit var finalCalendar : Calendar
 
     companion object {
         const val EVENT_EXTRA: String = "EVENT"
@@ -30,6 +41,13 @@ class AddEventActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_event)
+        setSupportActionBar(toolbar)
+        var actionBar = getSupportActionBar()
+        if (actionBar != null) {
+            getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
+            getSupportActionBar()?.setTitle(R.string.add_studio);
+        }
 
         event = intent.getSerializableExtra(EVENT_EXTRA) as Event
 
@@ -42,7 +60,14 @@ class AddEventActivity : AppCompatActivity() {
         studio.isChecked = event.orderStudio
         dress.isChecked = event.orderDress
         makeup.isChecked = event.orderMakeup
+        phone.setText(event.contactPhone)
 
+        totalPrice.setText(""+event.totalPrice)
+        paid.setText(""+event.paidPrice)
+        studioName.setText(event.studioName)
+        studioAddress.setText(event.studioAddress)
+
+        studioRoom.setText(event.studioRoom)
 
         val dateParser = SimpleDateFormat("dd,M,yyyy", Locale.getDefault())
         val timeParser = SimpleDateFormat("HH:mm", Locale.getDefault())
@@ -53,7 +78,7 @@ class AddEventActivity : AppCompatActivity() {
 
         var dateToSet = Date(event.time)
         val c = Calendar.getInstance()
-        val finalCalendar = Calendar.getInstance()
+        finalCalendar = Calendar.getInstance()
         finalCalendar.time = dateToSet
         c.time = dateToSet
 
@@ -108,25 +133,92 @@ class AddEventActivity : AppCompatActivity() {
         contact.setOnClickListener {
             showContactDialog()
         }
-        edit.setOnClickListener {
+        contactsList.setOnClickListener {
             showContactDialog()
         }
 
-        ok.setOnClickListener {
-            event.time = finalCalendar.timeInMillis
-            event.description = description.text.toString()
-            event.orderStudio = studio.isChecked
-            if (studio.isChecked){
-                event.studioName= studioName.text.toString()
-                event.studioRoom = studioRoom.text.toString()
-                event.studioAddress = studioAddress.text.toString()
-            }
-            event.orderDress = dress.isChecked
-            event.orderMakeup = makeup.isChecked
-            MainPresenter.addEvent(event)
 
-            finish()
+        studiosList.setOnClickListener { openStudiosList() }
+        totalPrice.setOnClickListener {
+            PricePickerDialog(this, getString(R.string.totalPrice), getFloatValue(totalPrice))
+                .setInnerResultUnits(getString(R.string.currency))
+                .setOnDoneListener {
+                    totalPrice.setText(("" + it).replace(".0", ""))
+                }
+                .show()
         }
+        paid.setOnClickListener {
+            PricePickerDialog(this, getString(R.string.paid), getFloatValue(paid))
+                .setInnerResultUnits(getString(R.string.currency))
+                .setOnDoneListener {
+                    paid.setText(("" + it).replace(".0", ""))
+                }
+                .show()
+        }
+
+    }
+
+    override
+    fun onCreateOptionsMenu(menu: Menu): Boolean {
+        getMenuInflater().inflate(R.menu.add_studio_menu, menu);
+        return true
+    }
+
+    override
+    fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+            android.R.id.home -> {
+                finish()
+            }
+            R.id.save -> {
+                event.time = finalCalendar.timeInMillis
+                event.contactPhone = phone.text.toString()
+                event.description = description.text.toString()
+                event.orderStudio = studio.isChecked
+                if (studio.isChecked) {
+                    event.studioName = studioName.text.toString()
+                    event.studioRoom = studioRoom.text.toString()
+                    event.studioAddress = studioAddress.text.toString()
+                }
+                event.studioGeo = studioGeo.text.toString()
+                event.orderDress = dress.isChecked
+                event.orderMakeup = makeup.isChecked
+
+                event.totalPrice = getIntValue(totalPrice)
+                event.paidPrice = getIntValue(paid)
+
+                MainPresenter.addEvent(event)
+                finish()
+            }
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private fun getFloatValue(view: TextView): Float {
+        var value = 0f
+        try {
+            value = view.text.toString().toFloat()
+        } catch (nfe: NumberFormatException) {
+            value = 1400f
+        }
+        return value
+    }
+
+    private fun getIntValue(view: TextView): Int {
+        var value = 0
+        try {
+            value = view.text.toString().toInt()
+        } catch (nfe: NumberFormatException) {
+            value = 0
+        }
+        return value
+    }
+
+    private fun openStudiosList() {
+        var intent = Intent(this, StudiosListActivity::class.java)
+        intent.putExtra(StudiosListActivity.IS_FOR_RESULT, true)
+        startActivityForResult(intent, 0)
     }
 
     fun showContactDialog() {
@@ -142,4 +234,17 @@ class AddEventActivity : AppCompatActivity() {
         }
         dialog.show(supportFragmentManager, "editDescription")
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == 0) {
+            var studio = data?.getSerializableExtra("STUDIO") as Studio
+            var photoRoom = data?.getSerializableExtra("ROOM") as PhotoRoom
+            studioName.setText(studio.name)
+            studioAddress.setText(studio.address)
+            studioGeo.setText(studio.link)
+            studioRoom.setText(photoRoom.name)
+        }
+    }
+
 }

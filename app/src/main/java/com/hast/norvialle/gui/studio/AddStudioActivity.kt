@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -32,8 +31,9 @@ class AddStudioActivity : AppCompatActivity() {
         val EDIT: Int = 1
         val STUDIO: String = "STUDIO"
     }
+
     val presenter: MainPresenter = MainPresenter
-var isForResult = true
+    var isForResult = true
     lateinit var studio: Studio
     var roomsViews = ArrayList<View>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,20 +46,21 @@ var isForResult = true
             getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
             getSupportActionBar()?.setTitle(R.string.add_studio);
         }
-if (intent?.action != Intent.ACTION_SEND){
-    studio = intent?.extras?.getSerializable(STUDIO) as Studio
-}else{
-    if ("text/plain" == intent.type) {
-        isForResult = false
-        studio = Studio()
-        var parts = ("" + intent?.clipData?.getItemAt(0)?.text).split("\n")
-        studio.name = parts[0]
-        studio.address = parts[1]
-        studio.phone = parts[2]
-        studio.link = if (parts[3].contains("go.2gis.com")) parts[3] else if (parts[4].contains("go.2gis.com")) parts[4] else ""
+        if (intent?.action != Intent.ACTION_SEND) {
+            studio = intent?.extras?.getSerializable(STUDIO) as Studio
+        } else {
+            if ("text/plain" == intent.type) {
+                isForResult = false
+                studio = Studio()
+                var parts = ("" + intent?.clipData?.getItemAt(0)?.text).split("\n")
+                studio.name = parts[0]
+                studio.address = parts[1]
+                studio.phone = parts[2]
+                studio.link =
+                    if (parts[3].contains("go.2gis.com")) parts[3] else if (parts[4].contains("go.2gis.com")) parts[4] else ""
 
-    }
-}
+            }
+        }
         if (studio == null) {
             studio = Studio()
         } else {
@@ -70,7 +71,7 @@ if (intent?.action != Intent.ACTION_SEND){
                 addRoom(room)
             }
         }
-        if (roomsViews.isEmpty()){
+        if (roomsViews.isEmpty()) {
             addRoom(null)
         }
         studioName.addTextChangedListener(TextListener(studioName))
@@ -85,8 +86,8 @@ if (intent?.action != Intent.ACTION_SEND){
         roomsViews.add(view)
         if (photoRoom != null) {
             view.roomName.setText(photoRoom.name)
-            view.price.setText(""+photoRoom.price)
-            view.priceWithDiscount.setText(""+photoRoom.priceWithDiscount)
+            view.price.setText("" + photoRoom.price)
+            view.priceWithDiscount.setText("" + photoRoom.priceWithDiscount)
 
         }
         view.roomName.addTextChangedListener(TextListener(view.roomName))
@@ -120,7 +121,8 @@ if (intent?.action != Intent.ACTION_SEND){
             }
             PricePickerDialog(this, getString(R.string.roomPriceWithDiscount), value)
                 .setInnerResultUnits(getString(R.string.currency))
-                .setOnDoneListener { view.priceWithDiscount.setText(("" + it).replace(".0", ""))
+                .setOnDoneListener {
+                    view.priceWithDiscount.setText(("" + it).replace(".0", ""))
                     paintBlack(view, R.id.price)
                     paintBlack(view, R.id.priceWithDiscount)
                 }
@@ -141,7 +143,7 @@ if (intent?.action != Intent.ACTION_SEND){
             android.R.id.home -> {
                 finish()
             }
-            R.id.saveStudio -> {
+            R.id.save -> {
                 if (studio == null) {
                     studio = Studio()
                 }
@@ -164,7 +166,7 @@ if (intent?.action != Intent.ACTION_SEND){
                     return true
                 }
                 studio.phone = studioPhone.text.toString()
-                if (roomsViews.isEmpty()){
+                if (roomsViews.isEmpty()) {
                     Toast.makeText(this, "Добавьте хотя бы один зал", LENGTH_LONG).show()
                     return true
                 }
@@ -212,7 +214,6 @@ if (intent?.action != Intent.ACTION_SEND){
     private fun paintRedBack(roomsView: View, view: Int) {
         (roomsView.findViewById(view) as TextView).setBackgroundColor(resources.getColor(R.color.red))
     }
-
 
 
     private fun getPrice(roomsView: View, price: Int): Int {
