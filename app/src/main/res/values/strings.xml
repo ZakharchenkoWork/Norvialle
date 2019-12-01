@@ -11,6 +11,7 @@
     <string name="norvialle">Norvialle</string>
     <string name="studios">Студии</string>
     <string name="add_studio">Добавление студии</string>
+    <string name="add_event">Добавление события</string>
     <string name="add">Добавить</string>
     <string name="navigation_drawer_open">open</string>
     <string name="navigation_drawer_close">close</string>

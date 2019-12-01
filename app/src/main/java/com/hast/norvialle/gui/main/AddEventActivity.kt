@@ -4,8 +4,8 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +23,8 @@ import com.hast.norvialle.gui.utils.AddContactDialog
 import kotlinx.android.synthetic.main.activity_add_event.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
+
 
 /**
  * Created by Konstantyn Zakharchenko on 20.09.2019.
@@ -36,6 +38,8 @@ class AddEventActivity : AppCompatActivity() {
 
     companion object {
         const val EVENT_EXTRA: String = "EVENT"
+        const val PICK_STUDIO: Int = 191
+        const val PICK_CONTACT: Int = 232
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +50,7 @@ class AddEventActivity : AppCompatActivity() {
         if (actionBar != null) {
             getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
             getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
-            getSupportActionBar()?.setTitle(R.string.add_studio);
+            getSupportActionBar()?.setTitle(R.string.add_event);
         }
 
         event = intent.getSerializableExtra(EVENT_EXTRA) as Event
@@ -134,7 +138,7 @@ class AddEventActivity : AppCompatActivity() {
             showContactDialog()
         }
         contactsList.setOnClickListener {
-            showContactDialog()
+             openContactsList()
         }
 
 
@@ -179,8 +183,9 @@ class AddEventActivity : AppCompatActivity() {
                     event.studioName = studioName.text.toString()
                     event.studioRoom = studioRoom.text.toString()
                     event.studioAddress = studioAddress.text.toString()
+                    event.studioGeo = studioGeo.text.toString()
                 }
-                event.studioGeo = studioGeo.text.toString()
+
                 event.orderDress = dress.isChecked
                 event.orderMakeup = makeup.isChecked
 
@@ -218,7 +223,12 @@ class AddEventActivity : AppCompatActivity() {
     private fun openStudiosList() {
         var intent = Intent(this, StudiosListActivity::class.java)
         intent.putExtra(StudiosListActivity.IS_FOR_RESULT, true)
-        startActivityForResult(intent, 0)
+        startActivityForResult(intent, PICK_STUDIO)
+    }
+    private fun openContactsList() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE
+        startActivityForResult(intent, PICK_CONTACT)
     }
 
     fun showContactDialog() {
@@ -237,13 +247,29 @@ class AddEventActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == 0) {
-            var studio = data?.getSerializableExtra("STUDIO") as Studio
-            var photoRoom = data?.getSerializableExtra("ROOM") as PhotoRoom
-            studioName.setText(studio.name)
-            studioAddress.setText(studio.address)
-            studioGeo.setText(studio.link)
-            studioRoom.setText(photoRoom.name)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == PICK_STUDIO) {
+                var studio = data?.getSerializableExtra("STUDIO") as Studio
+                var photoRoom = data?.getSerializableExtra("ROOM") as PhotoRoom
+                studioName.setText(studio.name)
+                studioAddress.setText(studio.address)
+                studioGeo.setText(studio.link)
+                studioRoom.setText(photoRoom.name)
+            } else if (requestCode == PICK_CONTACT) {
+                val contactUri = data?.getData();
+             /*   val i = {1}
+                 val projection : ArrayList<String> =  {ContactsContract.CommonDataKinds.Phone.NUMBER};*/
+                /*Cursor cursor = getContext().getContentResolver().query(contactUri, projection,
+                    null, null, null);
+
+                // If the cursor returned is valid, get the phone number
+                if (cursor != null && cursor.moveToFirst()) {
+                    int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                    String number = cursor.getString(numberIndex);
+                    // Do something with the phone number
+
+                }*/
+            }
         }
     }
 

@@ -4,25 +4,23 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.hast.norvialle.data.Event
 import com.hast.norvialle.R
+import com.hast.norvialle.data.Event
+import com.hast.norvialle.gui.dialogs.OneButtonDialog
 import com.hast.norvialle.utils.getDate
 import com.hast.norvialle.utils.getMillis
 import com.hast.norvialle.utils.getTime
-import kotlinx.android.synthetic.main.activity_add_event.*
 import kotlinx.android.synthetic.main.item_date.view.*
 import kotlinx.android.synthetic.main.item_event.view.*
-import kotlinx.android.synthetic.main.item_event.view.arrow
-import kotlinx.android.synthetic.main.item_event.view.delete
-import kotlinx.android.synthetic.main.item_event.view.edit
 
 
-class EventsAdapter(val items: ArrayList<Event>, private val context: Context) : RecyclerView.Adapter<EventsAdapter.BaseViewHolder<*>>() {
+class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
+    RecyclerView.Adapter<EventsAdapter.BaseViewHolder<*>>() {
     var dates: ArrayList<String>
     var onAddEventListener: OnAddEventListener =
         OnAddEventListener {}
@@ -161,49 +159,40 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
         override fun bind(event: Event) {
             itemView.locationName.setText(event.studioName)
             itemView.locationRoom.setText(event.studioRoom)
-            itemView.totalPrice.setText(""+event.totalPrice)
-            itemView.paid.setText(""+event.paidPrice)
+            itemView.totalPrice.setText("" + event.totalPrice)
+            itemView.paid.setText("" + event.paidPrice)
             itemView.moneyLeft.setText(context.getString(R.string.monyLeft, event.getMoneyLeft()))
             itemView.contact.setText(event.name)
+            itemView.description.setText(event.description)
             itemView.phone.setText(event.contactPhone)
-            if (!event.contactPhone.equals("")){
+            if (!event.contactPhone.equals("")) {
                 itemView.call.setOnClickListener { dial(event.contactPhone) }
                 itemView.call.visibility = View.VISIBLE
-            } else{
+                itemView.phone.visibility = View.VISIBLE
+            } else {
                 itemView.call.visibility = View.GONE
+                itemView.phone.visibility = View.GONE
             }
             itemView.address.setText(event.studioAddress)
 
-            if(!event.link.equals("")) {
+            if (!event.studioGeo.equals("")) {
                 itemView.address.setTextColor(context.resources.getColor(R.color.blue))
                 itemView.address.setOnClickListener { open2gis(event.studioGeo) }
-            } else{
+                itemView.geo.visibility = View.VISIBLE
+                itemView.geo.setOnClickListener { open2gis(event.studioGeo) }
+            } else {
                 itemView.address.setTextColor(context.resources.getColor(R.color.black))
+                itemView.geo.visibility = View.GONE
             }
 
-            /*if (!studio.link.equals("")) {
-                itemView.address.setOnClickListener { open2gis(studio.link) }
-                itemView.address.setTextColor(context.resources.getColor(R.color.blue))
-            } else{
-                itemView.address.setOnClickListener { }
-                itemView.address.setTextColor(context.resources.getColor(R.color.black))
-            }*/
             itemView.time.setText(getTime(event.time))
-            itemView.studio.visibility = if(event.orderStudio) View.VISIBLE else View.GONE
-            itemView.dress.visibility = if(event.orderDress) View.VISIBLE else View.GONE
-            itemView.makeup.visibility = if(event.orderMakeup) View.VISIBLE else View.GONE
+            itemView.studio.isEnabled =
+                event.orderStudio//if(event.orderStudio) View.VISIBLE else View.GONE
+            itemView.dress.isEnabled =
+                event.orderDress//if(event.orderDress) View.VISIBLE else View.GONE
+            itemView.makeup.isEnabled =
+                event.orderMakeup//if(event.orderMakeup) View.VISIBLE else View.GONE
 
-
-            itemView.foregroundLayout.setOnClickListener {
-                itemView.foregroundLayout.animate()
-                    .translationX(-itemView.foregroundLayout.width.toFloat())
-                    .setDuration(150)
-            }
-            itemView.arrow.setOnClickListener {
-                itemView.foregroundLayout.animate()
-                    .translationX(0f)
-                    .setDuration(150)
-            }
 
             if (!event.link.equals("")) {
                 itemView.insta.setOnClickListener {
@@ -227,8 +216,59 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
 
             itemView.copy.setOnClickListener { onAddEventListener.doAction(event.copy()) }
             itemView.edit.setOnClickListener { onAddEventListener.doAction(event) }
-            itemView.delete.setOnClickListener{ onDeleteEventListener.doAction(event)}
+            itemView.delete.setOnClickListener {
+                OneButtonDialog(context, OneButtonDialog.DIALOG_TYPE.MESSAGE_ONLY)
+                    .setTitle("Удаление")
+                    .setMessage("Вы действительно хотите удалить это событие, это действие не может быть отменено")
+                    .setOkListener { onDeleteEventListener.doAction(event) }
+                    .setOkButtonText("Да")
+                    .setCancelButtonText("Отмена")
+                    .setCancelable(true)
+                    .build()
+            }
 
+            itemView.foregroundLayout.setOnTouchListener(
+                DragListener(
+                    itemView.foregroundLayout,
+                    true
+                )
+            )
+            itemView.backgroundLayout.setOnTouchListener(
+                DragListener(
+                    itemView.foregroundLayout,
+                    false
+                )
+            )
+        }
+    }
+    inner class DragListener(val layout : View,val toLeft: Boolean) : View.OnTouchListener{
+        var dragStartY :Float = -1f
+        var dragStartX :Float = -1f
+        override fun onTouch(v: View, event: MotionEvent): Boolean {
+            if (event.action == MotionEvent.ACTION_DOWN){
+                dragStartY = event.y
+                dragStartX = event.x
+                return true
+             } else if(event.action == MotionEvent.ACTION_UP){
+                dragStartY = -1f
+                dragStartX = -1f
+            } else {
+                if (event.y > dragStartY - 40 && event.y < dragStartY + 40) {
+                    if (toLeft && event.x < dragStartX - 20){
+                        layout.animate()
+                            .translationX(-layout.width.toFloat())
+                            .setDuration(150)
+                        return true
+                    } else if (!toLeft && event.x > dragStartX + 20){
+                        layout.animate()
+                            .translationX(0f)
+                            .setDuration(150)
+                        return true
+                    }
+                }
+            }
+
+            return false
         }
     }
 
@@ -246,6 +286,7 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
             onAddeventListener(event)
         }
     }
+
     private fun open2gis(link: String) {
         val uri = Uri.parse(link.replace("http://", "dgis://"))
 
