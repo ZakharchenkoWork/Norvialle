@@ -7,23 +7,23 @@
         <item
                 android:id="@+id/calendar"
                 android:icon="@drawable/calendar"
-                android:title="Календарь" />
+                android:title="@string/calendar" />
         <item
                 android:id="@+id/addEvent"
                 android:icon="@drawable/plus"
-                android:title="Добавить событие" />
+                android:title="@string/add_event" />
         <item
                 android:id="@+id/contact"
                 android:icon="@drawable/insta"
-                android:title="Контакты" />
+                android:title="@string/contacts" />
         <item
                 android:id="@+id/dress"
                 android:icon="@drawable/dress"
-                android:title="Платья" />
+                android:title="@string/dresses" />
         <item
                 android:id="@+id/studio"
                 android:icon="@drawable/studio"
-                android:title="Студии" />
+                android:title="@string/studios" />
     </group>
 
 </menu>

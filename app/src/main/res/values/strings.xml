@@ -12,7 +12,7 @@
     <string name="norvialle">Norvialle</string>
     <string name="studios">Студии</string>
     <string name="add_studio">Добавление студии</string>
-    <string name="add_event">Добавление события</string>
+    <string name="adding_event">Добавление события</string>
     <string name="add">Добавить</string>
     <string name="navigation_drawer_open">open</string>
     <string name="navigation_drawer_close">close</string>
@@ -22,6 +22,12 @@
     <string name="roomPriceWithDiscount">Цена со скидкой</string>
     <string name="totalPrice">Общая цена</string>
     <string name="paid">Сумма залога</string>
+    <string name="makeupPrice">Стоимость макияжа</string>
     <string name="monyLeft">Остаток: %1$d</string>
+    <string name="calendar">Календарь</string>
+    <string name="add_event">Добавить событие</string>
+    <string name="contacts">Контакты</string>
+    <string name="dresses">Платья</string>
+
 
 </resources>

@@ -8,7 +8,7 @@ import java.util.*
  */
 
 fun getDate(date: Long): String {
-    val dateFormatter = SimpleDateFormat("dd:MM:yyyy", Locale.getDefault())
+    val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     return dateFormatter.format(date)
 }
 fun getTime(date: Long): String {

@@ -4,21 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
-import com.hast.norvialle.data.Event
 import com.hast.norvialle.R
+import com.hast.norvialle.data.Event
 import com.hast.norvialle.gui.CalendarActivity
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.studio.StudiosListActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener{
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     val presenter: MainPresenter =
         MainPresenter
@@ -68,20 +67,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 prepareAdapter()
             }
     }
-    fun openEventEditor(event: Event){
+
+    fun openEventEditor(event: Event) {
         val intent = Intent(this, AddEventActivity::class.java)
         intent.putExtra(AddEventActivity.EVENT_EXTRA, event)
         startActivity(intent)
     }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean { // Handle navigation view item clicks here.
         when (item.getItemId()) {
-            R.id.calendar-> {
+            R.id.calendar -> {
                 startActivity(Intent(this, CalendarActivity::class.java))
             }
-            R.id.studio-> {
+            R.id.studio -> {
                 startActivity(Intent(this, StudiosListActivity::class.java))
             }
-            R.id.addEvent-> {
+            R.id.addEvent -> {
                 openEventEditor(
                     Event(
                         "",
@@ -96,6 +97,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
+    override
+    fun onCreateOptionsMenu(menu: Menu): Boolean {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true
+    }
+
+    override
+    fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+
+            R.id.addEvent -> {
+                openEventEditor(
+                    Event("", "", System.currentTimeMillis())
+                )
+            }
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
 }

@@ -11,6 +11,7 @@ import java.io.Serializable
 class Event(@PrimaryKey var id: String, var name: String, var time: Long) : Serializable {
 
 
+
     var contactPhone: String = ""
     var avatar: String = ""
     var link: String = ""
@@ -24,6 +25,10 @@ class Event(@PrimaryKey var id: String, var name: String, var time: Long) : Seri
 
     var orderDress: Boolean = false
     var orderMakeup: Boolean = false
+    var makeupArtistName: String = ""
+
+    var makeupPrice: Int = 0
+    var makeupTime: Long = 0
     var paidPrice: Int = 0
     var totalPrice: Int = 0
 

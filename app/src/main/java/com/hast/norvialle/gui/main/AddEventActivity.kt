@@ -6,6 +6,7 @@ import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -17,13 +18,13 @@ import com.hast.norvialle.data.Event
 import com.hast.norvialle.data.PhotoRoom
 import com.hast.norvialle.data.Studio
 import com.hast.norvialle.gui.MainPresenter
+import com.hast.norvialle.gui.dialogs.OneButtonDialog
 import com.hast.norvialle.gui.dialogs.PricePickerDialog
 import com.hast.norvialle.gui.studio.StudiosListActivity
 import com.hast.norvialle.gui.utils.AddContactDialog
 import kotlinx.android.synthetic.main.activity_add_event.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**
@@ -34,12 +35,14 @@ class AddEventActivity : AppCompatActivity() {
     val presenter: MainPresenter =
         MainPresenter
     lateinit var event: Event
-    lateinit var finalCalendar : Calendar
+    lateinit var finalCalendar: Calendar
+    lateinit var finalMakupCalendar: Calendar
 
     companion object {
         const val EVENT_EXTRA: String = "EVENT"
         const val PICK_STUDIO: Int = 191
         const val PICK_CONTACT: Int = 232
+        const val ONE_HOUR_MILLIS: Long = 60*60*1000
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +53,7 @@ class AddEventActivity : AppCompatActivity() {
         if (actionBar != null) {
             getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
             getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
-            getSupportActionBar()?.setTitle(R.string.add_event);
+            getSupportActionBar()?.setTitle(R.string.adding_event);
         }
 
         event = intent.getSerializableExtra(EVENT_EXTRA) as Event
@@ -70,11 +73,11 @@ class AddEventActivity : AppCompatActivity() {
         makeup.isChecked = event.orderMakeup
         phone.setText(event.contactPhone)
 
-        totalPrice.setText(""+event.totalPrice)
-        paid.setText(""+event.paidPrice)
+        totalPrice.setText("" + event.totalPrice)
+        paid.setText("" + event.paidPrice)
         studioName.setText(event.studioName)
         studioAddress.setText(event.studioAddress)
-
+        makeupPrice.setText(""+event.makeupPrice)
         studioRoom.setText(event.studioRoom)
 
         val dateParser = SimpleDateFormat("dd,M,yyyy", Locale.getDefault())
@@ -86,9 +89,24 @@ class AddEventActivity : AppCompatActivity() {
 
         var dateToSet = Date(event.time)
         val c = Calendar.getInstance()
+        finalMakupCalendar = Calendar.getInstance()
         finalCalendar = Calendar.getInstance()
         finalCalendar.time = dateToSet
         c.time = dateToSet
+        if(event.makeupTime != 0L) {
+            finalMakupCalendar.time = Date(event.makeupTime)
+            makeupTime.setText(timeFormatter.format(Date(event.makeupTime)))
+        }
+
+
+        makeupArtistsName.setText(event.makeupArtistName)
+        makeupPrice.setText(""+event.makeupPrice)
+
+        if(event.orderMakeup){
+            makeupLayout.visibility = View.VISIBLE
+        } else{
+            makeupLayout.visibility = View.GONE
+        }
 
         val output = dateFormatter.format(dateToSet)
         date.setText(output)
@@ -127,7 +145,7 @@ class AddEventActivity : AppCompatActivity() {
             val tpd =
                 TimePickerDialog(this, TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
 
-                    Toast.makeText(this, h.toString() + " : " + m, Toast.LENGTH_LONG).show()
+
 
                     var timeToSet = timeParser.parse("" + h.toString() + ":" + m)
                     time.setText(timeFormatter.format(timeToSet))
@@ -137,31 +155,61 @@ class AddEventActivity : AppCompatActivity() {
 
             tpd.show()
         }
+        makeupTime.setOnClickListener {
+            if (event.makeupTime == 0L){
+                finalMakupCalendar.time = Date(dateToSet.time - ONE_HOUR_MILLIS)
+            } else{
+                finalMakupCalendar.time = Date(event.makeupTime)
+            }
+
+
+            val hour = finalMakupCalendar.get(Calendar.HOUR)
+            val minute =finalMakupCalendar.get(Calendar.MINUTE)
+
+            val tpd =
+                TimePickerDialog(this, TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
+                    var timeToSet = timeParser.parse("" + h.toString() + ":" + m)
+                    makeupTime.setText(timeFormatter.format(timeToSet))
+                    finalMakupCalendar.set(Calendar.MINUTE, m);
+                    finalMakupCalendar.set(Calendar.HOUR_OF_DAY, h);
+                }), hour, minute, true)
+
+            tpd.show()
+        }
 
         contact.setOnClickListener {
             showContactDialog()
         }
         contactsList.setOnClickListener {
-             openContactsList()
+            openContactsList()
         }
 
 
         studiosList.setOnClickListener { openStudiosList() }
         totalPrice.setOnClickListener {
-            PricePickerDialog(this, getString(R.string.totalPrice), getFloatValue(totalPrice))
-                .setInnerResultUnits(getString(R.string.currency))
-                .setOnDoneListener {
-                    totalPrice.setText(("" + it).replace(".0", ""))
-                }
-                .show()
+            OneButtonDialog(this, OneButtonDialog.DIALOG_TYPE.INPUT_ONLY)
+                .setTitle(getString(R.string.totalPrice))
+                .setMessage(""+getFloatValue(totalPrice))
+                .setInputType(InputType.TYPE_CLASS_NUMBER)
+                .setOkListener { totalPrice.setText(("" + it).replace(".0", "")) }
+                .build()
+
         }
         paid.setOnClickListener {
-            PricePickerDialog(this, getString(R.string.paid), getFloatValue(paid))
-                .setInnerResultUnits(getString(R.string.currency))
-                .setOnDoneListener {
-                    paid.setText(("" + it).replace(".0", ""))
-                }
-                .show()
+            OneButtonDialog(this, OneButtonDialog.DIALOG_TYPE.INPUT_ONLY)
+                .setTitle(getString(R.string.paid))
+                .setMessage(""+getFloatValue(paid))
+                .setInputType(InputType.TYPE_CLASS_NUMBER)
+                .setOkListener { paid.setText(("" + it).replace(".0", "")) }
+                .build()
+        }
+        makeupPrice.setOnClickListener {
+            OneButtonDialog(this, OneButtonDialog.DIALOG_TYPE.INPUT_ONLY)
+                .setTitle(getString(R.string.makeupPrice))
+                .setMessage(""+getFloatValue(makeupPrice))
+                .setInputType(InputType.TYPE_CLASS_NUMBER)
+                .setOkListener { makeupPrice.setText(("" + it).replace(".0", "")) }
+                .build()
         }
 
     }
@@ -189,6 +237,11 @@ class AddEventActivity : AppCompatActivity() {
                     event.studioAddress = studioAddress.text.toString()
                     event.studioGeo = studioGeo.text.toString()
                     event.studioPhone = studioPhone.text.toString()
+                }
+                if (makeup.isChecked) {
+                    event.makeupArtistName = makeupArtistsName.text.toString()
+                    event.makeupPrice = getIntValue(makeupPrice)
+                    event.makeupTime = finalMakupCalendar.timeInMillis
                 }
 
                 event.orderDress = dress.isChecked
@@ -230,6 +283,7 @@ class AddEventActivity : AppCompatActivity() {
         intent.putExtra(StudiosListActivity.IS_FOR_RESULT, true)
         startActivityForResult(intent, PICK_STUDIO)
     }
+
     private fun openContactsList() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE
@@ -266,8 +320,8 @@ class AddEventActivity : AppCompatActivity() {
                 studioRoom.setText(photoRoom.name)
             } else if (requestCode == PICK_CONTACT) {
                 val contactUri = data?.getData();
-             /*   val i = {1}
-                 val projection : ArrayList<String> =  {ContactsContract.CommonDataKinds.Phone.NUMBER};*/
+                /*   val i = {1}
+                    val projection : ArrayList<String> =  {ContactsContract.CommonDataKinds.Phone.NUMBER};*/
                 /*Cursor cursor = getContext().getContentResolver().query(contactUri, projection,
                     null, null, null);
 
@@ -281,5 +335,7 @@ class AddEventActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
 }

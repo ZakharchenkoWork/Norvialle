@@ -150,7 +150,6 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
 
         override fun bind(item: String) {
             itemView.date.setText(item)
-            itemView.plus.setOnClickListener { onAddEventListener.doAction(getMillis(item)) }
         }
     }
 
@@ -187,12 +186,9 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
             }
 
             itemView.time.setText(getTime(event.time))
-            itemView.studio.isEnabled =
-                event.orderStudio//if(event.orderStudio) View.VISIBLE else View.GONE
-            itemView.dress.isEnabled =
-                event.orderDress//if(event.orderDress) View.VISIBLE else View.GONE
-            itemView.makeup.isEnabled =
-                event.orderMakeup//if(event.orderMakeup) View.VISIBLE else View.GONE
+            itemView.studio.setImageResource(if(event.orderStudio) R.drawable.studio else R.drawable.studio_disabled)
+            itemView.dress.setImageResource(if(event.orderDress) R.drawable.dress else R.drawable.dress_disabled)
+            itemView.makeup.setImageResource(if(event.orderMakeup) R.drawable.makeup else R.drawable.makeup_disabled)
 
             if (!event.studioPhone.equals("")) {
                 itemView.studioPhone.setText(event.studioPhone)
