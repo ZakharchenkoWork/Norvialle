@@ -164,6 +164,7 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
             itemView.moneyLeft.setText(context.getString(R.string.monyLeft, event.getMoneyLeft()))
             itemView.contact.setText(event.name)
             itemView.description.setText(event.description)
+
             itemView.phone.setText(event.contactPhone)
             if (!event.contactPhone.equals("")) {
                 itemView.call.setOnClickListener { dial(event.contactPhone) }
@@ -193,7 +194,15 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
             itemView.makeup.isEnabled =
                 event.orderMakeup//if(event.orderMakeup) View.VISIBLE else View.GONE
 
+            if (!event.studioPhone.equals("")) {
+                itemView.studioPhone.setText(event.studioPhone)
+                itemView.studioPhone.visibility = View.VISIBLE
+                itemView.studioPhone.setTextColor(context.resources.getColor(R.color.blue))
+                itemView.studioPhone.setOnClickListener { dial(event.studioPhone) }
+            } else {
+                itemView.studioPhone.visibility = View.VISIBLE
 
+            }
             if (!event.link.equals("")) {
                 itemView.insta.setOnClickListener {
                     val uri = Uri.parse(event.link)
@@ -241,25 +250,26 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
             )
         }
     }
-    inner class DragListener(val layout : View,val toLeft: Boolean) : View.OnTouchListener{
-        var dragStartY :Float = -1f
-        var dragStartX :Float = -1f
+
+    inner class DragListener(val layout: View, val toLeft: Boolean) : View.OnTouchListener {
+        var dragStartY: Float = -1f
+        var dragStartX: Float = -1f
         override fun onTouch(v: View, event: MotionEvent): Boolean {
-            if (event.action == MotionEvent.ACTION_DOWN){
+            if (event.action == MotionEvent.ACTION_DOWN) {
                 dragStartY = event.y
                 dragStartX = event.x
                 return true
-             } else if(event.action == MotionEvent.ACTION_UP){
+            } else if (event.action == MotionEvent.ACTION_UP) {
                 dragStartY = -1f
                 dragStartX = -1f
             } else {
                 if (event.y > dragStartY - 40 && event.y < dragStartY + 40) {
-                    if (toLeft && event.x < dragStartX - 20){
+                    if (toLeft && event.x < dragStartX - 20) {
                         layout.animate()
                             .translationX(-layout.width.toFloat())
                             .setDuration(150)
                         return true
-                    } else if (!toLeft && event.x > dragStartX + 20){
+                    } else if (!toLeft && event.x > dragStartX + 20) {
                         layout.animate()
                             .translationX(0f)
                             .setDuration(150)

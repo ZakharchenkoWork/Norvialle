@@ -8,7 +8,10 @@ import android.view.WindowManager
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.hast.norvialle.R
+import com.hast.norvialle.data.Contact
 import com.hast.norvialle.gui.MainPresenter
+import kotlinx.android.synthetic.main.dialog_edit_text.*
+import kotlinx.android.synthetic.main.dialog_edit_text.view.*
 
 /**
  * Created by Konstantyn Zakharchenko on 23.09.2019.
@@ -20,22 +23,12 @@ class AddContactDialog : DialogFragment() {
         private const val EXTRA_TITLE = "title"
         private const val EXTRA_HINT = "hint"
         private const val EXTRA_MULTILINE = "multiline"
-        private const val EXTRA_TEXT = "text"
+        private const val EXTRA_NAME = "name"
+        private const val EXTRA_LINK = "link"
+        private const val EXTRA_PHONE = "phone"
 
-        fun newInstance(
-            title: String? = null,
-            hint: String? = null,
-            text: String? = null,
-            isMultiline: Boolean = false
-        ): AddContactDialog {
+        fun newInstance(): AddContactDialog {
             val dialog = AddContactDialog()
-            val args = Bundle().apply {
-                putString(EXTRA_TITLE, title)
-                putString(EXTRA_HINT, hint)
-                putString(EXTRA_TEXT, text)
-                putBoolean(EXTRA_MULTILINE, isMultiline)
-            }
-            dialog.arguments = args
             return dialog
         }
     }
@@ -44,35 +37,26 @@ class AddContactDialog : DialogFragment() {
     lateinit var link: EditText
     var nameText: String = ""
     var linkText: String = ""
-    var onOk: ((name: String, link: String) -> Unit)? = null
+    var phoneText: String = ""
+    var onOk: ((contact: Contact) -> Unit)? = null
     var onCancel: (() -> Unit)? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val text: String? = arguments?.getString(EXTRA_TEXT)
-        val isMiltiline = arguments?.getBoolean(EXTRA_MULTILINE) ?: false
 
         // StackOverflowError
         // val view = layoutInflater.inflate(R.layout.dialog_edit_text, null)
         val view = activity!!.layoutInflater.inflate(R.layout.dialog_edit_text, null)
 
-        name = view.findViewById(R.id.name)
-        link = view.findViewById(R.id.link)
-        name.setText(nameText)
-        link.setText(linkText)
 
-        if (isMiltiline) {
-            name.minLines = 3
-            //  editText.inputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-        }
-        if (text != null) {
-            name.append(text)
-        }
+        view.name.setText(nameText)
+        view.link.setText(linkText)
+        view.phone.setText(phoneText)
 
         val builder = AlertDialog.Builder(context!!)
             .setTitle("Adding new contact")
             .setView(view)
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                onOk?.invoke(name.text.toString(), link.text.toString())
+                onOk?.invoke(Contact(view.name.text.toString(), view.link.text.toString(), view.phone.text.toString()))
             }
             .setNegativeButton(android.R.string.cancel) { _, _ ->
                 onCancel?.invoke()
@@ -84,7 +68,5 @@ class AddContactDialog : DialogFragment() {
         return dialog
     }
 
-    fun composeContactData(name: String, link: String): String {
-        return "<html><a href=\"" + link + "\">" + name + "</a></html>"
-    }
+
 }

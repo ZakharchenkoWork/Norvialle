@@ -42,7 +42,7 @@
             android:src="@drawable/contacts"
             />
 
-    <EditText
+    <TextView
             android:id="@+id/phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,10 +51,8 @@
             app:layout_constraintTop_toBottomOf="@id/contact"
             android:layout_marginTop="@dimen/margin_small"
             android:gravity="center_horizontal"
-            android:hint="Номер телефона"
             android:textSize="20sp"
-            android:minEms="14"
-            android:inputType="phone"
+
             />
 
 
@@ -148,11 +146,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/address"/>
+        <EditText
+                android:id="@+id/studioPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:hint="Телефон"
+                />
         <TextView
                 android:id="@+id/studioGeo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"/>
+
     </LinearLayout>
     <CheckBox
             android:id="@+id/dress"
@@ -174,13 +181,62 @@
             android:layout_marginLeft="@dimen/margin_standard"
             android:text="@string/makeup"
             />
+    <RelativeLayout
+            android:id="@+id/makeupLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/margin_standard"
+            android:layout_marginRight="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_small"
+
+            app:layout_constraintTop_toBottomOf="@id/makeup"
+            app:layout_constraintLeft_toLeftOf="@id/makeup">
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Визажист"
+                android:layout_toLeftOf="@id/makeupTime"
+                android:layout_alignParentLeft="true"
+                android:maxLines="1"
+                android:ellipsize="end"
+
+                />
+        <TextView
+                android:id="@+id/makeupTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="За час"
+                android:layout_marginLeft="@dimen/margin_standard"
+                android:layout_marginRight="@dimen/margin_standard"
+                android:layout_toLeftOf="@id/makeupPrice"
+                android:layout_centerVertical="true"
+                />
+        <TextView
+                android:id="@+id/makeupPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="Цена"
+                android:layout_marginRight="@dimen/margin_standard"
+                android:layout_toLeftOf="@id/makeupArtistsList"
+            />
+        <ImageView
+                android:id="@+id/makeupArtistsList"
+                android:layout_width="@dimen/icon_size_standard"
+                android:layout_height="@dimen/icon_size_standard"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/list"/>
+
+    </RelativeLayout>
+
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2"
             android:layout_marginTop="@dimen/margin_standard"
-            app:layout_constraintTop_toBottomOf="@id/makeup">
+            app:layout_constraintTop_toBottomOf="@id/makeupLayout">
         <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

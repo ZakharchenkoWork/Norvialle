@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">Norvialle</string>
-    <string name="description">description</string>
+    <string name="description">Комментарий</string>
     <string name="studio">Заказ Студии</string>
     <string name="dress">Заказ платья</string>
     <string name="makeup">Заказ макияжа</string>
     <string name="studioName">Название студии</string>
+    <string name="studioPhone">Телефон студии</string>
     <string name="roomName">Название зала</string>
     <string name="address">Адресс</string>
     <string name="name">Имя контакта</string>

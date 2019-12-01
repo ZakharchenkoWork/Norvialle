@@ -60,6 +60,10 @@ class AddEventActivity : AppCompatActivity() {
         studio.setOnCheckedChangeListener { button, isChecked ->
             studioData.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
+        makeup.setOnCheckedChangeListener { buttonView, isChecked ->
+            makeupLayout.visibility = if (isChecked) View.VISIBLE else View.GONE
+        }
+
         description.setText(event.description)
         studio.isChecked = event.orderStudio
         dress.isChecked = event.orderDress
@@ -184,6 +188,7 @@ class AddEventActivity : AppCompatActivity() {
                     event.studioRoom = studioRoom.text.toString()
                     event.studioAddress = studioAddress.text.toString()
                     event.studioGeo = studioGeo.text.toString()
+                    event.studioPhone = studioPhone.text.toString()
                 }
 
                 event.orderDress = dress.isChecked
@@ -233,14 +238,17 @@ class AddEventActivity : AppCompatActivity() {
 
     fun showContactDialog() {
         val dialog =
-            AddContactDialog.newInstance(text = "", hint = "Description", isMultiline = true)
+            AddContactDialog.newInstance()
         dialog.nameText = event.name
         dialog.linkText = event.link
-        dialog.onOk = { name, link ->
-            event.name = name
-            event.link = link
-            contact.setText(name)
-            // do something
+        dialog.phoneText = event.contactPhone
+        dialog.onOk = { contactData ->
+            event.name = contactData.name
+            event.link = contactData.link
+            event.contactPhone = contactData.phone
+            contact.setText(contactData.name)
+            phone.setText(contactData.phone)
+
         }
         dialog.show(supportFragmentManager, "editDescription")
     }
@@ -253,6 +261,7 @@ class AddEventActivity : AppCompatActivity() {
                 var photoRoom = data?.getSerializableExtra("ROOM") as PhotoRoom
                 studioName.setText(studio.name)
                 studioAddress.setText(studio.address)
+                studioPhone.setText(studio.phone)
                 studioGeo.setText(studio.link)
                 studioRoom.setText(photoRoom.name)
             } else if (requestCode == PICK_CONTACT) {

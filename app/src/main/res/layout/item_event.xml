@@ -107,11 +107,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
-                android:layout_marginBottom="@dimen/margin_standard"
+
                 android:text="Адресс"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toLeftOf="@id/delete"
                 app:layout_constraintTop_toBottomOf="@+id/location" />
+        <TextView
+                android:id="@+id/studioPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/margin_standard"
+                android:text="Телефон студии"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintLeft_toLeftOf="@id/delete"
+                app:layout_constraintTop_toBottomOf="@+id/address" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -119,9 +129,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_small"
-            android:background="@drawable/background_plate"
-
-            >
+            android:background="@drawable/background_plate">
 
         <LinearLayout
                 android:id="@+id/orders"

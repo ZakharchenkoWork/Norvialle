@@ -29,7 +29,8 @@
     <EditText
             android:id="@+id/studioPhone"
             app:layout_constraintTop_toBottomOf="@id/studioAddress"
-            android:hint="@string/studioName"
+            android:hint="@string/studioPhone"
+            android:inputType="phone"
             style="@style/full_width_constrained_view" />
     <TextView
             android:id="@+id/roomsLabel"
