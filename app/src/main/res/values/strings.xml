@@ -11,8 +11,11 @@
     <string name="name">Имя контакта</string>
     <string name="norvialle">Norvialle</string>
     <string name="studios">Студии</string>
+    <string name="makeupArtists">Визажисты</string>
+
     <string name="add_studio">Добавление студии</string>
     <string name="adding_event">Добавление события</string>
+    <string name="adding_makeup_artist">Добавление визажиста</string>
     <string name="add">Добавить</string>
     <string name="navigation_drawer_open">open</string>
     <string name="navigation_drawer_close">close</string>
@@ -28,6 +31,9 @@
     <string name="add_event">Добавить событие</string>
     <string name="contacts">Контакты</string>
     <string name="dresses">Платья</string>
+    <string name="makeup_artist_price">Цена %1$d грн.</string>
+    <string name="one_hour_before">За час</string>
+    <string name="makeup_label">Макияж: \n %1$s \n%2$s</string>
 
 
 </resources>

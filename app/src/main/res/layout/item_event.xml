@@ -16,6 +16,7 @@
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_small"
             android:background="@drawable/background_plate">
+
         <ImageView
                 android:id="@+id/delete"
                 android:layout_width="@dimen/icon_size_small"
@@ -23,8 +24,7 @@
                 android:layout_marginLeft="@dimen/margin_standard"
                 android:src="@drawable/delete"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@id/edit"
-                />
+                app:layout_constraintTop_toTopOf="@id/edit" />
 
         <ImageView
                 android:id="@+id/copy"
@@ -40,29 +40,32 @@
                 android:id="@+id/edit"
                 android:layout_width="@dimen/icon_size_small"
                 android:layout_height="@dimen/icon_size_small"
-                android:layout_marginTop="@dimen/margin_standard"
-
                 android:layout_marginLeft="@dimen/margin_standard"
+
+                android:layout_marginTop="@dimen/margin_standard"
                 android:src="@drawable/edit"
                 app:layout_constraintLeft_toRightOf="@id/copy"
 
                 app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
                 android:id="@+id/call"
                 android:layout_width="@dimen/icon_size_small"
                 android:layout_height="@dimen/icon_size_small"
-                android:src="@drawable/call"
                 android:layout_marginRight="@dimen/margin_standard"
-                app:layout_constraintTop_toTopOf="@id/insta"
-                app:layout_constraintRight_toLeftOf="@id/insta" />
+                android:src="@drawable/call"
+                app:layout_constraintRight_toLeftOf="@id/insta"
+                app:layout_constraintTop_toTopOf="@id/insta" />
+
         <ImageView
                 android:id="@+id/geo"
                 android:layout_width="@dimen/icon_size_small"
                 android:layout_height="@dimen/icon_size_small"
-                android:src="@drawable/geo"
                 android:layout_marginRight="@dimen/margin_standard"
-                app:layout_constraintTop_toTopOf="@id/delete"
-                app:layout_constraintRight_toLeftOf="@id/call" />
+                android:src="@drawable/geo"
+                app:layout_constraintRight_toLeftOf="@id/call"
+                app:layout_constraintTop_toTopOf="@id/delete" />
+
         <ImageView
                 android:id="@+id/insta"
                 android:layout_width="@dimen/icon_size_small"
@@ -71,6 +74,7 @@
                 android:src="@drawable/insta"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/edit" />
+
         <TextView
                 android:id="@+id/contact"
                 android:layout_width="wrap_content"
@@ -112,6 +116,7 @@
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toLeftOf="@id/delete"
                 app:layout_constraintTop_toBottomOf="@+id/location" />
+
         <TextView
                 android:id="@+id/studioPhone"
                 android:layout_width="wrap_content"
@@ -135,16 +140,16 @@
                 android:id="@+id/orders"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_marginRight="@dimen/margin_small"
                 android:layout_marginLeft="@dimen/margin_small"
-                android:paddingLeft="@dimen/margin_small"
-                android:paddingRight="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                android:background="@color/colorPrimaryDark"
+                android:gravity="center"
 
                 android:orientation="vertical"
+                android:paddingLeft="@dimen/margin_small"
+                android:paddingRight="@dimen/margin_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:gravity="center"
-                android:background="@color/colorPrimaryDark"
                 app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -196,7 +201,7 @@
                 android:text="Зал"
                 android:textSize="@dimen/text_big_ish"
                 app:layout_constraintLeft_toRightOf="@id/orders"
-                app:layout_constraintRight_toLeftOf="@id/time"
+                app:layout_constraintRight_toLeftOf="@id/makeupTime"
                 app:layout_constraintStart_toEndOf="@+id/orders"
                 app:layout_constraintTop_toBottomOf="@id/locationName" />
 
@@ -208,11 +213,10 @@
                 android:layout_marginLeft="@dimen/margin_standard"
                 android:ellipsize="end"
                 android:maxLines="1"
-
                 android:text="Комментарий"
                 android:textSize="@dimen/text_normal"
                 app:layout_constraintLeft_toRightOf="@id/orders"
-                app:layout_constraintRight_toLeftOf="@id/time"
+                app:layout_constraintRight_toLeftOf="@id/makeupTime"
                 app:layout_constraintStart_toEndOf="@+id/orders"
                 app:layout_constraintTop_toBottomOf="@id/locationRoom" />
 
@@ -224,9 +228,9 @@
                 android:orientation="horizontal"
                 android:weightSum="2"
 
-                app:layout_constraintTop_toBottomOf="@id/description"
                 app:layout_constraintLeft_toRightOf="@id/orders"
-                app:layout_constraintRight_toRightOf="parent">
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description">
 
             <LinearLayout
                     android:layout_width="0dp"
@@ -281,21 +285,30 @@
                 android:id="@+id/moneyLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_small"
                 android:text="@string/monyLeft"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_normal"
-                android:layout_marginBottom="@dimen/margin_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/orders"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/pricesContainer" />
 
         <TextView
+                android:id="@+id/makeupTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/makeup_label"
+                app:layout_constraintRight_toRightOf="@id/time"
+                app:layout_constraintTop_toBottomOf="@id/time" />
+
+        <TextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/margin_standard"
                 android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_standard"
                 android:text="16:30"
                 android:textSize="@dimen/text_big"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -2,6 +2,7 @@ package com.hast.norvialle.gui
 
 import com.hast.norvialle.App
 import com.hast.norvialle.data.Event
+import com.hast.norvialle.data.MakeupArtist
 import com.hast.norvialle.data.Studio
 import java.util.*
 import kotlin.collections.ArrayList
@@ -13,13 +14,16 @@ import kotlin.collections.ArrayList
 object MainPresenter {
 
 
+
     var events: ArrayList<Event> = ArrayList()
     var studios: ArrayList<Studio> = ArrayList()
+    var makupArtists: ArrayList<MakeupArtist> = ArrayList()
 
 fun start(){
 
     events = java.util.ArrayList(App.db.eventDao().getAll())
     studios = java.util.ArrayList(App.db.studioDao().getAll())
+    makupArtists = java.util.ArrayList(App.db.makeupDao().getAll())
 
     sort()
 }
@@ -74,4 +78,25 @@ fun start(){
         }
     }
 
+    fun addMakeupArtist(makupArtist: MakeupArtist){
+        if (makupArtist.id.equals("")) {
+            makupArtist.id = UUID.randomUUID().toString()
+
+            App.db.makeupDao().insert(makupArtist)
+            makupArtists.add(makupArtist)
+        } else{
+            App.db.makeupDao().update(makupArtist)
+            for ((index, oldMakupArtists) in makupArtists.withIndex()) {
+                if(oldMakupArtists.id.equals(makupArtist.id)){
+                    makupArtists.set(index, makupArtist)
+                    return
+                }
+            }
+            makupArtists.add(makupArtist)
+        }
+    }
+    fun deleteMakeupArtist(makupArtist: MakeupArtist) {
+        App.db.makeupDao().delete(makupArtist)
+        makupArtists.remove(makupArtist)
+    }
 }

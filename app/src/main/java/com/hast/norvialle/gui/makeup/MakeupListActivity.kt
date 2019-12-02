@@ -10,9 +10,11 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hast.norvialle.R
+import com.hast.norvialle.data.MakeupArtist
 import com.hast.norvialle.data.PhotoRoom
 import com.hast.norvialle.data.Studio
 import com.hast.norvialle.gui.MainPresenter
+import com.hast.norvialle.gui.makeup.AddMakeupArtistActivity.Companion.MAKEUP_ARTIST
 import com.hast.norvialle.gui.studio.AddStudioActivity.Companion.STUDIO
 import kotlinx.android.synthetic.main.activity_studios_list.*
 
@@ -34,32 +36,36 @@ class MakeupListActivity : AppCompatActivity() {
         isForResult = intent.getBooleanExtra(IS_FOR_RESULT, false)
 
         list.layoutManager = LinearLayoutManager(this)
-        prepareAdapter()
+
         var actionBar = getSupportActionBar()
         if (actionBar != null) {
             getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
             getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
-            getSupportActionBar()?.setTitle(R.string.studios);
+            getSupportActionBar()?.setTitle(R.string.makeupArtists);
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        prepareAdapter()
+    }
     fun prepareAdapter() {
-        val adapter = StudiosAdapter(MainPresenter.studios, this)
+        val adapter = MakeupAdapter(MainPresenter.makupArtists, this)
         adapter.isForResult = isForResult
         list.adapter = adapter
         if (!isForResult) {
-            adapter.onEditStudioListener =
-                StudiosAdapter.OnEditStudioListener { openStudioEditor(it) }
-            adapter.onDeleteStudioListener = StudiosAdapter.OnEditStudioListener {
-                MainPresenter.deleteStudio(it)
+            adapter.onEditMakeupArtistListener =
+                MakeupAdapter.OnEditMakeupArtistListener{
+                }
+            adapter.onDeleteMakeupArtistListener= MakeupAdapter.OnEditMakeupArtistListener{
+                MainPresenter.deleteMakeupArtist(it)
                 prepareAdapter()
             }
         } else {
-            adapter.onPickStudioListener = StudiosAdapter.OnPickStudioListener {
-                    studio: Studio, photoRoom: PhotoRoom ->
+            adapter.onPickMakeupArtistListener= MakeupAdapter.OnPickMakeupArtistListener{
+                    makeupArtist: MakeupArtist ->
                 val finishIntent = Intent()
-                finishIntent.putExtra("STUDIO", studio)
-                finishIntent.putExtra("ROOM", photoRoom)
+                finishIntent.putExtra("MAKEUP_ARTIST", makeupArtist)
                 setResult(Activity.RESULT_OK, finishIntent)
                 finish()
             }
@@ -68,7 +74,7 @@ class MakeupListActivity : AppCompatActivity() {
 
     override
     fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.studios_menu, menu);
+        getMenuInflater().inflate(R.menu.makup_artist_menu, menu);
         return true
     }
 
@@ -78,31 +84,18 @@ class MakeupListActivity : AppCompatActivity() {
             android.R.id.home -> {
                 finish()
             }
-            R.id.addStudio -> {
-                openStudioEditor(Studio())
+            R.id.addMakeup -> {
+             openMakeupArtistEditor(MakeupArtist("",0,""))
             }
 
         }
         return super.onOptionsItemSelected(item)
     }
 
-    fun openStudioEditor(studio: Studio) {
-        var intent = Intent(this, AddStudioActivity::class.java)
-        intent.putExtra(STUDIO, studio)
-        startActivityForResult(intent, AddStudioActivity.EDIT)
+    private fun openMakeupArtistEditor(makeupArtist: MakeupArtist) {
+        var intent = Intent(this, AddMakeupArtistActivity::class.java)
+        intent.putExtra(MAKEUP_ARTIST, makeupArtist)
+        startActivityForResult(intent, AddMakeupArtistActivity.EDIT)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            AddStudioActivity.EDIT -> {
-                if (data != null && data.extras != null && data?.extras?.getSerializable(STUDIO) != null) {
-                    var studio = data?.extras?.getSerializable(STUDIO) as Studio
-                    presenter.addStudio(studio)
-                    prepareAdapter()
-                    Log.d("result", "is " + resultCode + " name: " + studio.name)
-                }
-            }
-        }
-    }
 }

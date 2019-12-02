@@ -13,7 +13,6 @@ import com.hast.norvialle.R
 import com.hast.norvialle.data.Event
 import com.hast.norvialle.gui.dialogs.OneButtonDialog
 import com.hast.norvialle.utils.getDate
-import com.hast.norvialle.utils.getMillis
 import com.hast.norvialle.utils.getTime
 import kotlinx.android.synthetic.main.item_date.view.*
 import kotlinx.android.synthetic.main.item_event.view.*
@@ -163,7 +162,17 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
             itemView.moneyLeft.setText(context.getString(R.string.monyLeft, event.getMoneyLeft()))
             itemView.contact.setText(event.name)
             itemView.description.setText(event.description)
-
+            itemView.makeupTime.setText(
+                context.getString(
+                    R.string.makeup_label,
+                    getTime(event.makeupTime),
+                    event.makeupArtistName
+                )
+            )
+            if (!event.makeupPhone.equals("")) {
+                itemView.makeupTime.setTextColor(context.resources.getColor(R.color.blue))
+                itemView.makeupTime.setOnClickListener { dial(event.makeupPhone) }
+            }
             itemView.phone.setText(event.contactPhone)
             if (!event.contactPhone.equals("")) {
                 itemView.call.setOnClickListener { dial(event.contactPhone) }
@@ -186,9 +195,9 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
             }
 
             itemView.time.setText(getTime(event.time))
-            itemView.studio.setImageResource(if(event.orderStudio) R.drawable.studio else R.drawable.studio_disabled)
-            itemView.dress.setImageResource(if(event.orderDress) R.drawable.dress else R.drawable.dress_disabled)
-            itemView.makeup.setImageResource(if(event.orderMakeup) R.drawable.makeup else R.drawable.makeup_disabled)
+            itemView.studio.setImageResource(if (event.orderStudio) R.drawable.studio else R.drawable.studio_disabled)
+            itemView.dress.setImageResource(if (event.orderDress) R.drawable.dress else R.drawable.dress_disabled)
+            itemView.makeup.setImageResource(if (event.orderMakeup) R.drawable.makeup else R.drawable.makeup_disabled)
 
             if (!event.studioPhone.equals("")) {
                 itemView.studioPhone.setText(event.studioPhone)

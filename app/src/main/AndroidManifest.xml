@@ -19,6 +19,8 @@
         </activity>
         <activity android:name=".gui.main.AddEventActivity"/>
         <activity android:name=".gui.CalendarActivity"/>
+        <activity android:name=".gui.makeup.MakeupListActivity"/>
+        <activity android:name=".gui.makeup.AddMakeupArtistActivity"/>
         <activity android:name=".gui.studio.StudiosListActivity"/>
         <activity android:name=".gui.studio.AddStudioActivity">
             <intent-filter>

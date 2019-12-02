@@ -18,7 +18,11 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        db = Room.databaseBuilder(this, AppDatabase::class.java, "database") .allowMainThreadQueries().build();
+
+        db = Room.databaseBuilder(this, AppDatabase::class.java, "database")
+            .addMigrations(AppDatabase.MIGRATION_1_2)
+
+            .allowMainThreadQueries().build();
 
     }
 }

@@ -13,6 +13,7 @@ import com.hast.norvialle.R
 import com.hast.norvialle.data.Event
 import com.hast.norvialle.gui.CalendarActivity
 import com.hast.norvialle.gui.MainPresenter
+import com.hast.norvialle.gui.makeup.MakeupListActivity
 import com.hast.norvialle.gui.studio.StudiosListActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -81,6 +82,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.studio -> {
                 startActivity(Intent(this, StudiosListActivity::class.java))
+            }
+            R.id.makeup -> {
+                startActivity(Intent(this, MakeupListActivity::class.java))
             }
             R.id.addEvent -> {
                 openEventEditor(

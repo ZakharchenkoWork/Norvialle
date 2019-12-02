@@ -216,9 +216,12 @@
                 android:id="@+id/makeupTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="За час"
+                android:text="@string/one_hour_before"
                 android:layout_marginLeft="@dimen/margin_standard"
                 android:layout_marginRight="@dimen/margin_standard"
+                android:layout_alignBottom="@id/makeupArtistsName"
+                android:layout_alignTop="@id/makeupArtistsName"
+                android:gravity="center"
                 android:layout_toLeftOf="@id/makeupPrice"
                 android:layout_centerVertical="true"
                 />
@@ -226,7 +229,9 @@
                 android:id="@+id/makeupPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_alignBottom="@id/makeupArtistsName"
+                android:layout_alignTop="@id/makeupArtistsName"
+                android:gravity="center"
                 android:text="Цена"
                 android:layout_marginRight="@dimen/margin_standard"
                 android:layout_toLeftOf="@id/makeupArtistsList"
@@ -235,8 +240,22 @@
                 android:id="@+id/makeupArtistsList"
                 android:layout_width="@dimen/icon_size_standard"
                 android:layout_height="@dimen/icon_size_standard"
+
                 android:layout_alignParentRight="true"
                 android:src="@drawable/list"/>
+        <EditText
+                android:id="@+id/makeupArtistsPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Телефон"
+                android:layout_below="@id/makeupArtistsName"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:maxLines="1"
+                android:ellipsize="end"
+
+                />
+
 
     </RelativeLayout>
 

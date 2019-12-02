@@ -3,6 +3,7 @@ package com.hast.norvialle.gui.main
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -10,18 +11,24 @@ import android.text.InputType
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Event
+import com.hast.norvialle.data.MakeupArtist
 import com.hast.norvialle.data.PhotoRoom
 import com.hast.norvialle.data.Studio
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.dialogs.OneButtonDialog
 import com.hast.norvialle.gui.dialogs.PricePickerDialog
+import com.hast.norvialle.gui.makeup.MakeupListActivity
 import com.hast.norvialle.gui.studio.StudiosListActivity
 import com.hast.norvialle.gui.utils.AddContactDialog
+import com.hast.norvialle.utils.getFloatValue
+import com.hast.norvialle.utils.getIntValue
 import kotlinx.android.synthetic.main.activity_add_event.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,6 +49,7 @@ class AddEventActivity : AppCompatActivity() {
         const val EVENT_EXTRA: String = "EVENT"
         const val PICK_STUDIO: Int = 191
         const val PICK_CONTACT: Int = 232
+        const val PICK_MAKEUP_ARTIST: Int = 540
         const val ONE_HOUR_MILLIS: Long = 60*60*1000
     }
 
@@ -73,11 +81,12 @@ class AddEventActivity : AppCompatActivity() {
         makeup.isChecked = event.orderMakeup
         phone.setText(event.contactPhone)
 
+
         totalPrice.setText("" + event.totalPrice)
         paid.setText("" + event.paidPrice)
         studioName.setText(event.studioName)
         studioAddress.setText(event.studioAddress)
-        makeupPrice.setText(""+event.makeupPrice)
+
         studioRoom.setText(event.studioRoom)
 
         val dateParser = SimpleDateFormat("dd,M,yyyy", Locale.getDefault())
@@ -101,6 +110,7 @@ class AddEventActivity : AppCompatActivity() {
 
         makeupArtistsName.setText(event.makeupArtistName)
         makeupPrice.setText(""+event.makeupPrice)
+        makeupArtistsPhone.setText(event.makeupPhone)
 
         if(event.orderMakeup){
             makeupLayout.visibility = View.VISIBLE
@@ -211,7 +221,8 @@ class AddEventActivity : AppCompatActivity() {
                 .setOkListener { makeupPrice.setText(("" + it).replace(".0", "")) }
                 .build()
         }
-
+        makeupArtistsList.setOnClickListener { openMakeupArtistsList() }
+        hideKeyboard()
     }
 
     override
@@ -241,7 +252,12 @@ class AddEventActivity : AppCompatActivity() {
                 if (makeup.isChecked) {
                     event.makeupArtistName = makeupArtistsName.text.toString()
                     event.makeupPrice = getIntValue(makeupPrice)
-                    event.makeupTime = finalMakupCalendar.timeInMillis
+                    if (makeupTime.text.toString().equals(getString(R.string.one_hour_before))) {
+                        event.makeupTime = finalMakupCalendar.timeInMillis
+                    } else{
+                        event.makeupTime = finalCalendar.timeInMillis - ONE_HOUR_MILLIS
+                    }
+                    event.makeupPhone = makeupArtistsPhone.text.toString()
                 }
 
                 event.orderDress = dress.isChecked
@@ -258,30 +274,17 @@ class AddEventActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item);
     }
 
-    private fun getFloatValue(view: TextView): Float {
-        var value = 0f
-        try {
-            value = view.text.toString().toFloat()
-        } catch (nfe: NumberFormatException) {
-            value = 1400f
-        }
-        return value
-    }
 
-    private fun getIntValue(view: TextView): Int {
-        var value = 0
-        try {
-            value = view.text.toString().toInt()
-        } catch (nfe: NumberFormatException) {
-            value = 0
-        }
-        return value
-    }
 
     private fun openStudiosList() {
         var intent = Intent(this, StudiosListActivity::class.java)
         intent.putExtra(StudiosListActivity.IS_FOR_RESULT, true)
         startActivityForResult(intent, PICK_STUDIO)
+    }
+    private fun openMakeupArtistsList() {
+        var intent = Intent(this, MakeupListActivity::class.java)
+        intent.putExtra(MakeupListActivity.IS_FOR_RESULT, true)
+        startActivityForResult(intent, PICK_MAKEUP_ARTIST)
     }
 
     private fun openContactsList() {
@@ -318,6 +321,12 @@ class AddEventActivity : AppCompatActivity() {
                 studioPhone.setText(studio.phone)
                 studioGeo.setText(studio.link)
                 studioRoom.setText(photoRoom.name)
+            } else  if (requestCode == PICK_MAKEUP_ARTIST) {
+                var makeupArtist = data?.getSerializableExtra("MAKEUP_ARTIST") as MakeupArtist
+                makeupPrice.setText(""+makeupArtist.defaultPrice)
+                makeupArtistsName.setText(makeupArtist.name)
+                makeupArtistsPhone.setText(makeupArtist.phone)
+
             } else if (requestCode == PICK_CONTACT) {
                 val contactUri = data?.getData();
                 /*   val i = {1}
@@ -334,6 +343,16 @@ class AddEventActivity : AppCompatActivity() {
                 }*/
             }
         }
+    }
+    fun AppCompatActivity.hideKeyboard() {
+        val view = this.currentFocus
+        if (view != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+
     }
 
 

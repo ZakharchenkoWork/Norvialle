@@ -9,33 +9,37 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.hast.norvialle.R
+import com.hast.norvialle.data.MakeupArtist
 import com.hast.norvialle.data.PhotoRoom
 import com.hast.norvialle.data.Studio
+import kotlinx.android.synthetic.main.item_makeup.view.*
 import kotlinx.android.synthetic.main.item_room_read_only.view.*
 import kotlinx.android.synthetic.main.item_studio.view.*
+import kotlinx.android.synthetic.main.item_studio.view.delete
+import kotlinx.android.synthetic.main.item_studio.view.edit
 
 
-class MakeupAdapter(val items: ArrayList<Studio>, private val context: Context) :
+class MakeupAdapter(val items: ArrayList<MakeupArtist>, private val context: Context) :
     RecyclerView.Adapter<MakeupAdapter.BaseViewHolder<*>>() {
 
-    var onEditStudioListener: OnEditStudioListener =
-        OnEditStudioListener {}
-    var onDeleteStudioListener: OnEditStudioListener =
-        OnEditStudioListener {}
-    var onPickStudioListener: OnPickStudioListener =
-        OnPickStudioListener { studio: Studio, photoRoom: PhotoRoom -> }
+    var onEditMakeupArtistListener: OnEditMakeupArtistListener =
+        OnEditMakeupArtistListener {}
+    var onDeleteMakeupArtistListener: OnEditMakeupArtistListener =
+        OnEditMakeupArtistListener {}
+    var onPickMakeupArtistListener: OnPickMakeupArtistListener =
+        OnPickMakeupArtistListener{ makeupArtist : MakeupArtist -> }
 
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
-        (holder as StudioViewHolder).bind(items[position])
+        (holder as MakeupViewHolder).bind(items[position])
     }
 
     var isForResult = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
-        return StudioViewHolder(
+        return MakeupViewHolder(
             LayoutInflater.from(context).inflate(
-                R.layout.item_studio,
+                R.layout.item_makeup,
                 parent,
                 false
             )
@@ -48,105 +52,28 @@ class MakeupAdapter(val items: ArrayList<Studio>, private val context: Context) 
     }
 
 
-    inner class StudioViewHolder(itemView: View) : BaseViewHolder<Studio>(itemView) {
+    inner class MakeupViewHolder(itemView: View) : BaseViewHolder<MakeupArtist>(itemView) {
 
-        override fun bind(studio: Studio) {
-            itemView.studioName.setText(studio.name)
-            itemView.address.setText(studio.address)
-            if (!studio.link.equals("")) {
-                if (!isForResult) {
-                    itemView.address.setOnClickListener { open2gis(studio.link) }
-                }
-                itemView.address.setTextColor(context.resources.getColor(R.color.blue))
-            } else {
-                itemView.address.setOnClickListener { }
-                itemView.address.setTextColor(context.resources.getColor(R.color.black))
-            }
-            if (!studio.phone.equals("") && !isForResult) {
-                itemView.studioPhone.setText(studio.phone)
-                itemView.studioPhone.visibility = View.VISIBLE
-                itemView.call.visibility = View.VISIBLE
-                itemView.call.setOnClickListener { dial(studio.phone) }
-            } else {
-                itemView.studioPhone.visibility = View.GONE
-                itemView.call.visibility = View.GONE
-            }
+        override fun bind(makeupArtist: MakeupArtist) {
+            itemView.makeupArtistName.setText(makeupArtist.name)
+            itemView.makeupArtistPhone.setText(makeupArtist.phone)
+            itemView.makeupArtistPhone.setOnClickListener { dial(makeupArtist.phone)}
+            itemView.makeupArtistPhone.setTextColor(context.resources.getColor(R.color.blue))
+
+            itemView.makeupArtistPrice.setText(context.getString(R.string.makeup_artist_price, makeupArtist.defaultPrice))
+
+
             if(!isForResult) {
                 itemView.edit.setOnClickListener {
-                    onEditStudioListener.doAction(studio)
+                    onEditMakeupArtistListener.doAction(makeupArtist)
                 }
-                itemView.delete.setOnClickListener { onDeleteStudioListener.doAction(studio) }
+                itemView.delete.setOnClickListener { onDeleteMakeupArtistListener.doAction(makeupArtist) }
             } else{
                 itemView.edit.visibility = View.GONE
                 itemView.delete.visibility = View.GONE
-            }
-
-            var areRoomsShown = false
-            itemView.arrow.setOnClickListener {
-                areRoomsShown = !areRoomsShown
-                switchRoomsVisibility(itemView.arrow, areRoomsShown, studio)
-            }
-            itemView.setOnClickListener {
-                areRoomsShown = !areRoomsShown
-                switchRoomsVisibility(itemView.arrow, areRoomsShown, studio)
-            }
-
-        }
-
-        private fun switchRoomsVisibility(
-            arrow: ImageView,
-            areRoomsShown: Boolean,
-            studio: Studio
-        ) {
-            arrow.animate().rotationBy(180f).setDuration(150)
-
-            if (areRoomsShown) {
-                if (!studio.phone.equals("")) {
-                    itemView.studioPhone.setText(studio.phone)
-                    itemView.studioPhone.visibility = View.VISIBLE
-                    itemView.call.visibility = View.VISIBLE
-                } else {
-                    itemView.studioPhone.visibility = View.GONE
-                    itemView.call.visibility = View.GONE
-                }
-                if (!studio.rooms.isEmpty()) {
-                    if (itemView.rooms.childCount == 0) {
-                        for (room in studio.rooms) {
-                            var view = LayoutInflater.from(context)
-                                .inflate(R.layout.item_room_read_only, itemView.rooms, false)
-                            itemView.rooms.addView(view)
-                            view.roomName.setText(room.name)
-                            view.price.setText("" + room.price)
-                            view.priceWithDiscount.setText("" + room.priceWithDiscount)
-                            if (isForResult){
-                                view.setOnClickListener { onPickStudioListener.doAction(studio, room) }
-                            } else{
-                                view.setOnClickListener{}
-                            }
-                        }
-
-                    }
-                    itemView.rooms.visibility = View.VISIBLE
-                }
-
-            } else {
-                itemView.rooms.visibility = View.GONE
-                itemView.studioPhone.visibility = View.GONE
-                itemView.call.visibility = View.GONE
+                itemView.setOnClickListener { onPickMakeupArtistListener.doAction(makeupArtist) }
             }
         }
-
-
-    }
-
-    private fun open2gis(link: String) {
-        val uri = Uri.parse(link.replace("http://", "dgis://"))
-
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-
-        intent.setPackage("ru.dublgis.dgismobile") // Если не планируете работать с публичной бета-версией, эту строчку надо указать
-
-        context.startActivity(intent)
     }
 
     private fun dial(phone: String) {
@@ -165,15 +92,15 @@ class MakeupAdapter(val items: ArrayList<Studio>, private val context: Context) 
     }
 
 
-    class OnEditStudioListener(private val onEditStudioListener: (studio: Studio) -> Unit) {
-        fun doAction(studio: Studio) {
-            onEditStudioListener(studio)
+    class OnEditMakeupArtistListener(private val onEditMakeupArtistListener: (makeupArtist : MakeupArtist) -> Unit) {
+        fun doAction(makeupArtist : MakeupArtist) {
+            onEditMakeupArtistListener(makeupArtist)
         }
     }
 
-    class OnPickStudioListener(private val onPickStudioListener: (studio: Studio, room: PhotoRoom) -> Unit) {
-        fun doAction(studio: Studio, room: PhotoRoom) {
-            onPickStudioListener(studio, room)
+    class OnPickMakeupArtistListener(private val onPickMakeupArtistListener: (makeupArtist : MakeupArtist) -> Unit) {
+        fun doAction(makeupArtist : MakeupArtist) {
+            onPickMakeupArtistListener(makeupArtist)
         }
     }
 }

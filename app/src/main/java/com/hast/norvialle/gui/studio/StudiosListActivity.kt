@@ -34,7 +34,7 @@ class StudiosListActivity : AppCompatActivity() {
         isForResult = intent.getBooleanExtra(IS_FOR_RESULT, false)
 
         list.layoutManager = LinearLayoutManager(this)
-        prepareAdapter()
+
         var actionBar = getSupportActionBar()
         if (actionBar != null) {
             getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
@@ -42,7 +42,10 @@ class StudiosListActivity : AppCompatActivity() {
             getSupportActionBar()?.setTitle(R.string.studios);
         }
     }
-
+    override fun onResume() {
+        super.onResume()
+        prepareAdapter()
+    }
     fun prepareAdapter() {
         val adapter = StudiosAdapter(MainPresenter.studios, this)
         adapter.isForResult = isForResult
