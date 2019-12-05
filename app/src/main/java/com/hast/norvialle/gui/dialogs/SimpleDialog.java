@@ -20,14 +20,14 @@ import com.hast.norvialle.R;
  * Created by Natali-Pi on 08.12.2017.
  */
 
-public class OneButtonDialog extends AlertDialog.Builder {
+public class SimpleDialog extends AlertDialog.Builder {
     public static final int DEFAULT = -1;
     protected static final String TAG_TITLE = "tt";
     protected static final String TAG_TEXT_VIEW = "tv";
     protected static final String TAG_EDIT_TEXT = "et";
 
 
-    private static OneButtonDialog lastDialog;
+    private static SimpleDialog lastDialog;
     private static Typeface typeface = null;
     private static Integer textStyle = null;
 
@@ -52,7 +52,7 @@ public class OneButtonDialog extends AlertDialog.Builder {
      * @param ctx        any Android Context
      * @param dialogType type of the dialog, to show.
      */
-    public OneButtonDialog(final Context ctx, DIALOG_TYPE dialogType) {
+    public SimpleDialog(final Context ctx, DIALOG_TYPE dialogType) {
         super(ctx);
 
         if (lastDialog != null) {
@@ -67,7 +67,7 @@ public class OneButtonDialog extends AlertDialog.Builder {
     }
 
     /**
-     * Set input type for EditText inside this dialog, or OneButtonDialog.DEFAULT.
+     * Set input type for EditText inside this dialog, or SimpleDialog.DEFAULT.
      * <p>
      * Call of this method is not necessary.
      *
@@ -75,7 +75,7 @@ public class OneButtonDialog extends AlertDialog.Builder {
      * @return this
      */
 
-    public OneButtonDialog setInputType(int inputType) { // TODO: Think about InputType anotation
+    public SimpleDialog setInputType(int inputType) { // TODO: Think about InputType anotation
         this.inputType = inputType;
         return this;
     }
@@ -88,7 +88,7 @@ public class OneButtonDialog extends AlertDialog.Builder {
      * @param positiveButtonText text for button.
      * @return this
      */
-    public OneButtonDialog setOkButtonText(String positiveButtonText) {
+    public SimpleDialog setOkButtonText(String positiveButtonText) {
         this.positiveButtonText = positiveButtonText;
         return this;
     }
@@ -100,7 +100,7 @@ public class OneButtonDialog extends AlertDialog.Builder {
      * @param negativeButtonText  text for button.
      * @return this
      */
-    public OneButtonDialog setCancelButtonText(String negativeButtonText) {
+    public SimpleDialog setCancelButtonText(String negativeButtonText) {
         this.negativeButtonText = negativeButtonText ;
         return this;
     }
@@ -114,11 +114,11 @@ public class OneButtonDialog extends AlertDialog.Builder {
      * @return this
      */
     public static void seAllDialogsTypeface(Typeface typeface) {
-        OneButtonDialog.typeface = typeface;
+        SimpleDialog.typeface = typeface;
     }
 
     /**
-     * Set typeface for any text inside this and only this OneButtonDialog.
+     * Set typeface for any text inside this and only this SimpleDialog.
      * Ignoring typeface setted for all other OneButtonDialogs.
      * <p>
      * Call of this method is not necessary.
@@ -140,11 +140,11 @@ public class OneButtonDialog extends AlertDialog.Builder {
      * @return this
      */
     public static void setAllDialogsTextStyle(@StyleRes int textStyle) {
-        OneButtonDialog.textStyle = textStyle;
+        SimpleDialog.textStyle = textStyle;
     }
 
     /**
-     * Set Style for title text inside this and only this OneButtonDialog.
+     * Set Style for title text inside this and only this SimpleDialog.
      * Ignoring Style setted for all other OneButtonDialogs.
      * <p>
      * Call of this method is not necessary.
@@ -152,13 +152,13 @@ public class OneButtonDialog extends AlertDialog.Builder {
      * @param textStyle text for button.
      * @return this
      */
-    public OneButtonDialog setCustomTitleStyle(@StyleRes int textStyle) {
+    public SimpleDialog setCustomTitleStyle(@StyleRes int textStyle) {
         this.customTitleStyle = textStyle;
         return this;
     }
 
     /**
-     * Set Style for any text inside this and only this OneButtonDialog.
+     * Set Style for any text inside this and only this SimpleDialog.
      * Ignoring Style setted for all other OneButtonDialogs.
      * <p>
      * Call of this method is not necessary.
@@ -166,12 +166,12 @@ public class OneButtonDialog extends AlertDialog.Builder {
      * @param textStyle text for button.
      * @return this
      */
-    public OneButtonDialog setCustomTextStyle(@StyleRes int textStyle) {
+    public SimpleDialog setCustomTextStyle(@StyleRes int textStyle) {
         this.customTextStyle = textStyle;
         return this;
     }
 
-    public OneButtonDialog setEditTextHint(String editTextHint) {
+    public SimpleDialog setEditTextHint(String editTextHint) {
         this.editTextHint = editTextHint;
         return this;
     }
@@ -186,7 +186,7 @@ public class OneButtonDialog extends AlertDialog.Builder {
      */
     private String title = null;
 
-    public OneButtonDialog setTitle(String title) {
+    public SimpleDialog setTitle(String title) {
         if (!isDefault(title)) {
             this.title = title;
         }
@@ -198,22 +198,22 @@ public class OneButtonDialog extends AlertDialog.Builder {
      * @param message use getString() to get string from resources.
      * @return this
      */
-    public OneButtonDialog setMessage(String message) {
+    public SimpleDialog setMessage(String message) {
         this.message = message;
         return this;
     }
 
 
-    public OneButtonDialog setOkListener(OKListener okListener) {
+    public SimpleDialog setOkListener(OKListener okListener) {
         this.okListener = okListener;
         return this;
     }
 
     /**
-     * @param icon pass Resource id for icon, or OneButtonDialog.DEFAULT if no icon needed
+     * @param icon pass Resource id for icon, or SimpleDialog.DEFAULT if no icon needed
      */
     @Override
-    public OneButtonDialog setIcon(@DrawableRes int icon) {
+    public SimpleDialog setIcon(@DrawableRes int icon) {
         if (icon != DEFAULT) {
             setIcon(icon);
         }
@@ -233,7 +233,7 @@ public class OneButtonDialog extends AlertDialog.Builder {
     /**
      * @return
      */
-    public OneButtonDialog build() {
+    public SimpleDialog build() {
         layout = new LinearLayout(getContext());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -330,7 +330,7 @@ public class OneButtonDialog extends AlertDialog.Builder {
     }
 
     @Override
-    public OneButtonDialog setCancelable(boolean cancelable) {
+    public SimpleDialog setCancelable(boolean cancelable) {
         isCancaleble = cancelable;
         super.setCancelable(cancelable);
         return this;

@@ -13,6 +13,7 @@ import com.hast.norvialle.R
 import com.hast.norvialle.data.Event
 import com.hast.norvialle.gui.CalendarActivity
 import com.hast.norvialle.gui.MainPresenter
+import com.hast.norvialle.gui.dresses.DressesListActivity
 import com.hast.norvialle.gui.makeup.MakeupListActivity
 import com.hast.norvialle.gui.studio.StudiosListActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -86,6 +87,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.makeup -> {
                 startActivity(Intent(this, MakeupListActivity::class.java))
             }
+            R.id.dress -> {
+                startActivity(Intent(this, DressesListActivity::class.java))
+            }
             R.id.addEvent -> {
                 openEventEditor(
                     Event(
@@ -96,6 +100,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 )
             }
         }
+
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }

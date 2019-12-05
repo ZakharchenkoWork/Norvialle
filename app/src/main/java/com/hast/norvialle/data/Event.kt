@@ -2,6 +2,9 @@ package com.hast.norvialle.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.hast.norvialle.db.DressDataConverter
+import com.hast.norvialle.db.StudioDataConverter
 import java.io.Serializable
 
 /**
@@ -32,6 +35,8 @@ class Event(@PrimaryKey var id: String, var name: String, var time: Long) : Seri
     var makeupTime: Long = 0
     var paidPrice: Int = 0
     var totalPrice: Int = 0
+    @TypeConverters(DressDataConverter::class)
+    var dresses = ArrayList<Dress>()
 
     constructor() : this("", "", 0) {
 

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black">
+
+    <RelativeLayout
+            android:id="@+id/controls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small">
+
+        <ImageView
+                android:id="@+id/back"
+                android:layout_width="@dimen/icon_size_standard"
+                android:layout_height="@dimen/icon_size_standard"
+                android:src="@drawable/back_white"
+
+                />
+
+        <TextView
+                android:id="@+id/commentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/back"
+                android:layout_alignBottom="@id/back"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                android:layout_toLeftOf="@id/rotate"
+                android:layout_toRightOf="@+id/back"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="Комментарий"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_normal" />
+
+        <ImageView
+                android:id="@+id/rotate"
+                android:layout_width="@dimen/icon_size_standard"
+                android:layout_height="@dimen/icon_size_standard"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="@dimen/margin_small"
+
+                android:layout_marginRight="@dimen/margin_small"
+                android:src="@drawable/rotate_white"
+
+                />
+
+    </RelativeLayout>
+
+    <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/controls"
+            android:scaleType="centerInside"
+            android:src="@drawable/dress_wide" />
+
+    <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+</RelativeLayout>

@@ -15,6 +15,16 @@ fun getIntValue(view: TextView): Int {
     return value
 }
 
+fun getIntValue(text: String): Int {
+    var value = 0
+    try {
+        value = text.toInt()
+    } catch (nfe: NumberFormatException) {
+        value = 0
+    }
+    return value
+}
+
 fun getFloatValue(view: TextView): Float {
     var value = 0f
     try {

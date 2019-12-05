@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        android:background="@drawable/background_plate"
+    >
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/backgroundLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+        <ImageView
+                android:id="@+id/delete"
+                android:layout_width="@dimen/icon_size_standard"
+                android:layout_height="@dimen/icon_size_standard"
+                android:src="@drawable/delete"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_margin="@dimen/margin_small"/>
+        <ImageView
+                android:id="@+id/edit"
+                android:layout_width="@dimen/icon_size_standard"
+                android:layout_height="@dimen/icon_size_standard"
+                android:src="@drawable/edit"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_margin="@dimen/margin_small"/>
+        <ImageView
+                android:id="@+id/view"
+                android:layout_width="@dimen/icon_size_standard"
+                android:layout_height="@dimen/icon_size_standard"
+                android:src="@drawable/view"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit"
+                android:layout_margin="@dimen/margin_small"/>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+<androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/foregroundLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    <ImageView
+            android:id="@+id/dressPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/dress_wide"
+            android:layout_margin="@dimen/margin_border"
+            app:layout_constraintHeight_percent="0.6"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/dressPhoto"
+            app:layout_constraintBottom_toBottomOf="@id/dressPhoto"
+            app:layout_constraintLeft_toLeftOf="@id/dressPhoto"
+            app:layout_constraintRight_toRightOf="@id/dressPhoto"
+            android:visibility="gone"
+            />
+    <TextView
+            android:id="@+id/dressPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Цена"
+            android:textSize="@dimen/text_big_ish"
+            app:layout_constraintLeft_toLeftOf="@id/dressPhoto"
+            app:layout_constraintRight_toRightOf="@id/dressPhoto"
+            app:layout_constraintTop_toBottomOf="@id/dressPhoto" />
+
+    <TextView
+            android:id="@+id/comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Коментарий"
+            android:textSize="@dimen/text_big_ish"
+            app:layout_constraintLeft_toLeftOf="@id/dressPhoto"
+            app:layout_constraintRight_toRightOf="@id/dressPhoto"
+            app:layout_constraintTop_toBottomOf="@id/dressPrice" />
+
+    <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_plate_transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/dressPickedView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/foregroundLayout"
+            android:layout_alignBottom="@id/foregroundLayout"
+            android:layout_alignStart="@id/foregroundLayout"
+            android:layout_alignEnd="@id/foregroundLayout"
+android:visibility="gone"
+            >
+
+        <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="@color/roseTransparent"
+                android:layout_margin="@dimen/margin_border"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+        <ImageView
+                android:layout_width="@dimen/icon_size_standard"
+                android:layout_height="@dimen/icon_size_standard"
+                android:scaleType="centerCrop"
+                android:src="@drawable/picked"
+                android:layout_margin="@dimen/margin_border"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>

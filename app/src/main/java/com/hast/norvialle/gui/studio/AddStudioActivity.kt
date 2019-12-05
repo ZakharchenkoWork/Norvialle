@@ -104,7 +104,6 @@ class AddStudioActivity : AppCompatActivity() {
             }
 
             PricePickerDialog(this, getString(R.string.roomPrice), value)
-                .setInnerResultUnits(getString(R.string.currency))
                 .setOnDoneListener {
                     view.price.setText(("" + it).replace(".0", ""))
                     paintBlack(view, R.id.price)
@@ -120,7 +119,6 @@ class AddStudioActivity : AppCompatActivity() {
                 value = 500f
             }
             PricePickerDialog(this, getString(R.string.roomPriceWithDiscount), value)
-                .setInnerResultUnits(getString(R.string.currency))
                 .setOnDoneListener {
                     view.priceWithDiscount.setText(("" + it).replace(".0", ""))
                     paintBlack(view, R.id.price)

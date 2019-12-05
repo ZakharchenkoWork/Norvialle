@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Event
-import com.hast.norvialle.gui.dialogs.OneButtonDialog
+import com.hast.norvialle.gui.dialogs.SimpleDialog
 import com.hast.norvialle.utils.getDate
 import com.hast.norvialle.utils.getTime
 import kotlinx.android.synthetic.main.item_date.view.*
@@ -231,7 +231,7 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
             itemView.copy.setOnClickListener { onAddEventListener.doAction(event.copy()) }
             itemView.edit.setOnClickListener { onAddEventListener.doAction(event) }
             itemView.delete.setOnClickListener {
-                OneButtonDialog(context, OneButtonDialog.DIALOG_TYPE.MESSAGE_ONLY)
+                SimpleDialog(context, SimpleDialog.DIALOG_TYPE.MESSAGE_ONLY)
                     .setTitle("Удаление")
                     .setMessage("Вы действительно хотите удалить это событие, это действие не может быть отменено")
                     .setOkListener { onDeleteEventListener.doAction(event) }

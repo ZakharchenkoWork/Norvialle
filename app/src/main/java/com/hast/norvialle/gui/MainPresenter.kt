@@ -1,6 +1,7 @@
 package com.hast.norvialle.gui
 
 import com.hast.norvialle.App
+import com.hast.norvialle.data.Dress
 import com.hast.norvialle.data.Event
 import com.hast.norvialle.data.MakeupArtist
 import com.hast.norvialle.data.Studio
@@ -18,12 +19,14 @@ object MainPresenter {
     var events: ArrayList<Event> = ArrayList()
     var studios: ArrayList<Studio> = ArrayList()
     var makupArtists: ArrayList<MakeupArtist> = ArrayList()
+    var dresses: ArrayList<Dress> = ArrayList()
 
 fun start(){
 
     events = java.util.ArrayList(App.db.eventDao().getAll())
     studios = java.util.ArrayList(App.db.studioDao().getAll())
     makupArtists = java.util.ArrayList(App.db.makeupDao().getAll())
+    dresses = java.util.ArrayList(App.db.dressDao().getAll())
 
     sort()
 }
@@ -99,4 +102,27 @@ fun start(){
         App.db.makeupDao().delete(makupArtist)
         makupArtists.remove(makupArtist)
     }
+
+    fun addDress(dress: Dress) {
+        if (dress.id.equals("")) {
+            dress.id = UUID.randomUUID().toString()
+
+            App.db.dressDao().insert(dress)
+            dresses.add(dress)
+        } else{
+            App.db.dressDao().update(dress)
+            for ((index, oldDress) in dresses.withIndex()) {
+                if(oldDress.id.equals(dress.id)){
+                    dresses.set(index, dress)
+                    return
+                }
+            }
+            dresses.add(dress)
+        }
+    }
+    fun deleteDress(dress: Dress) {
+        App.db.dressDao().delete(dress)
+        dresses.remove(dress)
+    }
+
 }

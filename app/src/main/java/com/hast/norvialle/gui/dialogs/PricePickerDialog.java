@@ -15,7 +15,6 @@ public class PricePickerDialog extends PickerDialog {
     private static final int NUMBER_OF_INTEGER_PICKERS = 4;
     private static final int NUMBER_OF_DECIMAL_PICKERS = 0;
 
-    private String innerResultUnits = ""; //will be used inside dialog only
 
     public PricePickerDialog(Context context, String dialogTitle, float startValue) {
         super(context, dialogTitle, startValue, NUMBER_OF_INTEGER_PICKERS, NUMBER_OF_DECIMAL_PICKERS); //3 integers and no decimal picker
@@ -43,7 +42,7 @@ public class PricePickerDialog extends PickerDialog {
     @Override
     protected String getInnerResultString(float collectedValue) {
         if (collectedValue != 0 && ("" + collectedValue).contains(".")) {
-            return ("" + collectedValue).replace(".0", "") + " " + innerResultUnits;
+            return ("" + collectedValue).replace(".0", "");
         } else {
             return "";
         }
@@ -55,14 +54,5 @@ public class PricePickerDialog extends PickerDialog {
         super.onNumberPickersValuesChange(integerNumberPickers, decimalNumberPickers);// refreshes result, after changes
     }
 
-    /**
-     * Sets the units of result value
-     *
-     * @param units units to be added to the end of result inside dialog
-     * @return this
-     */
-    public PricePickerDialog setInnerResultUnits(String units) {
-        innerResultUnits = units;
-        return this;
-    }
+
 }

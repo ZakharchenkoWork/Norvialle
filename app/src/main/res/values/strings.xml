@@ -17,10 +17,10 @@
     <string name="adding_event">Добавление события</string>
     <string name="adding_makeup_artist">Добавление визажиста</string>
     <string name="add">Добавить</string>
+    <string name="pick">Выбрать</string>
     <string name="navigation_drawer_open">open</string>
     <string name="navigation_drawer_close">close</string>
     <string name="ok">ok</string>
-    <string name="currency">грн.</string>
     <string name="roomPrice">Цена зала</string>
     <string name="roomPriceWithDiscount">Цена со скидкой</string>
     <string name="totalPrice">Общая цена</string>
@@ -31,9 +31,14 @@
     <string name="add_event">Добавить событие</string>
     <string name="contacts">Контакты</string>
     <string name="dresses">Платья</string>
-    <string name="makeup_artist_price">Цена %1$d грн.</string>
+    <string name="makeup_artist_price">Цена %1$d</string>
     <string name="one_hour_before">За час</string>
     <string name="makeup_label">Макияж: \n %1$s \n%2$s</string>
+    <string name="save">Сохранить</string>
+    <string name="view">Посмтореть</string>
+    <string name="take_photo">Сфотографировать</string>
+    <string name="from_gallery">Из галереи</string>
+    <string name="cancel">Отмена</string>
 
 
 </resources>

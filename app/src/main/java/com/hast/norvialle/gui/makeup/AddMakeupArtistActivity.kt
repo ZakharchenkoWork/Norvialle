@@ -124,14 +124,11 @@ class AddMakeupArtistActivity : AppCompatActivity() {
                val cursor: Cursor = contentResolver
                    .query(contactUri, projection, null, null, null)
                cursor.moveToFirst()
-               
+
                val columnPhone: Int = cursor.getColumnIndex(Phone.NUMBER)
                val columnName: Int = cursor.getColumnIndex(Phone.DISPLAY_NAME)
                phone.setText(cursor.getString(columnPhone))
                name.setText(cursor.getString(columnName))
-
-
-
             }
         }
     }

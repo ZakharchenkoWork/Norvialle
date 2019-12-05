@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_studios_list.*
 /**
  * Created by Konstantyn Zakharchenko on 29.11.2019.
  */
-class StudiosListActivity : AppCompatActivity() {
+class       StudiosListActivity : AppCompatActivity() {
     companion object {
         val IS_FOR_RESULT = "for result"
     }

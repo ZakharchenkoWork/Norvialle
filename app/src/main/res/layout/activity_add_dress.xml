@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+            android:id="@+id/dressPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/dress_wide"
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+    <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/dressPhoto"
+            app:layout_constraintBottom_toBottomOf="@id/dressPhoto"
+            app:layout_constraintLeft_toLeftOf="@id/dressPhoto"
+            app:layout_constraintRight_toRightOf="@id/dressPhoto"
+            android:visibility="gone"
+        />
+
+
+    <ImageView
+            android:id="@+id/plusIcon"
+            android:layout_width="@dimen/icon_size_big"
+            android:layout_height="@dimen/icon_size_big"
+            android:src="@drawable/pink_plus"
+            app:layout_constraintBottom_toBottomOf="@id/dressPhoto"
+            app:layout_constraintHorizontal_bias="0.7"
+            android:layout_margin="30dp"
+            app:layout_constraintLeft_toLeftOf="@id/dressPhoto"
+
+
+            android:padding="5dp"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    <EditText
+            android:id="@+id/comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_standard"
+            android:hint="Комментарий"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dressPhoto" />
+
+
+    <EditText
+            android:id="@+id/price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_standard"
+            android:hint="Цена"
+            android:inputType="number"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/comment" />
+
+    <ImageView
+            android:id="@+id/rotate"
+            android:layout_width="@dimen/icon_size_standard"
+            android:layout_height="@dimen/icon_size_standard"
+            android:src="@drawable/rotate"
+            app:layout_constraintBottom_toBottomOf="@id/dressPhoto"
+            app:layout_constraintRight_toRightOf="@id/dressPhoto"
+            android:layout_margin="@dimen/margin_standard"
+            android:visibility="gone"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

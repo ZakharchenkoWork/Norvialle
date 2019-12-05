@@ -16,22 +16,25 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import com.hast.norvialle.R
-import com.hast.norvialle.data.Event
-import com.hast.norvialle.data.MakeupArtist
-import com.hast.norvialle.data.PhotoRoom
-import com.hast.norvialle.data.Studio
+import com.hast.norvialle.data.*
 import com.hast.norvialle.gui.MainPresenter
-import com.hast.norvialle.gui.dialogs.OneButtonDialog
+import com.hast.norvialle.gui.dialogs.SimpleDialog
 import com.hast.norvialle.gui.dialogs.PricePickerDialog
+import com.hast.norvialle.gui.dresses.DressesListActivity
 import com.hast.norvialle.gui.makeup.MakeupListActivity
 import com.hast.norvialle.gui.studio.StudiosListActivity
 import com.hast.norvialle.gui.utils.AddContactDialog
+import com.hast.norvialle.gui.utils.FullScreenPictureActivity
 import com.hast.norvialle.utils.getFloatValue
 import com.hast.norvialle.utils.getIntValue
 import kotlinx.android.synthetic.main.activity_add_event.*
+import kotlinx.android.synthetic.main.activity_add_event.toolbar
+import kotlinx.android.synthetic.main.activity_studios_list.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -49,10 +52,25 @@ class AddEventActivity : AppCompatActivity() {
         const val EVENT_EXTRA: String = "EVENT"
         const val PICK_STUDIO: Int = 191
         const val PICK_CONTACT: Int = 232
-        const val PICK_MAKEUP_ARTIST: Int = 540
+        const val PICK_DRESSES: Int = 540
+        const val PICK_MAKEUP_ARTIST: Int = 168
         const val ONE_HOUR_MILLIS: Long = 60*60*1000
     }
+fun setAdapter(){
+    val dressesPicturesAdapter = DressesPicturesAdapter(event.dresses, this)
+    dressesList.adapter = dressesPicturesAdapter
+    dressesPicturesAdapter.onViewDressListener = DressesPicturesAdapter.OnViewDressListener{ it ->  openPictureFullScreen(it)}
 
+}
+
+    fun openPictureFullScreen(dress: Dress) {
+
+            val intent = Intent(this, FullScreenPictureActivity::class.java)
+            intent.putExtra(FullScreenPictureActivity.PICTURE_FILE_NAME, dress.fileName)
+            intent.putExtra(FullScreenPictureActivity.COMMENT, dress.comment)
+            startActivity(intent)
+
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_event)
@@ -65,7 +83,7 @@ class AddEventActivity : AppCompatActivity() {
         }
 
         event = intent.getSerializableExtra(EVENT_EXTRA) as Event
-
+        dressesList.layoutManager = GridLayoutManager(this, 5)
 
         contact.setText(if (!event.name.equals("")) event.name else getString(R.string.name))
         studio.setOnCheckedChangeListener { button, isChecked ->
@@ -74,7 +92,20 @@ class AddEventActivity : AppCompatActivity() {
         makeup.setOnCheckedChangeListener { buttonView, isChecked ->
             makeupLayout.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
+        dress.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                dressesList.visibility = View.VISIBLE
+                if (event.dresses.isEmpty()) {
+                    openDressesList()
+                } else{
+                    setAdapter()
 
+                }
+            } else{
+                dressesList.visibility = View.GONE
+            }
+
+        }
         description.setText(event.description)
         studio.isChecked = event.orderStudio
         dress.isChecked = event.orderDress
@@ -155,8 +186,6 @@ class AddEventActivity : AppCompatActivity() {
             val tpd =
                 TimePickerDialog(this, TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
 
-
-
                     var timeToSet = timeParser.parse("" + h.toString() + ":" + m)
                     time.setText(timeFormatter.format(timeToSet))
                     finalCalendar.set(Calendar.MINUTE, m);
@@ -197,7 +226,7 @@ class AddEventActivity : AppCompatActivity() {
 
         studiosList.setOnClickListener { openStudiosList() }
         totalPrice.setOnClickListener {
-            OneButtonDialog(this, OneButtonDialog.DIALOG_TYPE.INPUT_ONLY)
+            SimpleDialog(this, SimpleDialog.DIALOG_TYPE.INPUT_ONLY)
                 .setTitle(getString(R.string.totalPrice))
                 .setMessage(""+getFloatValue(totalPrice))
                 .setInputType(InputType.TYPE_CLASS_NUMBER)
@@ -206,7 +235,7 @@ class AddEventActivity : AppCompatActivity() {
 
         }
         paid.setOnClickListener {
-            OneButtonDialog(this, OneButtonDialog.DIALOG_TYPE.INPUT_ONLY)
+            SimpleDialog(this, SimpleDialog.DIALOG_TYPE.INPUT_ONLY)
                 .setTitle(getString(R.string.paid))
                 .setMessage(""+getFloatValue(paid))
                 .setInputType(InputType.TYPE_CLASS_NUMBER)
@@ -214,13 +243,14 @@ class AddEventActivity : AppCompatActivity() {
                 .build()
         }
         makeupPrice.setOnClickListener {
-            OneButtonDialog(this, OneButtonDialog.DIALOG_TYPE.INPUT_ONLY)
+            SimpleDialog(this, SimpleDialog.DIALOG_TYPE.INPUT_ONLY)
                 .setTitle(getString(R.string.makeupPrice))
                 .setMessage(""+getFloatValue(makeupPrice))
                 .setInputType(InputType.TYPE_CLASS_NUMBER)
                 .setOkListener { makeupPrice.setText(("" + it).replace(".0", "")) }
                 .build()
         }
+
         makeupArtistsList.setOnClickListener { openMakeupArtistsList() }
         hideKeyboard()
     }
@@ -281,6 +311,12 @@ class AddEventActivity : AppCompatActivity() {
         intent.putExtra(StudiosListActivity.IS_FOR_RESULT, true)
         startActivityForResult(intent, PICK_STUDIO)
     }
+
+    private fun openDressesList() {
+        var intent = Intent(this, DressesListActivity::class.java)
+        intent.putExtra(DressesListActivity.IS_FOR_RESULT, true)
+        startActivityForResult(intent, PICK_DRESSES)
+    }
     private fun openMakeupArtistsList() {
         var intent = Intent(this, MakeupListActivity::class.java)
         intent.putExtra(MakeupListActivity.IS_FOR_RESULT, true)
@@ -326,6 +362,11 @@ class AddEventActivity : AppCompatActivity() {
                 makeupPrice.setText(""+makeupArtist.defaultPrice)
                 makeupArtistsName.setText(makeupArtist.name)
                 makeupArtistsPhone.setText(makeupArtist.phone)
+
+            } else  if (requestCode == PICK_DRESSES) {
+                event.dresses = data?.getSerializableExtra(DressesListActivity.DRESS) as ArrayList<Dress>
+                setAdapter()
+                dressesList.visibility = View.VISIBLE
 
             } else if (requestCode == PICK_CONTACT) {
                 val contactUri = data?.getData();
