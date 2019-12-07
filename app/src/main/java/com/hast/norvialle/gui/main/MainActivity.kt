@@ -11,15 +11,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Event
-import com.hast.norvialle.gui.CalendarActivity
 import com.hast.norvialle.gui.MainPresenter
+import com.hast.norvialle.gui.SettingsActivity
+import com.hast.norvialle.gui.calendar.CalendarActivity
 import com.hast.norvialle.gui.dresses.DressesListActivity
 import com.hast.norvialle.gui.makeup.MakeupListActivity
 import com.hast.norvialle.gui.studio.StudiosListActivity
+import com.hast.norvialle.utils.notifications.createNotificationChannels
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    companion object {
+        val SCROLL_TO = "SCROLL_TO"
+    }
 
     val presenter: MainPresenter =
         MainPresenter
@@ -46,11 +52,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.setNavigationItemSelectedListener(this)
         list.layoutManager = LinearLayoutManager(this)
 
+
+
+        createNotificationChannels(this)
+
+
     }
 
     override fun onResume() {
         super.onResume()
         prepareAdapter()
+        if (intent != null) {
+            val dateToScroll = intent.getLongExtra(SCROLL_TO, 0)
+            list.smoothScrollToPosition((list.adapter as EventsAdapter).getPositionByDate(dateToScroll))
+        }
     }
 
     fun prepareAdapter() {
@@ -89,6 +104,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.dress -> {
                 startActivity(Intent(this, DressesListActivity::class.java))
+            }
+            R.id.settings -> {
+                startActivity(Intent(this, SettingsActivity::class.java))
             }
             R.id.addEvent -> {
                 openEventEditor(
