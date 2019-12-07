@@ -13,29 +13,64 @@ import com.hast.norvialle.R
 import com.hast.norvialle.data.Event
 import com.hast.norvialle.gui.dialogs.SimpleDialog
 import com.hast.norvialle.utils.getDate
+import com.hast.norvialle.utils.getDateInMillis
 import com.hast.norvialle.utils.getTime
+import com.hast.norvialle.utils.getTimeLocal
 import kotlinx.android.synthetic.main.item_date.view.*
 import kotlinx.android.synthetic.main.item_event.view.*
 
 
-class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
+class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context) :
     RecyclerView.Adapter<EventsAdapter.BaseViewHolder<*>>() {
+    val items: ArrayList<Event> = ArrayList()
     var dates: ArrayList<String>
     var onAddEventListener: OnAddEventListener =
         OnAddEventListener {}
     var onDeleteEventListener: OnAddEventListener =
         OnAddEventListener {}
-
-    init {
-        dates = prepareDates()
-
-    }
-
+    var eventsBack = 0
     companion object {
         private const val TYPE_DATE = 0
         private const val TYPE_EVENT = 1
 
     }
+    init {
+
+        prepareItems()
+        dates = prepareDates()
+
+    }
+
+    fun prepareItems() {
+        val dateNow = getDateInMillis(System.currentTimeMillis())
+        var firstIndex = -1
+        for ((index, item) in allItems.withIndex()) {
+            if (getDateInMillis(item.time) >= dateNow) {
+                if (firstIndex == -1) {
+                    firstIndex = index
+                }
+                items.add(item)
+            }
+        }
+        if (firstIndex > 0) {
+            var downValue = if (firstIndex - eventsBack > 0) firstIndex - eventsBack else 0
+
+            for (i in firstIndex downTo downValue){
+                if (i >= 0) {
+                    items.add(0, allItems[i])
+                }
+            }
+
+        }
+    }
+    fun showPrevious() {
+        items.clear()
+        eventsBack += 10
+        prepareItems()
+        dates = prepareDates()
+        notifyDataSetChanged()
+    }
+
 
 
     private fun prepareDates(): ArrayList<String> {
@@ -165,7 +200,7 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
             itemView.makeupTime.setText(
                 context.getString(
                     R.string.makeup_label,
-                    getTime(event.makeupTime),
+                    getTimeLocal(event.makeupTime),
                     event.makeupArtistName
                 )
             )
@@ -194,7 +229,7 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
                 itemView.geo.visibility = View.GONE
             }
 
-            itemView.time.setText(getTime(event.time))
+            itemView.time.setText(getTimeLocal(event.time))
             itemView.studio.setImageResource(if (event.orderStudio) R.drawable.studio else R.drawable.studio_disabled)
             itemView.dress.setImageResource(if (event.orderDress) R.drawable.dress else R.drawable.dress_disabled)
             itemView.makeup.setImageResource(if (event.orderMakeup) R.drawable.makeup else R.drawable.makeup_disabled)
@@ -321,6 +356,24 @@ class EventsAdapter(val items: ArrayList<Event>, private val context: Context) :
             )
         )
     }
+
+    fun getPositionByDate(dateToScroll: Long): Int {
+        if (dateToScroll != 0L) {
+            for (i in 1..itemCount) {
+                val itemByPosition = getItemByPosition(i)
+                if (itemByPosition is Event){
+                    if (getDateInMillis(itemByPosition.time) == dateToScroll) {
+                        return i
+                    }
+                }
+            }
+            return 0
+        } else{
+            return 0
+        }
+    }
+
+
 }
 
 

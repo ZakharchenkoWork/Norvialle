@@ -56,7 +56,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         createNotificationChannels(this)
 
-
+        swipeRefresh.setOnRefreshListener {
+            val adapter = list.adapter as EventsAdapter
+            adapter.showPrevious()
+            swipeRefresh.isRefreshing = false
+        }
     }
 
     override fun onResume() {
