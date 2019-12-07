@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.item_room_read_only.view.*
 import kotlinx.android.synthetic.main.item_studio.view.*
 
 
-class StudiosAdapter(val items: ArrayList<Studio>, private val context: Context) :
+class StudiosAdapter(val allItems: ArrayList<Studio>, private val context: Context) :
     RecyclerView.Adapter<StudiosAdapter.BaseViewHolder<*>>() {
 
     var onEditStudioListener: OnEditStudioListener =
@@ -24,8 +24,11 @@ class StudiosAdapter(val items: ArrayList<Studio>, private val context: Context)
         OnEditStudioListener {}
     var onPickStudioListener: OnPickStudioListener =
         OnPickStudioListener { studio: Studio, photoRoom: PhotoRoom -> }
+    val items: ArrayList<Studio> = ArrayList()
 
-
+    init{
+        items.addAll(allItems)
+    }
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         (holder as StudioViewHolder).bind(items[position])
     }
@@ -157,6 +160,23 @@ class StudiosAdapter(val items: ArrayList<Studio>, private val context: Context)
                 Uri.fromParts("tel", phone, null)
             )
         )
+    }
+
+    fun filterBy(filterText : String) {
+        if (!filterText.equals("")) {
+            items.clear()
+            for (item in allItems) {
+                if (item.name.contains(filterText) || item.address.contains(filterText) || item.phone.contains(filterText)
+                    || item.roomsContains(filterText)) {
+                    items.add(item)
+                }
+
+            }
+        } else{
+            items.clear()
+            items.addAll(allItems)
+        }
+        notifyDataSetChanged()
     }
 
 

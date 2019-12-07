@@ -4,9 +4,12 @@ package com.hast.norvialle.gui.studio
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hast.norvialle.R
@@ -19,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_studios_list.*
 /**
  * Created by Konstantyn Zakharchenko on 29.11.2019.
  */
-class       StudiosListActivity : AppCompatActivity() {
+class StudiosListActivity : AppCompatActivity() {
     companion object {
         val IS_FOR_RESULT = "for result"
     }
@@ -27,6 +30,8 @@ class       StudiosListActivity : AppCompatActivity() {
     val presenter: MainPresenter =
         MainPresenter
     var isForResult = false
+    var isSearchShown = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_studios_list)
@@ -41,7 +46,20 @@ class       StudiosListActivity : AppCompatActivity() {
             getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
             getSupportActionBar()?.setTitle(R.string.studios);
         }
+        search.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                (list.adapter as StudiosAdapter).filterBy(""+p0)
+            }
+        })
     }
+
+
     override fun onResume() {
         super.onResume()
         prepareAdapter()
@@ -83,6 +101,9 @@ class       StudiosListActivity : AppCompatActivity() {
             }
             R.id.addStudio -> {
                 openStudioEditor(Studio())
+            } R.id.search-> {
+                isSearchShown = !isSearchShown
+                search.visibility = if (isSearchShown) View.VISIBLE else View.GONE
             }
 
         }
