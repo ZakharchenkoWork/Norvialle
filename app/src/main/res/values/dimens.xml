@@ -11,8 +11,8 @@
     <dimen name="icon_size_medium">30dp</dimen>
     <dimen name="icon_size_small">20dp</dimen>
 
-    <dimen name="text_normal">16dp</dimen>
-    <dimen name="text_big_ish">20dp</dimen>
-    <dimen name="text_big">24dp</dimen>
+    <dimen name="text_normal">16sp</dimen>
+    <dimen name="text_big_ish">20sp</dimen>
+    <dimen name="text_big">24sp</dimen>
 
 </resources>

@@ -16,11 +16,22 @@
     <string name="add_studio">Добавление студии</string>
     <string name="adding_event">Добавление события</string>
     <string name="adding_makeup_artist">Добавление визажиста</string>
+    <string name="adding_contact">Добавление Контакта</string>
+
+
+    <string name="delete_dialog_title">Удаление</string>
+    <string name="delete_dialog_message">Вы действительно хотите удалить %1$s, это действие не может быть отменено</string>
+    <string name="delete_dialog_yes">Да</string>
+    <string name="delete_dialog_no">Нет</string>
+    <string name="delete_dialog_event">событие</string>
+    <string name="delete_dialog_dress">платье</string>
+
     <string name="add">Добавить</string>
     <string name="pick">Выбрать</string>
     <string name="navigation_drawer_open">open</string>
     <string name="navigation_drawer_close">close</string>
     <string name="ok">ok</string>
+    <string name="save">Сохранить</string>
     <string name="roomPrice">Цена зала</string>
     <string name="roomPriceWithDiscount">Цена со скидкой</string>
     <string name="totalPrice">Общая цена</string>
@@ -34,11 +45,27 @@
     <string name="makeup_artist_price">Цена %1$d</string>
     <string name="one_hour_before">За час</string>
     <string name="makeup_label">Макияж: \n %1$s \n%2$s</string>
-    <string name="save">Сохранить</string>
     <string name="view">Посмтореть</string>
     <string name="take_photo">Сфотографировать</string>
     <string name="from_gallery">Из галереи</string>
     <string name="cancel">Отмена</string>
+    <string name="shoot_in_time">Съёмка в %1$s</string>
+    <string name="schedule">Расписание</string>
+    <string name="open_to_view">Откройте для просмотра</string>
+    <string name="shoot_location">Локация: %1$s </string>
+    <string name="shoot_address">по адрессу: %1$s </string>
+    <string name="shoot_client">Клиент: %1$s </string>
+    <string name="notifications_label">Напоминания о съемках</string>
+    <string name="day_before">За день, в: </string>
+    <string name="default_day_before_time">22:00</string>
+    <string name="default_this_day_time">08:00</string>
+    <string name="default_time_before_shoot">02:00</string>
+    <string name="this_day">В тот же день, в: </string>
+    <string name="time_before_shoot">Перед съемкой, за: </string>
+    <string name="settings">Настройки</string>
+    <string name="search">Поиск</string>
+    <string name="insta">Инстаграм</string>
+    <string name="dialog_add_contact_save">Хотите сохранить контакт в список?</string>
 
 
 </resources>

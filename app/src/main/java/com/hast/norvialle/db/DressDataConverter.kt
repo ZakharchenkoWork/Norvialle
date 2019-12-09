@@ -14,24 +14,24 @@ import java.lang.reflect.Type
 class DressDataConverter {
 
     @TypeConverter
-    fun fromCountryLangList(countryLang: ArrayList<Dress?>?): String? {
-        if (countryLang == null) {
-            return null
+    fun fromCountryLangList(countryLang: ArrayList<Dress>): String {
+        if (countryLang.equals("")) {
+            return "[]"
         }
         val gson = Gson()
         val type: Type =
-            object : TypeToken<ArrayList<Dress?>?>() {}.getType()
+            object : TypeToken<ArrayList<Dress>>(){}.getType()
         return gson.toJson(countryLang, type)
     }
 
     @TypeConverter
-    fun toCountryLangList(countryLangString: String?): ArrayList<Dress>? {
-        if (countryLangString == null) {
-            return null
+    fun toCountryLangList(countryLangString: String): ArrayList<Dress> {
+        if (countryLangString.equals("")) {
+            return ArrayList()
         }
         val gson = Gson()
         val type: Type =
-            object : TypeToken<ArrayList<Dress?>?>() {}.getType()
+            object : TypeToken<ArrayList<Dress>>() {}.getType()
         return gson.fromJson(countryLangString, type)
     }
 }

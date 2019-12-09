@@ -29,5 +29,11 @@
                 android:icon="@drawable/studio"
                 android:title="@string/studios" />
     </group>
+    <group android:checkableBehavior="single">
+        <item
+                android:id="@+id/settings"
+                android:icon="@drawable/settings"
+                android:title="@string/settings" />
 
+    </group>
 </menu>

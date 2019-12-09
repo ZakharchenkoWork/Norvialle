@@ -17,7 +17,8 @@ import com.hast.norvialle.data.PhotoRoom
 import com.hast.norvialle.data.Studio
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.studio.AddStudioActivity.Companion.STUDIO
-import kotlinx.android.synthetic.main.activity_studios_list.*
+import kotlinx.android.synthetic.main.activity_search_list.*
+
 
 /**
  * Created by Konstantyn Zakharchenko on 29.11.2019.
@@ -34,7 +35,7 @@ class StudiosListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_studios_list)
+        setContentView(R.layout.activity_search_list)
         setSupportActionBar(toolbar)
         isForResult = intent.getBooleanExtra(IS_FOR_RESULT, false)
 
@@ -46,7 +47,7 @@ class StudiosListActivity : AppCompatActivity() {
             getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
             getSupportActionBar()?.setTitle(R.string.studios);
         }
-        search.addTextChangedListener(object : TextWatcher {
+        searchFilter.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
             }
 
@@ -89,7 +90,7 @@ class StudiosListActivity : AppCompatActivity() {
 
     override
     fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.studios_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_search_plus, menu);
         return true
     }
 
@@ -99,11 +100,11 @@ class StudiosListActivity : AppCompatActivity() {
             android.R.id.home -> {
                 finish()
             }
-            R.id.addStudio -> {
+            R.id.plus -> {
                 openStudioEditor(Studio())
             } R.id.search-> {
                 isSearchShown = !isSearchShown
-                search.visibility = if (isSearchShown) View.VISIBLE else View.GONE
+            searchFilter.visibility = if (isSearchShown) View.VISIBLE else View.GONE
             }
 
         }

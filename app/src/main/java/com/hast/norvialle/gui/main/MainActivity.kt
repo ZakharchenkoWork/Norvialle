@@ -14,6 +14,7 @@ import com.hast.norvialle.data.Event
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.SettingsActivity
 import com.hast.norvialle.gui.calendar.CalendarActivity
+import com.hast.norvialle.gui.contacts.ContactsListActivity
 import com.hast.norvialle.gui.dresses.DressesListActivity
 import com.hast.norvialle.gui.makeup.MakeupListActivity
 import com.hast.norvialle.gui.studio.StudiosListActivity
@@ -99,6 +100,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.getItemId()) {
             R.id.calendar -> {
                 startActivity(Intent(this, CalendarActivity::class.java))
+            }
+            R.id.contact -> {
+                startActivity(Intent(this, ContactsListActivity::class.java))
             }
             R.id.studio -> {
                 startActivity(Intent(this, StudiosListActivity::class.java))

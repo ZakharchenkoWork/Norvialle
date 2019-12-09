@@ -1,10 +1,9 @@
-package com.hast.norvialle.gui.makeup
+package com.hast.norvialle.gui.contacts
 
 import android.app.Activity
 import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.provider.ContactsContract.CommonDataKinds.Phone
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,52 +12,56 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.R
+import com.hast.norvialle.data.Contact
 import com.hast.norvialle.data.MakeupArtist
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.utils.getIntValue
-import kotlinx.android.synthetic.main.activity_add_makeup_artist.*
-
+import kotlinx.android.synthetic.main.activity_add_contact.*
+import kotlinx.android.synthetic.main.activity_add_contact.name
+import kotlinx.android.synthetic.main.activity_add_contact.phone
+import kotlinx.android.synthetic.main.item_contact.*
+import kotlinx.android.synthetic.main.item_event.*
+import kotlinx.android.synthetic.main.item_event.insta
 
 
 /**
  * Created by Konstantyn Zakharchenko on 29.11.2019.
  */
-class AddMakeupArtistActivity : AppCompatActivity() {
+class AddContactActivity : AppCompatActivity() {
     companion object {
         val EDIT: Int = 1
-        val MAKEUP_ARTIST: String = "MAKEUP_ARTIST"
-        val PICK_CONTACT: Int = 197
+        val DATA_TYPE = "CONTACT"
+        val PICK_CONTACT: Int = 911
     }
 
-    val presenter: MainPresenter = MainPresenter
 
-    lateinit var makeupArtist: MakeupArtist
+
+    lateinit var contact: Contact
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_makeup_artist)
+        setContentView(R.layout.activity_add_contact)
         setSupportActionBar(toolbar)
         var actionBar = getSupportActionBar()
         if (actionBar != null) {
             getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
             getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
-            getSupportActionBar()?.setTitle(R.string.adding_makeup_artist);
+            getSupportActionBar()?.setTitle(R.string.adding_contact);
         }
 
-            makeupArtist = intent?.extras?.getSerializable(MAKEUP_ARTIST) as MakeupArtist
+        contact = intent?.extras?.getSerializable(DATA_TYPE) as Contact
 
-        if (makeupArtist == null) {
-            makeupArtist = MakeupArtist("",0,"")
+        if (contact == null) {
+            contact = Contact("","","")
         } else {
-            name.setText(makeupArtist.name)
-            phone.setText(makeupArtist.phone)
-            price.setText(""+makeupArtist.defaultPrice)
+            name.setText(contact.name)
+            phone.setText(contact.phone)
+            link.setText(contact.link)
 
         }
 
         name.addTextChangedListener(TextListener(name))
-        phone.addTextChangedListener(TextListener(phone))
-        price.addTextChangedListener(TextListener(price))
+
         contactsList.setOnClickListener { openContactsList() }
     }
 
@@ -76,33 +79,27 @@ class AddMakeupArtistActivity : AppCompatActivity() {
                 finish()
             }
             R.id.save -> {
-                if (makeupArtist == null) {
-                    makeupArtist = MakeupArtist("",0,"")
+                if (contact == null) {
+                    contact = Contact("","","")
                 }
 
 
                 if (!name.text.equals("")) {
-                    makeupArtist.name = name.text.toString()
+                    contact.name = name.text.toString()
                 } else {
                     name.setBackgroundColor(resources.getColor(R.color.red))
                     return true
                 }
 
-                if (!phone.text.equals("")) {
-                    makeupArtist.phone = phone.text.toString()
-                } else {
-                    phone.setBackgroundColor(resources.getColor(R.color.red))
-                    return true
-                }
 
-                if (!price.text.equals("")) {
-                    makeupArtist.defaultPrice = getIntValue(price)
-                } else {
-                    price.setBackgroundColor(resources.getColor(R.color.red))
-                    return true
-                }
+                    contact.phone = phone.text.toString()
 
-                    presenter.addMakeupArtist(makeupArtist)
+
+
+                    contact.link= link.text.toString()
+
+
+                    MainPresenter.addContact(contact)
                 finish()
             }
 

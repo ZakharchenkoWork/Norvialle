@@ -172,14 +172,26 @@
     </LinearLayout>
     <CheckBox
             android:id="@+id/dress"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/studioData"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/dressesListPick"
+            app:layout_constraintHorizontal_bias="0"
             android:layout_marginLeft="@dimen/margin_standard"
             android:text="@string/dress"
             />
+    <ImageView
+            android:id="@+id/dressesListPick"
+            android:layout_width="@dimen/icon_size_standard"
+            android:layout_height="@dimen/icon_size_standard"
+            app:layout_constraintTop_toBottomOf="@id/studioData"
+            app:layout_constraintBottom_toBottomOf="@id/dress"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="@dimen/margin_standard"
+           android:layout_marginRight="@dimen/margin_standard"
+           android:visibility="gone"
+            android:src="@drawable/list"/>
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/dressesList"
             android:layout_width="match_parent"
@@ -188,6 +200,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:visibility="gone"/>
+
     <CheckBox
             android:id="@+id/makeup"
             android:layout_width="match_parent"

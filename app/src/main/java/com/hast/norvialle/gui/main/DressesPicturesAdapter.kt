@@ -61,7 +61,7 @@ class DressesPicturesAdapter(val items: ArrayList<Dress>, private val context: C
     ) {
         if (!fileName.equals("")) {
             progress.visibility = View.VISIBLE
-            com.hast.norvialle.utils.loadPicture(context, fileName).subscribeBy(
+            com.hast.norvialle.utils.loadPictureThumbnail(context, fileName).subscribeBy(
                 onNext = {
                     imageView.setImageBitmap(it)
                 },

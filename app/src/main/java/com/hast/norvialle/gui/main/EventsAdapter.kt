@@ -12,10 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Event
 import com.hast.norvialle.gui.dialogs.SimpleDialog
-import com.hast.norvialle.utils.getDate
-import com.hast.norvialle.utils.getDateInMillis
-import com.hast.norvialle.utils.getTime
-import com.hast.norvialle.utils.getTimeLocal
+import com.hast.norvialle.utils.*
 import kotlinx.android.synthetic.main.item_date.view.*
 import kotlinx.android.synthetic.main.item_event.view.*
 
@@ -52,8 +49,10 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
                 items.add(item)
             }
         }
+        firstIndex--
         if (firstIndex > 0) {
-            var downValue = if (firstIndex - eventsBack > 0) firstIndex - eventsBack else 0
+
+            var downValue = if (firstIndex - eventsBack >= 0) firstIndex - eventsBack else 0
 
             for (i in firstIndex downTo downValue){
                 if (i >= 0) {
@@ -266,14 +265,8 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
             itemView.copy.setOnClickListener { onAddEventListener.doAction(event.copy()) }
             itemView.edit.setOnClickListener { onAddEventListener.doAction(event) }
             itemView.delete.setOnClickListener {
-                SimpleDialog(context, SimpleDialog.DIALOG_TYPE.MESSAGE_ONLY)
-                    .setTitle("Удаление")
-                    .setMessage("Вы действительно хотите удалить это событие, это действие не может быть отменено")
-                    .setOkListener { onDeleteEventListener.doAction(event) }
-                    .setOkButtonText("Да")
-                    .setCancelButtonText("Отмена")
-                    .setCancelable(true)
-                    .build()
+                showDeleteDialog(context, R.string.delete_dialog_event, {onDeleteEventListener.doAction(event)} )
+
             }
 
             itemView.foregroundLayout.setOnTouchListener(
@@ -362,11 +355,20 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
             for (i in 1..itemCount) {
                 val itemByPosition = getItemByPosition(i)
                 if (itemByPosition is Event){
+                    if(i == 1 && itemByPosition.time > dateToScroll){
+                        if (items.size != allItems.size) {
+                            showPrevious()
+                            return getPositionByDate(dateToScroll)
+                        } else{
+                            return 0
+                        }
+                    }
                     if (getDateInMillis(itemByPosition.time) == dateToScroll) {
                         return i
                     }
                 }
             }
+
             return 0
         } else{
             return 0

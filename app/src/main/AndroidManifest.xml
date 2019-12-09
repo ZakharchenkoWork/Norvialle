@@ -3,6 +3,8 @@
           package="com.hast.norvialle">
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
     <application
             android:allowBackup="true"
             android:icon="@drawable/icon"
@@ -18,14 +20,17 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".gui.SettingsActivity"/>
         <activity android:name=".gui.main.AddEventActivity"/>
-        <activity android:name=".gui.CalendarActivity"/>
+        <activity android:name=".gui.calendar.CalendarActivity"/>
         <activity android:name=".gui.makeup.MakeupListActivity"/>
         <activity android:name=".gui.makeup.AddMakeupArtistActivity"/>
         <activity android:name=".gui.dresses.DressesListActivity"/>
         <activity android:name=".gui.dresses.AddDressActivity"/>
         <activity android:name=".gui.utils.FullScreenPictureActivity"/>
         <activity android:name=".gui.studio.StudiosListActivity"/>
+        <activity android:name=".gui.contacts.ContactsListActivity"/>
+        <activity android:name=".gui.contacts.AddContactActivity"/>
         <activity android:name=".gui.studio.AddStudioActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -42,6 +47,8 @@
                     android:name="android.support.FILE_PROVIDER_PATHS"
                     android:resource="@xml/file_provider_paths"/>
         </provider>
+
+        <receiver android:process=":remote" android:name=".utils.notifications.AlarmReceiver"/>
     </application>
 
 </manifest>

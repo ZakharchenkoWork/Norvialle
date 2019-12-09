@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:id="@+id/addMakeup"
+            android:id="@+id/plus"
             android:orderInCategory="100"
             android:title="@string/add"
             android:icon="@drawable/top_menu_plus"

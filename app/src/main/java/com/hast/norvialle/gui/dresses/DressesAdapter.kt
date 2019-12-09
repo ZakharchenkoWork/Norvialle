@@ -21,11 +21,6 @@ import java.io.FileInputStream
 class DressesAdapter(val items: ArrayList<Dress>, private val context: Context) :
     RecyclerView.Adapter<DressesAdapter.BaseViewHolder<*>>() {
 
-    var onEditDressListener: OnEditDressListener =
-        OnEditDressListener {}
-    var onDeleteDressListener: OnEditDressListener =
-        OnEditDressListener {}
-
     var onViewDressListener: OnViewDressListener =
         OnViewDressListener{ dress : Dress -> }
 
@@ -72,13 +67,7 @@ val pickedDresses : ArrayList<Dress> = ArrayList()
             loadPicture(itemView.dressPhoto, dress.fileName, itemView.progress)
 
             if(!isForResult) {
-                itemView.foregroundLayout.setOnClickListener { itemView.foregroundLayout.visibility = View.GONE }
-                itemView.backgroundLayout.setOnClickListener { itemView.foregroundLayout.visibility = View.VISIBLE }
-                itemView.edit.setOnClickListener {
-                    onEditDressListener.doAction(dress)
-                }
-                itemView.delete.setOnClickListener { onDeleteDressListener.doAction(dress) }
-                itemView.view.setOnClickListener { onViewDressListener.doAction(dress) }
+                itemView.setOnClickListener { onViewDressListener.doAction(dress) }
                 itemView.dressPickedView.visibility = View.GONE
             } else{
                 itemView.setOnClickListener {
@@ -92,6 +81,11 @@ val pickedDresses : ArrayList<Dress> = ArrayList()
 
                 }
 
+                if (pickedDresses.contains(dress)) {
+                    itemView.dressPickedView.visibility = View.VISIBLE
+                } else {
+                    itemView.dressPickedView.visibility = View.GONE
+                }
 
             }
         }
@@ -105,7 +99,7 @@ val pickedDresses : ArrayList<Dress> = ArrayList()
     ) {
         if (!fileName.equals("")) {
             progress.visibility = View.VISIBLE
-            com.hast.norvialle.utils.loadPicture(context, fileName).subscribeBy(
+            com.hast.norvialle.utils.loadPictureThumbnail(context, fileName).subscribeBy(
                 onNext = {
                     imageView.setImageBitmap(it)
                 },
@@ -116,6 +110,10 @@ val pickedDresses : ArrayList<Dress> = ArrayList()
 
         }
 
+    }
+
+    fun setPicked(pickedDresses: java.util.ArrayList<Dress>) {
+        this.pickedDresses.addAll(pickedDresses)
     }
 
 

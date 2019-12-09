@@ -1,10 +1,7 @@
 package com.hast.norvialle.gui
 
 import com.hast.norvialle.App
-import com.hast.norvialle.data.Dress
-import com.hast.norvialle.data.Event
-import com.hast.norvialle.data.MakeupArtist
-import com.hast.norvialle.data.Studio
+import com.hast.norvialle.data.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -15,21 +12,27 @@ import kotlin.collections.ArrayList
 object MainPresenter {
 
 
-
     var events: ArrayList<Event> = ArrayList()
     var studios: ArrayList<Studio> = ArrayList()
     var makupArtists: ArrayList<MakeupArtist> = ArrayList()
     var dresses: ArrayList<Dress> = ArrayList()
+    var contacts: ArrayList<Contact> = ArrayList()
+    var settings: Settings = Settings()
 
-fun start(){
+    fun start() {
 
-    events = java.util.ArrayList(App.db.eventDao().getAll())
-    studios = java.util.ArrayList(App.db.studioDao().getAll())
-    makupArtists = java.util.ArrayList(App.db.makeupDao().getAll())
-    dresses = java.util.ArrayList(App.db.dressDao().getAll())
+        events = java.util.ArrayList(App.db.eventDao().getAll())
+        studios = java.util.ArrayList(App.db.studioDao().getAll())
+        makupArtists = java.util.ArrayList(App.db.makeupDao().getAll())
+        dresses = java.util.ArrayList(App.db.dressDao().getAll())
+        contacts = java.util.ArrayList(App.db.contactsDao().getAll())
+        settings = App.db.settingsDao().get()
+        if (settings == null) {
+            settings = Settings()
+        }
+        sort()
+    }
 
-    sort()
-}
     fun sort() {
         events.sortBy { it.time }
     }
@@ -59,20 +62,22 @@ fun start(){
         App.db.eventDao().delete(event)
         events.remove(event)
     }
+
     fun deleteStudio(studio: Studio) {
         App.db.studioDao().delete(studio)
         studios.remove(studio)
     }
+
     fun addStudio(studio: Studio) {
         if (studio.id.equals("")) {
             studio.id = UUID.randomUUID().toString()
 
             App.db.studioDao().insert(studio)
             studios.add(studio)
-        } else{
+        } else {
             App.db.studioDao().update(studio)
             for ((index, oldStudio) in studios.withIndex()) {
-                if(oldStudio.id.equals(studio.id)){
+                if (oldStudio.id.equals(studio.id)) {
                     studios.set(index, studio)
                     return
                 }
@@ -81,16 +86,16 @@ fun start(){
         }
     }
 
-    fun addMakeupArtist(makupArtist: MakeupArtist){
+    fun addMakeupArtist(makupArtist: MakeupArtist) {
         if (makupArtist.id.equals("")) {
             makupArtist.id = UUID.randomUUID().toString()
 
             App.db.makeupDao().insert(makupArtist)
             makupArtists.add(makupArtist)
-        } else{
+        } else {
             App.db.makeupDao().update(makupArtist)
             for ((index, oldMakupArtists) in makupArtists.withIndex()) {
-                if(oldMakupArtists.id.equals(makupArtist.id)){
+                if (oldMakupArtists.id.equals(makupArtist.id)) {
                     makupArtists.set(index, makupArtist)
                     return
                 }
@@ -98,6 +103,30 @@ fun start(){
             makupArtists.add(makupArtist)
         }
     }
+
+    fun addContact(contact: Contact) {
+        if (contact.id.equals("")) {
+            contact.id = UUID.randomUUID().toString()
+
+            App.db.contactsDao().insert(contact)
+            contacts.add(contact)
+        } else {
+            App.db.contactsDao().update(contact)
+            for ((index, oldContact) in contacts.withIndex()) {
+                if (oldContact.id.equals(contact.id)) {
+                    contacts.set(index, contact)
+                    return
+                }
+            }
+            contacts.add(contact)
+        }
+    }
+
+    fun deleteContact(contact: Contact) {
+        App.db.contactsDao().delete(contact)
+        contacts.remove(contact)
+    }
+
     fun deleteMakeupArtist(makupArtist: MakeupArtist) {
         App.db.makeupDao().delete(makupArtist)
         makupArtists.remove(makupArtist)
@@ -109,10 +138,10 @@ fun start(){
 
             App.db.dressDao().insert(dress)
             dresses.add(dress)
-        } else{
+        } else {
             App.db.dressDao().update(dress)
             for ((index, oldDress) in dresses.withIndex()) {
-                if(oldDress.id.equals(dress.id)){
+                if (oldDress.id.equals(dress.id)) {
                     dresses.set(index, dress)
                     return
                 }
@@ -120,9 +149,24 @@ fun start(){
             dresses.add(dress)
         }
     }
+
     fun deleteDress(dress: Dress) {
         App.db.dressDao().delete(dress)
-        dresses.remove(dress)
+        if (dresses.contains(dress)) {
+            dresses.remove(dress)
+        } else {
+            for (dressFromList in dresses) {
+                if (dressFromList.fileName.equals(dress.fileName)) {
+                    dresses.remove(dressFromList)
+                    return
+                }
+            }
+        }
+    }
+
+    fun saveSettings(settings: Settings) {
+        App.db.settingsDao().update(settings)
+        this.settings = settings
     }
 
 }

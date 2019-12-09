@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.text.InputType
@@ -13,15 +14,15 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.hast.norvialle.R
 import com.hast.norvialle.data.*
 import com.hast.norvialle.gui.MainPresenter
+import com.hast.norvialle.gui.contacts.AddContactActivity
+import com.hast.norvialle.gui.contacts.ContactsListActivity
+import com.hast.norvialle.gui.contacts.ContactsListActivity.Companion.RETURN_DATA
 import com.hast.norvialle.gui.dialogs.SimpleDialog
-import com.hast.norvialle.gui.dialogs.PricePickerDialog
 import com.hast.norvialle.gui.dresses.DressesListActivity
 import com.hast.norvialle.gui.makeup.MakeupListActivity
 import com.hast.norvialle.gui.studio.StudiosListActivity
@@ -29,9 +30,11 @@ import com.hast.norvialle.gui.utils.AddContactDialog
 import com.hast.norvialle.gui.utils.FullScreenPictureActivity
 import com.hast.norvialle.utils.getFloatValue
 import com.hast.norvialle.utils.getIntValue
+import com.hast.norvialle.utils.notifications.AlarmReceiver
 import kotlinx.android.synthetic.main.activity_add_event.*
+import kotlinx.android.synthetic.main.activity_add_event.contactsList
+import kotlinx.android.synthetic.main.activity_add_event.phone
 import kotlinx.android.synthetic.main.activity_add_event.toolbar
-import kotlinx.android.synthetic.main.activity_studios_list.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -47,30 +50,33 @@ class AddEventActivity : AppCompatActivity() {
     lateinit var event: Event
     lateinit var finalCalendar: Calendar
     lateinit var finalMakupCalendar: Calendar
-
+    val addContactDialog = AddContactDialog.newInstance()
     companion object {
         const val EVENT_EXTRA: String = "EVENT"
         const val PICK_STUDIO: Int = 191
         const val PICK_CONTACT: Int = 232
         const val PICK_DRESSES: Int = 540
         const val PICK_MAKEUP_ARTIST: Int = 168
-        const val ONE_HOUR_MILLIS: Long = 60*60*1000
+        const val ONE_HOUR_MILLIS: Long = 60 * 60 * 1000
     }
-fun setAdapter(){
-    val dressesPicturesAdapter = DressesPicturesAdapter(event.dresses, this)
-    dressesList.adapter = dressesPicturesAdapter
-    dressesPicturesAdapter.onViewDressListener = DressesPicturesAdapter.OnViewDressListener{ it ->  openPictureFullScreen(it)}
 
-}
+    fun setAdapter() {
+        val dressesPicturesAdapter = DressesPicturesAdapter(event.dresses, this)
+        dressesList.adapter = dressesPicturesAdapter
+        dressesPicturesAdapter.onViewDressListener =
+            DressesPicturesAdapter.OnViewDressListener { it -> openPictureFullScreen(it) }
+
+    }
 
     fun openPictureFullScreen(dress: Dress) {
 
-            val intent = Intent(this, FullScreenPictureActivity::class.java)
-            intent.putExtra(FullScreenPictureActivity.PICTURE_FILE_NAME, dress.fileName)
-            intent.putExtra(FullScreenPictureActivity.COMMENT, dress.comment)
-            startActivity(intent)
+        val intent = Intent(this, FullScreenPictureActivity::class.java)
+        intent.putExtra(FullScreenPictureActivity.PICTURE_FILE_NAME, dress.fileName)
+        intent.putExtra(FullScreenPictureActivity.COMMENT, dress.comment)
+        startActivity(intent)
 
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_event)
@@ -95,13 +101,15 @@ fun setAdapter(){
         dress.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 dressesList.visibility = View.VISIBLE
+                dressesListPick.visibility = View.VISIBLE
                 if (event.dresses.isEmpty()) {
-                    openDressesList()
-                } else{
+                    openDressesList(event.dresses)
+                } else {
                     setAdapter()
-
                 }
-            } else{
+                dressesListPick.setOnClickListener { openDressesList(event.dresses) }
+            } else {
+                dressesListPick.visibility = View.GONE
                 dressesList.visibility = View.GONE
             }
 
@@ -133,19 +141,19 @@ fun setAdapter(){
         finalCalendar = Calendar.getInstance()
         finalCalendar.time = dateToSet
         c.time = dateToSet
-        if(event.makeupTime != 0L) {
+        if (event.makeupTime != 0L) {
             finalMakupCalendar.time = Date(event.makeupTime)
             makeupTime.setText(timeFormatter.format(Date(event.makeupTime)))
         }
 
 
         makeupArtistsName.setText(event.makeupArtistName)
-        makeupPrice.setText(""+event.makeupPrice)
+        makeupPrice.setText("" + event.makeupPrice)
         makeupArtistsPhone.setText(event.makeupPhone)
 
-        if(event.orderMakeup){
+        if (event.orderMakeup) {
             makeupLayout.visibility = View.VISIBLE
-        } else{
+        } else {
             makeupLayout.visibility = View.GONE
         }
 
@@ -179,8 +187,9 @@ fun setAdapter(){
         }
 
         time.setOnClickListener {
+
             c.time = dateToSet
-            val hour = c.get(Calendar.HOUR)
+            val hour = c.get(Calendar.HOUR_OF_DAY)
             val minute = c.get(Calendar.MINUTE)
 
             val tpd =
@@ -195,15 +204,15 @@ fun setAdapter(){
             tpd.show()
         }
         makeupTime.setOnClickListener {
-            if (event.makeupTime == 0L){
+            if (event.makeupTime == 0L) {
                 finalMakupCalendar.time = Date(dateToSet.time - ONE_HOUR_MILLIS)
-            } else{
+            } else {
                 finalMakupCalendar.time = Date(event.makeupTime)
             }
 
 
-            val hour = finalMakupCalendar.get(Calendar.HOUR)
-            val minute =finalMakupCalendar.get(Calendar.MINUTE)
+            val hour = finalMakupCalendar.get(Calendar.HOUR_OF_DAY)
+            val minute = finalMakupCalendar.get(Calendar.MINUTE)
 
             val tpd =
                 TimePickerDialog(this, TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
@@ -228,7 +237,7 @@ fun setAdapter(){
         totalPrice.setOnClickListener {
             SimpleDialog(this, SimpleDialog.DIALOG_TYPE.INPUT_ONLY)
                 .setTitle(getString(R.string.totalPrice))
-                .setMessage(""+getFloatValue(totalPrice))
+                .setMessage("" + getFloatValue(totalPrice))
                 .setInputType(InputType.TYPE_CLASS_NUMBER)
                 .setOkListener { totalPrice.setText(("" + it).replace(".0", "")) }
                 .build()
@@ -237,7 +246,7 @@ fun setAdapter(){
         paid.setOnClickListener {
             SimpleDialog(this, SimpleDialog.DIALOG_TYPE.INPUT_ONLY)
                 .setTitle(getString(R.string.paid))
-                .setMessage(""+getFloatValue(paid))
+                .setMessage("" + getFloatValue(paid))
                 .setInputType(InputType.TYPE_CLASS_NUMBER)
                 .setOkListener { paid.setText(("" + it).replace(".0", "")) }
                 .build()
@@ -245,7 +254,7 @@ fun setAdapter(){
         makeupPrice.setOnClickListener {
             SimpleDialog(this, SimpleDialog.DIALOG_TYPE.INPUT_ONLY)
                 .setTitle(getString(R.string.makeupPrice))
-                .setMessage(""+getFloatValue(makeupPrice))
+                .setMessage("" + getFloatValue(makeupPrice))
                 .setInputType(InputType.TYPE_CLASS_NUMBER)
                 .setOkListener { makeupPrice.setText(("" + it).replace(".0", "")) }
                 .build()
@@ -257,7 +266,7 @@ fun setAdapter(){
 
     override
     fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.add_studio_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_save, menu);
         return true
     }
 
@@ -284,7 +293,7 @@ fun setAdapter(){
                     event.makeupPrice = getIntValue(makeupPrice)
                     if (makeupTime.text.toString().equals(getString(R.string.one_hour_before))) {
                         event.makeupTime = finalMakupCalendar.timeInMillis
-                    } else{
+                    } else {
                         event.makeupTime = finalCalendar.timeInMillis - ONE_HOUR_MILLIS
                     }
                     event.makeupPhone = makeupArtistsPhone.text.toString()
@@ -297,6 +306,8 @@ fun setAdapter(){
                 event.paidPrice = getIntValue(paid)
 
                 MainPresenter.addEvent(event)
+
+                AlarmReceiver().setAlarm(this, event = event, settings = MainPresenter.settings)
                 finish()
             }
 
@@ -305,18 +316,19 @@ fun setAdapter(){
     }
 
 
-
     private fun openStudiosList() {
         var intent = Intent(this, StudiosListActivity::class.java)
         intent.putExtra(StudiosListActivity.IS_FOR_RESULT, true)
         startActivityForResult(intent, PICK_STUDIO)
     }
 
-    private fun openDressesList() {
+    private fun openDressesList(dresses: ArrayList<Dress>) {
         var intent = Intent(this, DressesListActivity::class.java)
         intent.putExtra(DressesListActivity.IS_FOR_RESULT, true)
+        intent.putExtra(DressesListActivity.PICKED_DRESSES, dresses)
         startActivityForResult(intent, PICK_DRESSES)
     }
+
     private fun openMakeupArtistsList() {
         var intent = Intent(this, MakeupListActivity::class.java)
         intent.putExtra(MakeupListActivity.IS_FOR_RESULT, true)
@@ -324,26 +336,31 @@ fun setAdapter(){
     }
 
     private fun openContactsList() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE
+        var intent = Intent(this, ContactsListActivity::class.java)
+        intent.putExtra(ContactsListActivity.IS_FOR_RESULT, true)
         startActivityForResult(intent, PICK_CONTACT)
     }
 
     fun showContactDialog() {
-        val dialog =
-            AddContactDialog.newInstance()
-        dialog.nameText = event.name
-        dialog.linkText = event.link
-        dialog.phoneText = event.contactPhone
-        dialog.onOk = { contactData ->
+
+        addContactDialog .nameText = event.name
+        addContactDialog .linkText = event.link
+        addContactDialog .phoneText = event.contactPhone
+        addContactDialog .onOk = { contactData ->
             event.name = contactData.name
             event.link = contactData.link
             event.contactPhone = contactData.phone
             contact.setText(contactData.name)
             phone.setText(contactData.phone)
-
+            SimpleDialog(this, SimpleDialog.DIALOG_TYPE.MESSAGE_ONLY)
+                .setTitle(getString(R.string.adding_contact))
+                .setMessage(getString(R.string.dialog_add_contact_save))
+                .setCancelable(true)
+                .setOkListener {
+                    presenter.addContact(contactData)
+                }.build()
         }
-        dialog.show(supportFragmentManager, "editDescription")
+        addContactDialog.show(supportFragmentManager, "editDescription")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -357,34 +374,43 @@ fun setAdapter(){
                 studioPhone.setText(studio.phone)
                 studioGeo.setText(studio.link)
                 studioRoom.setText(photoRoom.name)
-            } else  if (requestCode == PICK_MAKEUP_ARTIST) {
+            } else if (requestCode == PICK_MAKEUP_ARTIST) {
                 var makeupArtist = data?.getSerializableExtra("MAKEUP_ARTIST") as MakeupArtist
-                makeupPrice.setText(""+makeupArtist.defaultPrice)
+                makeupPrice.setText("" + makeupArtist.defaultPrice)
                 makeupArtistsName.setText(makeupArtist.name)
                 makeupArtistsPhone.setText(makeupArtist.phone)
 
-            } else  if (requestCode == PICK_DRESSES) {
-                event.dresses = data?.getSerializableExtra(DressesListActivity.DRESS) as ArrayList<Dress>
+            } else if (requestCode == PICK_DRESSES) {
+                event.dresses =
+                    data?.getSerializableExtra(DressesListActivity.DRESS) as ArrayList<Dress>
                 setAdapter()
                 dressesList.visibility = View.VISIBLE
-
-            } else if (requestCode == PICK_CONTACT) {
+            }  else if (requestCode == AddContactActivity.PICK_CONTACT && data != null) {
                 val contactUri = data?.getData();
-                /*   val i = {1}
-                    val projection : ArrayList<String> =  {ContactsContract.CommonDataKinds.Phone.NUMBER};*/
-                /*Cursor cursor = getContext().getContentResolver().query(contactUri, projection,
-                    null, null, null);
+                val projection = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+                val cursor: Cursor = contentResolver
+                    .query(contactUri, projection, null, null, null)
+                cursor.moveToFirst()
 
-                // If the cursor returned is valid, get the phone number
-                if (cursor != null && cursor.moveToFirst()) {
-                    int numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                    String number = cursor.getString(numberIndex);
-                    // Do something with the phone number
+                val columnPhone: Int = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                val columnName: Int = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
 
-                }*/
+                addContactDialog .nameText = cursor.getString(columnName)
+                addContactDialog .phoneText = cursor.getString(columnPhone)
+                addContactDialog.update()
+            }else if (requestCode == PICK_CONTACT) {
+                var contactData = data?.getSerializableExtra(RETURN_DATA) as Contact
+                event.name = contactData.name
+                event.link = contactData.link
+                event.contactPhone = contactData.phone
+                contact.setText(contactData.name)
+                phone.setText(contactData.phone)
+
             }
+
         }
     }
+
     fun AppCompatActivity.hideKeyboard() {
         val view = this.currentFocus
         if (view != null) {
@@ -395,7 +421,6 @@ fun setAdapter(){
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
     }
-
 
 
 }

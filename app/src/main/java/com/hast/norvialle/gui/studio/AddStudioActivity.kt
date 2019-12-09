@@ -20,7 +20,6 @@ import com.hast.norvialle.data.Studio
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.dialogs.PricePickerDialog
 import kotlinx.android.synthetic.main.activity_add_studio.*
-import kotlinx.android.synthetic.main.activity_studios_list.toolbar
 import kotlinx.android.synthetic.main.item_room.view.*
 
 /**
@@ -131,7 +130,7 @@ class AddStudioActivity : AppCompatActivity() {
 
     override
     fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.add_studio_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_save, menu);
         return true
     }
 

@@ -5,16 +5,13 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.hast.norvialle.data.Dress
-import com.hast.norvialle.data.Event
-import com.hast.norvialle.data.MakeupArtist
-import com.hast.norvialle.data.Studio
+import com.hast.norvialle.data.*
 
 
 /**
  * Created by Konstantyn Zakharchenko on 28.11.2019.
  */
-@Database(entities = [Event::class, Studio::class, MakeupArtist::class, Dress::class], version = 4)
+@Database(entities = [Event::class, Studio::class, MakeupArtist::class, Dress::class, Settings::class, Contact::class], version = 6)
 abstract class AppDatabase : RoomDatabase() {
     companion object {
 
@@ -49,10 +46,35 @@ abstract class AppDatabase : RoomDatabase() {
             }
 
         }
+        val MIGRATION_4_5: Migration? = object : Migration(4, 5) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE IF NOT EXISTS Settings (`id` TEXT NOT NULL, PRIMARY KEY(`id`))")
+                database.execSQL("ALTER TABLE Settings ADD COLUMN notifyDayBefore INTEGER DEFAULT  1 NOT NULL")
+                database.execSQL("ALTER TABLE Settings ADD COLUMN timeOfDayBefore INTEGER DEFAULT  79200000 NOT NULL")
+                database.execSQL("ALTER TABLE Settings ADD COLUMN notifySameDay INTEGER DEFAULT  1 NOT NULL")
+                database.execSQL("ALTER TABLE Settings ADD COLUMN timeOfSameDay INTEGER DEFAULT  28800000 NOT NULL")
+                database.execSQL("ALTER TABLE Settings ADD COLUMN notifyTimeBefore INTEGER DEFAULT  1 NOT NULL")
+                database.execSQL("ALTER TABLE Settings ADD COLUMN timeBeforeShoot INTEGER DEFAULT 120000 NOT NULL")
+
+
+            }
+
+        }
+        val MIGRATION_5_6: Migration? = object : Migration(5, 6) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE IF NOT EXISTS Contact (`id` TEXT NOT NULL, PRIMARY KEY(`id`))")
+                database.execSQL("ALTER TABLE Contact ADD COLUMN name TEXT DEFAULT '' NOT NULL")
+                database.execSQL("ALTER TABLE Contact ADD COLUMN link TEXT DEFAULT '' NOT NULL")
+                database.execSQL("ALTER TABLE Contact ADD COLUMN phone TEXT DEFAULT '' NOT NULL")
+            }
+
+        }
     }
 
     abstract fun eventDao(): EventsDao
     abstract fun studioDao(): StudioDao
     abstract fun makeupDao(): MakeupDao
     abstract fun dressDao(): DressDao
+    abstract fun settingsDao(): SettingsDao
+    abstract fun contactsDao(): ContactDao
 }

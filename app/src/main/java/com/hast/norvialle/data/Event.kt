@@ -1,6 +1,7 @@
 package com.hast.norvialle.data
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.hast.norvialle.db.DressDataConverter
@@ -37,7 +38,7 @@ class Event(@PrimaryKey var id: String, var name: String, var time: Long) : Seri
     var totalPrice: Int = 0
     @TypeConverters(DressDataConverter::class)
     var dresses = ArrayList<Dress>()
-
+@Ignore
     constructor() : this("", "", 0) {
 
     }

@@ -1,13 +1,17 @@
 package com.hast.norvialle.gui.utils
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.R
+import com.hast.norvialle.data.Dress
+import com.hast.norvialle.gui.MainPresenter
+import com.hast.norvialle.gui.dresses.AddDressActivity
 import com.hast.norvialle.utils.loadPicture
 import com.hast.norvialle.utils.rotatePictureFile
-import com.hast.norvialle.utils.saveFile
+import com.hast.norvialle.utils.showDeleteDialog
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_full_picture.*
 import java.lang.ref.WeakReference
@@ -18,7 +22,9 @@ import java.lang.ref.WeakReference
 class FullScreenPictureActivity : AppCompatActivity() {
     companion object {
         val PICTURE_FILE_NAME = "PICTURE_FILE_NAME"
+        val DRESS = "DRESS"
         val COMMENT = "COMMENT"
+        val EDIT_AND_DELETE = "EDIT_AND_DELETE"
     }
 
     var bitmap = WeakReference<Bitmap>(null)
@@ -27,7 +33,31 @@ class FullScreenPictureActivity : AppCompatActivity() {
         setContentView(R.layout.activity_full_picture)
         back.setOnClickListener { finish() }
 
-        val fileName = intent?.extras?.getString(PICTURE_FILE_NAME)
+        var fileName = intent?.let { it.extras?.getString(PICTURE_FILE_NAME)}
+        val comment = intent?.extras?.getString(COMMENT)
+
+        val hasControls = intent?.let { it.extras?.getBoolean(EDIT_AND_DELETE, false)}
+
+        if (hasControls == null || !hasControls){
+            editDeleteLayout.visibility = View.GONE
+            commentText.setText(comment)
+        } else{
+            editDeleteLayout.visibility = View.VISIBLE
+            val dress : Dress? = intent?.let { return@let it.extras?.getSerializable(DRESS) as Dress }
+            if (dress != null){
+                fileName =dress.fileName
+                edit.setOnClickListener{
+                    openDressEditor(dress)
+                }
+                delete.setOnClickListener{
+                    showDeleteDialog(this, R.string.delete_dialog_dress) {
+                        MainPresenter.deleteDress(dress)
+                        finish()
+                    }
+                }
+            }
+
+        }
         if (fileName != null) {
             progress.visibility = View.VISIBLE
             loadPicture(this, fileName).subscribeBy(
@@ -43,8 +73,7 @@ class FullScreenPictureActivity : AppCompatActivity() {
         } else {
             finish()
         }
-        val comment = intent?.extras?.getString(COMMENT)
-        commentText.setText(comment)
+
 
 
         rotate.setOnClickListener {
@@ -61,6 +90,13 @@ class FullScreenPictureActivity : AppCompatActivity() {
                 , onComplete = { progress.visibility = View.GONE }
             )
         }
+    }
+
+    private fun openDressEditor(dress: Dress) {
+        var intent = Intent(this, AddDressActivity::class.java)
+        intent.putExtra(AddDressActivity.DRESS, dress)
+        startActivityForResult(intent, AddDressActivity.EDIT)
+        finish()
     }
 
 }

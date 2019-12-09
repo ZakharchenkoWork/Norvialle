@@ -5,6 +5,7 @@ import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.media.ThumbnailUtils
 import android.util.Log
 import android.view.View
 
@@ -23,6 +24,10 @@ import java.lang.ref.WeakReference
 /**
  * Created by Konstantyn Zakharchenko on 04.12.2019.
  */
+
+object Pictures{
+    val files = HashMap<String, WeakReference<Bitmap>> ()
+}
 
 fun saveFile(context: Context, fileName: String, bitmap: Bitmap): Observable<Boolean> {
    return Observable.create<Boolean> {
@@ -80,7 +85,45 @@ fun loadPicture(context: Context, fileName: String): Observable<Bitmap> {
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 }
+fun loadPictureThumbnail(context: Context, fileName: String): Observable<Bitmap> {
+    return Observable.create<Bitmap> {
+        val callbacks = it
+        if (!fileName.equals("")) {
+            var isFound = false
+            val bitmap = Pictures.files[fileName]
+            bitmap?.let { bitmap.get()?.let { callbacks.onNext(it)
+                isFound= true } }
+            if (!isFound) {
 
+                val cw = ContextWrapper(context.applicationContext)
+                val directory: File = cw.getDir("dresses", Context.MODE_PRIVATE)
+                if (directory.exists()) {
+                    val thumbnail = ThumbnailUtils.extractThumbnail(
+                        BitmapFactory.decodeStream(
+                            FileInputStream(
+                                File(
+                                    directory,
+                                    fileName
+                                )
+                            )
+                        ), 100, 100
+                    )
+                    Pictures.files.put(fileName, WeakReference(thumbnail))
+                    it.onNext(
+                        thumbnail
+                    )
+                } else {
+                    it.onError(IOException("Pictures folder does not exists"))
+                }
+            }
+        } else{
+            it.onError(IOException("Picture not set"))
+        }
+        it.onComplete()
+    }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+}
 
 fun rotatePictureFile(bitmap: Bitmap?): Observable<Bitmap> {
     return Observable.create<Bitmap> {

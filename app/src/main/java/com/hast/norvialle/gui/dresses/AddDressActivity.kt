@@ -30,7 +30,6 @@ import com.hast.norvialle.utils.loadPicture
 import com.hast.norvialle.utils.saveFile
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_add_dress.*
-import kotlinx.android.synthetic.main.activity_studios_list.toolbar
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -140,7 +139,7 @@ class AddDressActivity : AppCompatActivity() {
 
     override
     fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.add_makeup_artist_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_save, menu);
         return true
     }
 

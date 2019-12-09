@@ -10,10 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Dress
-import com.hast.norvialle.data.MakeupArtist
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.utils.FullScreenPictureActivity
-import kotlinx.android.synthetic.main.activity_studios_list.*
+import kotlinx.android.synthetic.main.activity_makeup_list.*
 
 
 /**
@@ -23,6 +22,7 @@ class DressesListActivity : AppCompatActivity() {
     companion object {
         val IS_FOR_RESULT = "for result"
         val DRESS = "DRESS"
+        val PICKED_DRESSES = "PICKED_DRESSES"
     }
 
     val presenter: MainPresenter =
@@ -53,36 +53,32 @@ class DressesListActivity : AppCompatActivity() {
         adapter = DressesAdapter(MainPresenter.dresses, this)
         adapter.isForResult = isForResult
         list.adapter = adapter
+        if (isForResult){
+            val pickedDresses = intent.getSerializableExtra(PICKED_DRESSES) as ArrayList<Dress>
+            adapter.setPicked(pickedDresses)
 
+        }
         if (!isForResult) {
-            adapter.onEditDressListener=
-                DressesAdapter.OnEditDressListener{
-                    openAddDressActivity(it)
-                }
-            adapter.onDeleteDressListener= DressesAdapter.OnEditDressListener{
-                MainPresenter.deleteDress(it)
-                prepareAdapter()
-            }
             adapter.onViewDressListener = DressesAdapter.OnViewDressListener {
-                openPictureFullScreen(it.fileName, it.comment)
+                openPictureFullScreen(it)
             }
         }
     }
 
-    fun openPictureFullScreen(pictureFileName: String?, comment: String) {
-        if (pictureFileName != null && !pictureFileName.equals("")) {
+    fun openPictureFullScreen(dress : Dress) {
+
             val intent = Intent(this, FullScreenPictureActivity::class.java)
-            intent.putExtra(FullScreenPictureActivity.PICTURE_FILE_NAME, pictureFileName)
-            intent.putExtra(FullScreenPictureActivity.COMMENT, comment)
+            intent.putExtra(FullScreenPictureActivity.DRESS, dress)
+            intent.putExtra(FullScreenPictureActivity.EDIT_AND_DELETE, true)
             startActivity(intent)
-        }
+
     }
     override
     fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (!isForResult) {
-            getMenuInflater().inflate(R.menu.dress_menu, menu);
+            getMenuInflater().inflate(R.menu.menu_plus, menu);
         } else{
-            getMenuInflater().inflate(R.menu.dress_menu_pick, menu);
+            getMenuInflater().inflate(R.menu.menu_pick, menu);
         }
         return true
     }
@@ -93,7 +89,7 @@ class DressesListActivity : AppCompatActivity() {
             android.R.id.home -> {
                 finish()
             }
-            R.id.addDress -> {
+            R.id.plus -> {
                 openAddDressActivity(Dress("","",0))
             }
             R.id.pickDresses ->{

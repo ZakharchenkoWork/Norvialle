@@ -1,8 +1,12 @@
 package com.hast.norvialle.gui.utils
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
+import android.provider.ContactsContract
+import android.view.View
 
 import android.view.WindowManager
 import android.widget.EditText
@@ -10,6 +14,7 @@ import androidx.fragment.app.DialogFragment
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Contact
 import com.hast.norvialle.gui.MainPresenter
+import com.hast.norvialle.gui.contacts.AddContactActivity
 import kotlinx.android.synthetic.main.dialog_edit_text.*
 import kotlinx.android.synthetic.main.dialog_edit_text.view.*
 
@@ -40,23 +45,24 @@ class AddContactDialog : DialogFragment() {
     var phoneText: String = ""
     var onOk: ((contact: Contact) -> Unit)? = null
     var onCancel: (() -> Unit)? = null
-
+    lateinit var dialogView : View
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         // StackOverflowError
         // val view = layoutInflater.inflate(R.layout.dialog_edit_text, null)
-        val view = activity!!.layoutInflater.inflate(R.layout.dialog_edit_text, null)
+        dialogView = activity!!.layoutInflater.inflate(R.layout.dialog_edit_text, null)
 
 
-        view.name.setText(nameText)
-        view.link.setText(linkText)
-        view.phone.setText(phoneText)
+        dialogView.name.setText(nameText)
+        dialogView.link.setText(linkText)
+        dialogView.phone.setText(phoneText)
+        dialogView.contactsList.setOnClickListener { openContactsList() }
 
         val builder = AlertDialog.Builder(context!!)
             .setTitle("Adding new contact")
-            .setView(view)
+            .setView(dialogView)
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                onOk?.invoke(Contact(view.name.text.toString(), view.link.text.toString(), view.phone.text.toString()))
+                onOk?.invoke(Contact(dialogView.name.text.toString(), dialogView.link.text.toString(), dialogView.phone.text.toString()))
             }
             .setNegativeButton(android.R.string.cancel) { _, _ ->
                 onCancel?.invoke()
@@ -68,5 +74,15 @@ class AddContactDialog : DialogFragment() {
         return dialog
     }
 
+    private fun openContactsList() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE
+        (context as Activity).startActivityForResult(intent, AddContactActivity.PICK_CONTACT)
+    }
 
+    fun update() {
+        if(::dialogView.isInitialized)
+        dialogView.name.setText(nameText)
+        dialogView.phone.setText(phoneText)
+    }
 }

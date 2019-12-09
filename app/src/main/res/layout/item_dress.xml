@@ -6,40 +6,6 @@
         android:layout_margin="@dimen/margin_small"
         android:background="@drawable/background_plate"
     >
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/backgroundLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-        <ImageView
-                android:id="@+id/delete"
-                android:layout_width="@dimen/icon_size_standard"
-                android:layout_height="@dimen/icon_size_standard"
-                android:src="@drawable/delete"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_margin="@dimen/margin_small"/>
-        <ImageView
-                android:id="@+id/edit"
-                android:layout_width="@dimen/icon_size_standard"
-                android:layout_height="@dimen/icon_size_standard"
-                android:src="@drawable/edit"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_margin="@dimen/margin_small"/>
-        <ImageView
-                android:id="@+id/view"
-                android:layout_width="@dimen/icon_size_standard"
-                android:layout_height="@dimen/icon_size_standard"
-                android:src="@drawable/view"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edit"
-                android:layout_margin="@dimen/margin_small"/>
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/foregroundLayout"
         android:layout_width="match_parent"

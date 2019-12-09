@@ -17,23 +17,31 @@
                 android:src="@drawable/back_white"
 
                 />
+<RelativeLayout
+        android:id="@+id/editDeleteLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/rotate">
+    <ImageView
+            android:id="@+id/edit"
+            android:layout_width="@dimen/icon_size_standard"
+            android:layout_height="@dimen/icon_size_standard"
+            android:layout_alignParentEnd="true"
 
-        <TextView
-                android:id="@+id/commentText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/back"
-                android:layout_alignBottom="@id/back"
-                android:layout_marginLeft="@dimen/margin_small"
-                android:layout_marginRight="@dimen/margin_small"
-                android:layout_toLeftOf="@id/rotate"
-                android:layout_toRightOf="@+id/back"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:maxLines="1"
-                android:text="Комментарий"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_normal" />
+            android:layout_marginRight="@dimen/margin_small"
+            android:src="@drawable/edit_white"
+            />
+    <ImageView
+            android:id="@+id/delete"
+            android:layout_width="@dimen/icon_size_standard"
+            android:layout_height="@dimen/icon_size_standard"
+        android:layout_toStartOf="@id/edit"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_small"
+            android:src="@drawable/delete_white"
+            />
+</RelativeLayout>
+
 
         <ImageView
                 android:id="@+id/rotate"
@@ -56,7 +64,21 @@
             android:layout_below="@id/controls"
             android:scaleType="centerInside"
             android:src="@drawable/dress_wide" />
+    <TextView
+            android:id="@+id/commentText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/margin_standard"
+            android:layout_marginRight="@dimen/margin_standard"
+            android:layout_marginBottom="@dimen/margin_standard"
 
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="Комментарий"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_normal" />
     <ProgressBar
             android:id="@+id/progress"
             android:layout_width="wrap_content"
