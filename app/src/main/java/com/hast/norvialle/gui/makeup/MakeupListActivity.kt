@@ -6,13 +6,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hast.norvialle.R
 import com.hast.norvialle.data.MakeupArtist
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.makeup.AddMakeupArtistActivity.Companion.MAKEUP_ARTIST
+import com.hast.norvialle.utils.getSearchTextWatcher
+import com.hast.norvialle.utils.showDeleteDialog
 import kotlinx.android.synthetic.main.activity_makeup_list.*
+import kotlinx.android.synthetic.main.activity_makeup_list.list
+import kotlinx.android.synthetic.main.activity_makeup_list.searchFilter
+import kotlinx.android.synthetic.main.activity_makeup_list.toolbar
+import kotlinx.android.synthetic.main.activity_search_list.*
 
 
 /**
@@ -51,15 +58,17 @@ class MakeupListActivity : AppCompatActivity() {
         adapter.isForResult = isForResult
         list.adapter = adapter
         if (!isForResult) {
-            adapter.onEditMakeupArtistListener =
-                MakeupAdapter.OnEditMakeupArtistListener{
+            adapter.onEditistener = {
+                openMakeupArtistEditor(it)
                 }
-            adapter.onDeleteMakeupArtistListener= MakeupAdapter.OnEditMakeupArtistListener{
-                MainPresenter.deleteMakeupArtist(it)
-                prepareAdapter()
+            adapter.onDeleteListener= {
+                showDeleteDialog(this, R.string.delete_dialog_makeup_artist) {
+                    MainPresenter.deleteMakeupArtist(it)
+                    prepareAdapter()
+                }
             }
         } else {
-            adapter.onPickMakeupArtistListener= MakeupAdapter.OnPickMakeupArtistListener{
+            adapter.onPickListener= {
                     makeupArtist: MakeupArtist ->
                 val finishIntent = Intent()
                 finishIntent.putExtra("MAKEUP_ARTIST", makeupArtist)
@@ -67,13 +76,15 @@ class MakeupListActivity : AppCompatActivity() {
                 finish()
             }
         }
+        searchFilter.addTextChangedListener(getSearchTextWatcher { adapter.filterBy(it) })
     }
 
     override
     fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.menu_plus, menu);
+        getMenuInflater().inflate(R.menu.menu_search_plus, menu);
         return true
     }
+    var isSearchShown = false
 
     override
     fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -83,6 +94,10 @@ class MakeupListActivity : AppCompatActivity() {
             }
             R.id.plus -> {
              openMakeupArtistEditor(MakeupArtist("",0,""))
+            }
+            R.id.search-> {
+                isSearchShown = !isSearchShown
+                searchFilter.visibility = if (isSearchShown) View.VISIBLE else View.GONE
             }
 
         }
