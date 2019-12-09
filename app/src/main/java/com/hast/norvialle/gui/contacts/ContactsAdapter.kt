@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Contact
 import com.hast.norvialle.gui.utils.BaseAdapter
-import com.hast.norvialle.utils.preparePhone
 import kotlinx.android.synthetic.main.item_contact.view.*
 
 class ContactsAdapter(allItems: ArrayList<Contact>, context: Context) :
@@ -70,7 +69,7 @@ class ContactsAdapter(allItems: ArrayList<Contact>, context: Context) :
     }
 
     override fun isMatchingFilter(data: Contact, filterText: String): Boolean {
-        return data.name.contains(filterText) || preparePhone(data.phone).contains(preparePhone(filterText))
+        return contains(data.name, filterText) || checkPhone(data.phone, filterText)
     }
 }
 

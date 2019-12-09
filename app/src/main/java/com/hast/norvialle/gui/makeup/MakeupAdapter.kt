@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import com.hast.norvialle.R
 import com.hast.norvialle.data.MakeupArtist
 import com.hast.norvialle.gui.utils.BaseAdapter
-import com.hast.norvialle.utils.preparePhone
 import kotlinx.android.synthetic.main.item_makeup.view.*
 import kotlinx.android.synthetic.main.item_studio.view.delete
 import kotlinx.android.synthetic.main.item_studio.view.edit
@@ -21,11 +20,7 @@ class MakeupAdapter(allItems: ArrayList<MakeupArtist>, context: Context) :
     }
 
     override fun isMatchingFilter(data: MakeupArtist, filterText: String): Boolean {
-        return data.name.contains(filterText) || preparePhone(data.phone).contains(
-            preparePhone(
-                filterText
-            )
-        )
+        return contains(data.name, filterText) || checkPhone(data.phone, filterText)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
