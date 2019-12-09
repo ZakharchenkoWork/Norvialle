@@ -4,8 +4,6 @@ package com.hast.norvialle.gui.studio
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -17,6 +15,8 @@ import com.hast.norvialle.data.PhotoRoom
 import com.hast.norvialle.data.Studio
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.studio.AddStudioActivity.Companion.STUDIO
+import com.hast.norvialle.utils.getSearchTextWatcher
+import com.hast.norvialle.utils.showDeleteDialog
 import kotlinx.android.synthetic.main.activity_search_list.*
 
 
@@ -47,17 +47,7 @@ class StudiosListActivity : AppCompatActivity() {
             getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
             getSupportActionBar()?.setTitle(R.string.studios);
         }
-        searchFilter.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-            }
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                (list.adapter as StudiosAdapter).filterBy(""+p0)
-            }
-        })
     }
 
 
@@ -65,27 +55,33 @@ class StudiosListActivity : AppCompatActivity() {
         super.onResume()
         prepareAdapter()
     }
+
     fun prepareAdapter() {
         val adapter = StudiosAdapter(MainPresenter.studios, this)
         adapter.isForResult = isForResult
         list.adapter = adapter
         if (!isForResult) {
-            adapter.onEditStudioListener =
-                StudiosAdapter.OnEditStudioListener { openStudioEditor(it) }
-            adapter.onDeleteStudioListener = StudiosAdapter.OnEditStudioListener {
-                MainPresenter.deleteStudio(it)
-                prepareAdapter()
+            adapter.onEditistener = { openStudioEditor(it) }
+            adapter.onDeleteListener = {
+                showDeleteDialog(this, R.string.delete_dialog_studio) {
+                    MainPresenter.deleteStudio(it)
+                    prepareAdapter()
+                }
             }
         } else {
-            adapter.onPickStudioListener = StudiosAdapter.OnPickStudioListener {
-                    studio: Studio, photoRoom: PhotoRoom ->
+            adapter.onPickListenerWithOptional = { studio: Studio, photoRoom: Any ->
                 val finishIntent = Intent()
                 finishIntent.putExtra("STUDIO", studio)
-                finishIntent.putExtra("ROOM", photoRoom)
+                if (photoRoom is PhotoRoom) {
+                    finishIntent.putExtra("ROOM", photoRoom)
+                }
                 setResult(Activity.RESULT_OK, finishIntent)
                 finish()
             }
         }
+        searchFilter.addTextChangedListener(getSearchTextWatcher {
+            (list.adapter as StudiosAdapter).filterBy(it)
+        })
     }
 
     override
@@ -102,9 +98,10 @@ class StudiosListActivity : AppCompatActivity() {
             }
             R.id.plus -> {
                 openStudioEditor(Studio())
-            } R.id.search-> {
+            }
+            R.id.search -> {
                 isSearchShown = !isSearchShown
-            searchFilter.visibility = if (isSearchShown) View.VISIBLE else View.GONE
+                searchFilter.visibility = if (isSearchShown) View.VISIBLE else View.GONE
             }
 
         }

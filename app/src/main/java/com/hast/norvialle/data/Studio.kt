@@ -37,7 +37,7 @@ class Studio : Serializable{
 
     fun roomsContains(filterText: String): Boolean {
         for (room in rooms) {
-            if (room.name.contains(filterText)){
+            if (room.name.toLowerCase().contains(filterText.toLowerCase())){
                 return true
             }
         }

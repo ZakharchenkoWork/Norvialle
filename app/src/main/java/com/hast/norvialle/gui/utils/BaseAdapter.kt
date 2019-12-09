@@ -21,6 +21,7 @@ abstract class BaseAdapter<DataType> (private val allItems: ArrayList<DataType>,
     var onDeleteListener: ((data: DataType)->Unit)? = null
 
     var onPickListener: ((data: DataType)->Unit)? = null
+    var onPickListenerWithOptional: ((data: DataType, optional : Any)->Unit)? = null
     var isForResult = false
     val items: ArrayList<DataType> = ArrayList()
 
@@ -95,7 +96,17 @@ abstract fun isMatchingFilter(data:DataType, filterText : String) : Boolean
         abstract fun bind(item: T)
     }
 
+    fun contains(text: String, filter:String) : Boolean{
+        return text.toLowerCase().contains(filter.toLowerCase())
+    }
 
+    fun checkPhone(number: String, filter:String) : Boolean{
+        return preparePhone(number).contains(preparePhone(filter))
+
+    }
+    fun preparePhone(phone : String) : String{
+        return phone.replace(" ", "").replace("(", "").replace(")", "").replace("-", "").replace("+", "").trim()
+    }
 }
 
 

@@ -11,29 +11,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hast.norvialle.R
 import com.hast.norvialle.data.PhotoRoom
 import com.hast.norvialle.data.Studio
+import com.hast.norvialle.gui.utils.BaseAdapter
 import kotlinx.android.synthetic.main.item_room_read_only.view.*
 import kotlinx.android.synthetic.main.item_studio.view.*
 
 
-class StudiosAdapter(val allItems: ArrayList<Studio>, private val context: Context) :
-    RecyclerView.Adapter<StudiosAdapter.BaseViewHolder<*>>() {
+class StudiosAdapter(allItems: ArrayList<Studio>, context: Context) :
+    BaseAdapter<Studio>(allItems, context) {
 
-    var onEditStudioListener: OnEditStudioListener =
-        OnEditStudioListener {}
-    var onDeleteStudioListener: OnEditStudioListener =
-        OnEditStudioListener {}
-    var onPickStudioListener: OnPickStudioListener =
-        OnPickStudioListener { studio: Studio, photoRoom: PhotoRoom -> }
-    val items: ArrayList<Studio> = ArrayList()
 
-    init{
-        items.addAll(allItems)
-    }
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         (holder as StudioViewHolder).bind(items[position])
     }
-
-    var isForResult = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         return StudioViewHolder(
@@ -43,11 +32,6 @@ class StudiosAdapter(val allItems: ArrayList<Studio>, private val context: Conte
                 false
             )
         )
-    }
-
-
-    override fun getItemCount(): Int {
-        return items.size
     }
 
 
@@ -76,9 +60,9 @@ class StudiosAdapter(val allItems: ArrayList<Studio>, private val context: Conte
             }
             if(!isForResult) {
                 itemView.edit.setOnClickListener {
-                    onEditStudioListener.doAction(studio)
+                    onEditistener?.invoke(studio)
                 }
-                itemView.delete.setOnClickListener { onDeleteStudioListener.doAction(studio) }
+                itemView.delete.setOnClickListener { onDeleteListener?.invoke(studio) }
             } else{
                 itemView.edit.visibility = View.GONE
                 itemView.delete.visibility = View.GONE
@@ -122,7 +106,7 @@ class StudiosAdapter(val allItems: ArrayList<Studio>, private val context: Conte
                             view.price.setText("" + room.price)
                             view.priceWithDiscount.setText("" + room.priceWithDiscount)
                             if (isForResult){
-                                view.setOnClickListener { onPickStudioListener.doAction(studio, room) }
+                                view.setOnClickListener { onPickListenerWithOptional?.invoke(studio, room) }
                             } else{
                                 view.setOnClickListener{}
                             }
@@ -142,60 +126,14 @@ class StudiosAdapter(val allItems: ArrayList<Studio>, private val context: Conte
 
     }
 
-    private fun open2gis(link: String) {
-        val uri = Uri.parse(link.replace("http://", "dgis://"))
+    override fun isMatchingFilter(data: Studio, filterText: String): Boolean {
 
-        val intent = Intent(Intent.ACTION_VIEW, uri)
+     return contains(data.name, filterText) || contains(data.address, filterText) ||
+                    checkPhone(data.phone, filterText)
+                    || data.roomsContains(filterText)
 
-        intent.setPackage("ru.dublgis.dgismobile") // Если не планируете работать с публичной бета-версией, эту строчку надо указать
-
-        context.startActivity(intent)
     }
 
-    private fun dial(phone: String) {
-
-        context.startActivity(
-            Intent(
-                Intent.ACTION_DIAL,
-                Uri.fromParts("tel", phone, null)
-            )
-        )
-    }
-
-    fun filterBy(filterText : String) {
-        if (!filterText.equals("")) {
-            items.clear()
-            for (item in allItems) {
-                if (item.name.contains(filterText) || item.address.contains(filterText) || item.phone.contains(filterText)
-                    || item.roomsContains(filterText)) {
-                    items.add(item)
-                }
-
-            }
-        } else{
-            items.clear()
-            items.addAll(allItems)
-        }
-        notifyDataSetChanged()
-    }
-
-
-    abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        abstract fun bind(item: T)
-    }
-
-
-    class OnEditStudioListener(private val onEditStudioListener: (studio: Studio) -> Unit) {
-        fun doAction(studio: Studio) {
-            onEditStudioListener(studio)
-        }
-    }
-
-    class OnPickStudioListener(private val onPickStudioListener: (studio: Studio, room: PhotoRoom) -> Unit) {
-        fun doAction(studio: Studio, room: PhotoRoom) {
-            onPickStudioListener(studio, room)
-        }
-    }
 }
 
 

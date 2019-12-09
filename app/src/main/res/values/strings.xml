@@ -67,6 +67,7 @@
     <string name="insta">Инстаграм</string>
     <string name="dialog_add_contact_save">Хотите сохранить контакт в список?</string>
     <string name="delete_dialog_makeup_artist">визажиста</string>
+    <string name="delete_dialog_studio">студию</string>
 
 
 </resources>
