@@ -1,8 +1,6 @@
-package com.hast.norvialle.gui.main
+package com.hast.norvialle.gui.events
 
 import android.content.Context
-import android.content.ContextWrapper
-import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,18 +9,15 @@ import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Dress
-import com.hast.norvialle.data.MakeupArtist
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.item_dress.view.*
-import java.io.File
-import java.io.FileInputStream
 
 
 class DressesPicturesAdapter(val items: ArrayList<Dress>, private val context: Context) :
     RecyclerView.Adapter<DressesPicturesAdapter.BaseViewHolder<*>>() {
 
     var onViewDressListener: OnViewDressListener =
-        OnViewDressListener{ dress : Dress -> }
+        OnViewDressListener { dress: Dress -> }
 
     override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
         (holder as DressViewHolder).bind(items[position])

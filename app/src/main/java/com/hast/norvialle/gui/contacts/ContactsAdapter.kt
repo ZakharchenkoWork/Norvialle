@@ -59,6 +59,8 @@ class ContactsAdapter(allItems: ArrayList<Contact>, context: Context) :
                 itemView.delete.setOnClickListener {
                     onDeleteListener?.invoke(contact)
                 }
+                itemView.edit.visibility = View.VISIBLE
+                itemView.delete.visibility = View.VISIBLE
             } else {
                 itemView.edit.visibility = View.GONE
                 itemView.delete.visibility = View.GONE

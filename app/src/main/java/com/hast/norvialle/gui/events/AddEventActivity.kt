@@ -1,4 +1,4 @@
-package com.hast.norvialle.gui.main
+package com.hast.norvialle.gui.events
 
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -21,8 +21,7 @@ import com.hast.norvialle.data.*
 import com.hast.norvialle.gui.BaseActivity
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.contacts.AddContactActivity
-import com.hast.norvialle.gui.contacts.ContactsListActivity
-import com.hast.norvialle.gui.contacts.ContactsListActivity.Companion.RETURN_DATA
+import com.hast.norvialle.gui.contacts.ContactsListFragment
 import com.hast.norvialle.gui.dialogs.SimpleDialog
 import com.hast.norvialle.gui.dresses.DressesListActivity
 import com.hast.norvialle.gui.makeup.MakeupListActivity
@@ -31,7 +30,6 @@ import com.hast.norvialle.gui.utils.AddContactDialog
 import com.hast.norvialle.gui.utils.FullScreenPictureActivity
 import com.hast.norvialle.utils.getFloatValue
 import com.hast.norvialle.utils.getIntValue
-import com.hast.norvialle.utils.notifications.AlarmReceiver
 import com.hast.norvialle.utils.notifications.setAlarmForEvent
 import kotlinx.android.synthetic.main.activity_add_event.*
 import kotlinx.android.synthetic.main.activity_add_event.contactsList
@@ -61,10 +59,18 @@ class AddEventActivity : BaseActivity() {
     }
 
     fun setAdapter() {
-        val dressesPicturesAdapter = DressesPicturesAdapter(event.dresses, this)
+        val dressesPicturesAdapter =
+            DressesPicturesAdapter(
+                event.dresses,
+                this
+            )
         dressesList.adapter = dressesPicturesAdapter
         dressesPicturesAdapter.onViewDressListener =
-            DressesPicturesAdapter.OnViewDressListener { it -> openPictureFullScreen(it) }
+            DressesPicturesAdapter.OnViewDressListener { it ->
+                openPictureFullScreen(
+                    it
+                )
+            }
 
     }
 
@@ -265,17 +271,8 @@ class AddEventActivity : BaseActivity() {
     }
 
     override
-    fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.menu_save, menu);
-        return true
-    }
-
-    override
     fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
-            android.R.id.home -> {
-                finish()
-            }
             R.id.save -> {
                 event.time = finalCalendar.timeInMillis
                 event.contactPhone = phone.text.toString()
@@ -315,30 +312,46 @@ class AddEventActivity : BaseActivity() {
         return super.onOptionsItemSelected(item);
     }
 
+    override fun getMenuRes(): Int {
+        return R.menu.menu_save
+    }
+    override fun getMenuTitleRes(): Int {
+        return R.string.adding_event
+    }
 
     private fun openStudiosList() {
         var intent = Intent(this, StudiosListActivity::class.java)
         intent.putExtra(StudiosListActivity.IS_FOR_RESULT, true)
-        startActivityForResult(intent, PICK_STUDIO)
+        startActivityForResult(intent,
+            PICK_STUDIO
+        )
     }
 
     private fun openDressesList(dresses: ArrayList<Dress>) {
         var intent = Intent(this, DressesListActivity::class.java)
         intent.putExtra(DressesListActivity.IS_FOR_RESULT, true)
         intent.putExtra(DressesListActivity.PICKED_DRESSES, dresses)
-        startActivityForResult(intent, PICK_DRESSES)
+        startActivityForResult(intent,
+            PICK_DRESSES
+        )
     }
 
     private fun openMakeupArtistsList() {
         var intent = Intent(this, MakeupListActivity::class.java)
         intent.putExtra(MakeupListActivity.IS_FOR_RESULT, true)
-        startActivityForResult(intent, PICK_MAKEUP_ARTIST)
+        startActivityForResult(intent,
+            PICK_MAKEUP_ARTIST
+        )
     }
 
     private fun openContactsList() {
-        var intent = Intent(this, ContactsListActivity::class.java)
-        intent.putExtra(ContactsListActivity.IS_FOR_RESULT, true)
-        startActivityForResult(intent, PICK_CONTACT)
+        showFragment(ContactsListFragment.newInstance(){
+            event.name = it.name
+            event.link = it.link
+            event.contactPhone = it.phone
+            contact.setText(it.name)
+            phone.setText(it.phone)
+        })
     }
 
     fun showContactDialog() {
@@ -398,29 +411,11 @@ class AddEventActivity : BaseActivity() {
                 addContactDialog .nameText = cursor.getString(columnName)
                 addContactDialog .phoneText = cursor.getString(columnPhone)
                 addContactDialog.update()
-            }else if (requestCode == PICK_CONTACT) {
-                var contactData = data?.getSerializableExtra(RETURN_DATA) as Contact
-                event.name = contactData.name
-                event.link = contactData.link
-                event.contactPhone = contactData.phone
-                contact.setText(contactData.name)
-                phone.setText(contactData.phone)
-
             }
-
         }
     }
 
-    fun AppCompatActivity.hideKeyboard() {
-        val view = this.currentFocus
-        if (view != null) {
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0)
-        }
 
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
-
-    }
 
 
 }

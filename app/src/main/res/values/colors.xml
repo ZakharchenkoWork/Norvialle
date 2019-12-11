@@ -10,5 +10,6 @@
     <color name="light_grey">#AAAAAA</color>
     <color name="blue">#3F51B5</color>
     <color name="roseTransparent">#80D9949C</color>
+    <color name="standard_layout_background">#FAECF4</color>
 
 </resources>

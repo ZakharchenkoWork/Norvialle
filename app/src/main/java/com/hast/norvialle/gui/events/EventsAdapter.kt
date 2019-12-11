@@ -1,4 +1,4 @@
-package com.hast.norvialle.gui.main
+package com.hast.norvialle.gui.events
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Event
-import com.hast.norvialle.gui.dialogs.SimpleDialog
 import com.hast.norvialle.utils.*
 import kotlinx.android.synthetic.main.item_date.view.*
 import kotlinx.android.synthetic.main.item_event.view.*

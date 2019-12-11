@@ -25,6 +25,7 @@
     <string name="delete_dialog_no">Нет</string>
     <string name="delete_dialog_event">событие</string>
     <string name="delete_dialog_dress">платье</string>
+    <string name="delete_dialog_contact">контакт</string>
 
     <string name="add">Добавить</string>
     <string name="pick">Выбрать</string>
@@ -38,6 +39,7 @@
     <string name="paid">Сумма залога</string>
     <string name="makeupPrice">Стоимость макияжа</string>
     <string name="monyLeft">Остаток: %1$d</string>
+    <string name="events_list">События</string>
     <string name="calendar">Календарь</string>
     <string name="add_event">Добавить событие</string>
     <string name="contacts">Контакты</string>

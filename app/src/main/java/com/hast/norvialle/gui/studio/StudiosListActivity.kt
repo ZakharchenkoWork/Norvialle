@@ -17,6 +17,7 @@ import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.studio.AddStudioActivity.Companion.STUDIO
 import com.hast.norvialle.utils.getSearchTextWatcher
 import com.hast.norvialle.utils.showDeleteDialog
+import kotlinx.android.synthetic.main.activity_add_contact.*
 import kotlinx.android.synthetic.main.activity_search_list.*
 
 
