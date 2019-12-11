@@ -36,6 +36,7 @@ class Event(@PrimaryKey var id: String, var name: String, var time: Long) : Seri
     var makeupTime: Long = 0
     var paidPrice: Int = 0
     var totalPrice: Int = 0
+    var additionalId:Int = 0
     @TypeConverters(DressDataConverter::class)
     var dresses = ArrayList<Dress>()
 @Ignore
@@ -63,5 +64,10 @@ class Event(@PrimaryKey var id: String, var name: String, var time: Long) : Seri
         event.totalPrice = totalPrice
 
         return event
+    }
+
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is Event) id.equals(other.id) else super.equals(other)
     }
 }

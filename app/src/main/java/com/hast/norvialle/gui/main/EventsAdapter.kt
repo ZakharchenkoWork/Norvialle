@@ -75,7 +75,7 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
     private fun prepareDates(): ArrayList<String> {
         val dates = ArrayList<String>()
         for (item in items) {
-            val date = getDate(item.time)
+            val date = getDateLocal(item.time)
             if (!dates.contains(date)) {
                 dates.add(date)
             }
@@ -126,9 +126,9 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
 
         for (item in items) {
 
-            if (!date.equals(getDate(item.time))) {
+            if (!date.equals(getDateLocal(item.time))) {
                 counter++
-                date = getDate(item.time)
+                date = getDateLocal(item.time)
                 if (counter == position) {
                     return TYPE_DATE
                 } else {
@@ -157,9 +157,9 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
 
         for (item in items) {
 
-            if (!date.equals(getDate(item.time))) {
+            if (!date.equals(getDateLocal(item.time))) {
                 counter++
-                date = getDate(item.time)
+                date = getDateLocal(item.time)
                 if (counter == position) {
                     return date
                 } else {
@@ -196,17 +196,9 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
             itemView.moneyLeft.setText(context.getString(R.string.monyLeft, event.getMoneyLeft()))
             itemView.contact.setText(event.name)
             itemView.description.setText(event.description)
-            itemView.makeupTime.setText(
-                context.getString(
-                    R.string.makeup_label,
-                    getTimeLocal(event.makeupTime),
-                    event.makeupArtistName
-                )
-            )
-            if (!event.makeupPhone.equals("")) {
-                itemView.makeupTime.setTextColor(context.resources.getColor(R.color.blue))
-                itemView.makeupTime.setOnClickListener { dial(event.makeupPhone) }
-            }
+
+
+
             itemView.phone.setText(event.contactPhone)
             if (!event.contactPhone.equals("")) {
                 itemView.call.setOnClickListener { dial(event.contactPhone) }
@@ -231,7 +223,18 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
             itemView.time.setText(getTimeLocal(event.time))
             itemView.studio.setImageResource(if (event.orderStudio) R.drawable.studio else R.drawable.studio_disabled)
             itemView.dress.setImageResource(if (event.orderDress) R.drawable.dress else R.drawable.dress_disabled)
-            itemView.makeup.setImageResource(if (event.orderMakeup) R.drawable.makeup else R.drawable.makeup_disabled)
+            if (event.orderMakeup) {
+                itemView.makeup.setImageResource(R.drawable.makeup)
+                itemView.makeupTime.visibility = View.VISIBLE
+                itemView.makeupTime.setText(context.getString(R.string.makeup_label, getTimeLocal(event.makeupTime), event.makeupArtistName))
+                if (!event.makeupPhone.equals("")) {
+                    itemView.makeupTime.setTextColor(context.resources.getColor(R.color.blue))
+                    itemView.makeupTime.setOnClickListener { dial(event.makeupPhone) }
+                }
+            }else{
+                itemView.makeup.setImageResource(R.drawable.makeup_disabled)
+                itemView.makeupTime.visibility = View.GONE
+            }
 
             if (!event.studioPhone.equals("")) {
                 itemView.studioPhone.setText(event.studioPhone)
@@ -265,8 +268,7 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
             itemView.copy.setOnClickListener { onAddEventListener.doAction(event.copy()) }
             itemView.edit.setOnClickListener { onAddEventListener.doAction(event) }
             itemView.delete.setOnClickListener {
-                showDeleteDialog(context, R.string.delete_dialog_event, {onDeleteEventListener.doAction(event)} )
-
+               onDeleteEventListener.doAction(event)
             }
 
             itemView.foregroundLayout.setOnTouchListener(

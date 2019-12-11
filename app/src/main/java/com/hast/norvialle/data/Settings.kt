@@ -10,10 +10,20 @@ import androidx.room.PrimaryKey
 class Settings {
     @PrimaryKey
     var id = "settings"
-    var notifyDayBefore = true
-    var timeOfDayBefore :Long = 22*60*60*1000
-    var notifySameDay = true
-    var timeOfSameDay :Long= 8*60*60*1000
-    var notifyTimeBefore = true
-    var timeBeforeShoot :Long= 2*60*1000
+    var notifyDayBefore = false
+    var timeOfDayBefore :Long = 0
+    var notifySameDay = false
+    var timeOfSameDay :Long=0
+    var notifyTimeBefore = false
+    var timeBeforeShoot :Long= 0
+
+    fun setDefault(){
+        id = "settings"
+        notifyDayBefore = true
+        timeOfDayBefore  = 22*60*60*1000
+        notifySameDay = true
+        timeOfSameDay = 8*60*60*1000
+        notifyTimeBefore = true
+        timeBeforeShoot = 8*60*60*1000
+    }
 }

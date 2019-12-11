@@ -2,6 +2,7 @@ package com.hast.norvialle.gui
 
 import com.hast.norvialle.App
 import com.hast.norvialle.data.*
+import com.hast.norvialle.db.AppDatabase
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -19,6 +20,12 @@ object MainPresenter {
     var contacts: ArrayList<Contact> = ArrayList()
     var settings: Settings = Settings()
 
+    fun getEventsList(): ArrayList<Event> {
+        if (events.isEmpty()) {
+            events = java.util.ArrayList(App.db.eventDao().getAll())
+        }
+        return events
+    }
     fun start() {
 
         events = java.util.ArrayList(App.db.eventDao().getAll())
@@ -26,11 +33,19 @@ object MainPresenter {
         makupArtists = java.util.ArrayList(App.db.makeupDao().getAll())
         dresses = java.util.ArrayList(App.db.dressDao().getAll())
         contacts = java.util.ArrayList(App.db.contactsDao().getAll())
-        settings = App.db.settingsDao().get()
-        if (settings == null) {
-            settings = Settings()
+
+        if(AppDatabase.migrateFrom4to5){
+            settings.setDefault()
+            App.db.settingsDao().insert(settings)
         }
+        settings = App.db.settingsDao().get()
         sort()
+        if (AppDatabase.migrationFrom6to7){
+            for (event in events) {
+                event.additionalId = (System.currentTimeMillis() % Int.MAX_VALUE).toInt()
+                App.db.eventDao().update(event)
+            }
+        }
     }
 
     fun sort() {
@@ -39,7 +54,8 @@ object MainPresenter {
 
     fun addEvent(event: Event) {
         if (event.id.equals("")) {
-            event.id = UUID.randomUUID().toString()
+            event.id = ""+(Math.random() * 1000000).toInt()
+            event.additionalId =  (System.currentTimeMillis() % Int.MAX_VALUE).toInt()
             events.add(event)
             App.db.eventDao().insert(event)
             sort()

@@ -11,10 +11,12 @@ import com.hast.norvialle.data.*
 /**
  * Created by Konstantyn Zakharchenko on 28.11.2019.
  */
-@Database(entities = [Event::class, Studio::class, MakeupArtist::class, Dress::class, Settings::class, Contact::class], version = 6)
+@Database(entities = [Event::class, Studio::class, MakeupArtist::class, Dress::class, Settings::class, Contact::class], version = 7)
 abstract class AppDatabase : RoomDatabase() {
-    companion object {
 
+    companion object {
+        var migrationFrom6to7 = false
+        var migrateFrom4to5 = false
         val MIGRATION_1_2: Migration? = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE Event ADD COLUMN makeupArtistName TEXT DEFAULT '' NOT NULL")
@@ -54,8 +56,8 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("ALTER TABLE Settings ADD COLUMN notifySameDay INTEGER DEFAULT  1 NOT NULL")
                 database.execSQL("ALTER TABLE Settings ADD COLUMN timeOfSameDay INTEGER DEFAULT  28800000 NOT NULL")
                 database.execSQL("ALTER TABLE Settings ADD COLUMN notifyTimeBefore INTEGER DEFAULT  1 NOT NULL")
-                database.execSQL("ALTER TABLE Settings ADD COLUMN timeBeforeShoot INTEGER DEFAULT 120000 NOT NULL")
-
+                database.execSQL("ALTER TABLE Settings ADD COLUMN timeBeforeShoot INTEGER DEFAULT 120000000 NOT NULL")
+                migrateFrom4to5 = true
 
             }
 
@@ -66,6 +68,15 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("ALTER TABLE Contact ADD COLUMN name TEXT DEFAULT '' NOT NULL")
                 database.execSQL("ALTER TABLE Contact ADD COLUMN link TEXT DEFAULT '' NOT NULL")
                 database.execSQL("ALTER TABLE Contact ADD COLUMN phone TEXT DEFAULT '' NOT NULL")
+            }
+
+        }
+
+        val MIGRATION_6_7: Migration? = object : Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+
+                database.execSQL("ALTER TABLE Event ADD COLUMN additionalId INTEGER DEFAULT 555 NOT NULL")
+                migrationFrom6to7 = true
             }
 
         }

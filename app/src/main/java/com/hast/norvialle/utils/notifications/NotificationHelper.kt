@@ -12,6 +12,7 @@ import com.hast.norvialle.R
 import com.hast.norvialle.data.Event
 import com.hast.norvialle.gui.main.MainActivity
 import com.hast.norvialle.utils.getTime
+import com.hast.norvialle.utils.getTimeLocal
 import java.io.Serializable
 
 /**
@@ -31,8 +32,6 @@ import java.io.Serializable
 
             val notificationManager = context.getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
-
-
 
             channel = NotificationChannel(channelId+"-MULTIPLE", context.getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH)
             notificationManager.createNotificationChannel(channel)
@@ -58,14 +57,11 @@ fun composeBigText(context: Context, events: ArrayList<Event>): String {
 
     var text = ""
     for (event in events) {
+        if(event.time > 0){
+           text += getTimeLocal(event.time) +" - "
+        }
         if (!event.studioName.equals("")){
             text += context.getString(R.string.shoot_location, event.studioName)
-        }
-        if (!event.studioAddress.equals("")){
-            text += context.getString(R.string.shoot_address, event.studioAddress)
-        }
-        if (!event.name.equals("")){
-            text += context.getString(R.string.shoot_client, event.name)
         }
         if (!events.last().equals(event)) {
             text += "\n"
@@ -82,7 +78,7 @@ fun createSampleDataNotification(context: Context, event: Event){
 
     val notificationBuilder = NotificationCompat.Builder(context, channelId).apply {
         setSmallIcon(R.drawable.icon) // 3
-        setContentTitle(context.getString(R.string.shoot_in_time, getTime(event.time))) // 4
+        setContentTitle(context.getString(R.string.shoot_in_time, getTimeLocal(event.time))) // 4
         setContentText(context.getString(R.string.shoot_location, event.studioName)) // 5
         setStyle(NotificationCompat.BigTextStyle().bigText(composeBigText(context, event))) // 6
         priority = NotificationCompat.PRIORITY_DEFAULT // 7
@@ -97,14 +93,17 @@ fun createSampleDataNotification(context: Context, event: Event){
     val notificationManager = NotificationManagerCompat.from(context)
     notificationManager.notify(1001, notificationBuilder.build())
 }
-fun createSampleDataNotification(context: Context, events: java.util.ArrayList<Event>) {
+fun createSampleDataNotification(context: Context, events: java.util.ArrayList<Event>, isTommorrow: Boolean) {
+    if (events.isEmpty()){
+        return
+    }
 
     val channelId = "${context.packageName}-${context.getString(R.string.app_name)}-MULTIPLE"
 
     val notificationBuilder = NotificationCompat.Builder(context, channelId).apply {
         setSmallIcon(R.drawable.icon) // 3
-        setContentTitle(context.getString(R.string.schedule)) // 4
-        setContentText(context.getString(R.string.open_to_view)) // 5
+        setContentTitle(context.getString(if (isTommorrow) R.string.schedule_for_tomorrow else R.string.schedule_for_today )) // 4
+        setContentText(context.getString(R.string.planned_x_events_open_to_view, context.resources.getQuantityString(R.plurals.plurals_shoot, events.size, events.size))) // 5
         setStyle(NotificationCompat.BigTextStyle().bigText(composeBigText(context, events))) // 6
         priority = NotificationCompat.PRIORITY_DEFAULT // 7
         setAutoCancel(true) // 8

@@ -8,6 +8,9 @@ import com.hast.norvialle.R
 import com.hast.norvialle.data.Settings
 import com.hast.norvialle.utils.getTime
 import com.hast.norvialle.utils.notifications.AlarmReceiver
+import com.hast.norvialle.utils.notifications.resetAlarmsForEvents
+import com.hast.norvialle.utils.notifications.resetDayBeforeAlarm
+import com.hast.norvialle.utils.notifications.resetDaySameAlarm
 import com.hast.norvialle.utils.showTimePickerDialog
 import kotlinx.android.synthetic.main.activity_settings.*
 
@@ -27,13 +30,14 @@ class SettingsActivity : AppCompatActivity() {
             getSupportActionBar()?.setTitle(R.string.adding_event);
         }
 
-        dayBefore.isChecked = MainPresenter.settings.notifyDayBefore
-        thisDay.isChecked = MainPresenter.settings.notifySameDay
-        timeBeforeShoot.isChecked = MainPresenter.settings.notifyTimeBefore
+        val settings = MainPresenter.settings
+        dayBefore.isChecked = settings.notifyDayBefore
+        thisDay.isChecked = settings.notifySameDay
+        timeBeforeShoot.isChecked = settings.notifyTimeBefore
 
-        defaultDayBeforeTime.setText(getTime(MainPresenter.settings.timeOfDayBefore))
-        defaultThisDayTime.setText(getTime(MainPresenter.settings.timeOfSameDay))
-        defaultTimeBeforeShoot.setText(getTime(MainPresenter.settings.timeBeforeShoot))
+        defaultDayBeforeTime.setText(getTime(settings.timeOfDayBefore))
+        defaultThisDayTime.setText(getTime(settings.timeOfSameDay))
+        defaultTimeBeforeShoot.setText(getTime(settings.timeBeforeShoot))
 
         defaultDayBeforeTime.setOnClickListener { showTimePickerDialog(this, defaultDayBeforeTime) }
         defaultThisDayTime.setOnClickListener { showTimePickerDialog(this, defaultThisDayTime) }
@@ -43,7 +47,7 @@ class SettingsActivity : AppCompatActivity() {
                 defaultTimeBeforeShoot
             )
         }
-        AlarmReceiver().setAlarms(this, MainPresenter.events, MainPresenter.settings, false)
+
 //        defaultDayBeforeTime
     }
 
@@ -65,9 +69,23 @@ class SettingsActivity : AppCompatActivity() {
                 settings.notifySameDay = thisDay.isChecked
                 settings.notifyTimeBefore = timeBeforeShoot.isChecked
 
-                settings.timeOfDayBefore = getTime(defaultDayBeforeTime)
-                settings.timeOfSameDay = getTime(defaultThisDayTime)
-                settings.timeBeforeShoot = getTime(defaultTimeBeforeShoot)
+                val defaultDayBeforeTimeValue = getTime(defaultDayBeforeTime)
+                if (settings.timeOfDayBefore != defaultDayBeforeTimeValue) {
+                    settings.timeOfDayBefore = defaultDayBeforeTimeValue
+                    resetDayBeforeAlarm(this, settings)
+                }
+                val defaultThisDayTimeValue = getTime(defaultThisDayTime)
+                if (settings.timeOfSameDay != defaultThisDayTimeValue){
+                settings.timeOfSameDay = defaultThisDayTimeValue
+                    resetDaySameAlarm(this, settings)
+            }
+
+
+                val defaultTimeBeforeShootValue = getTime(defaultTimeBeforeShoot)
+                if (settings.timeBeforeShoot != defaultTimeBeforeShootValue) {
+                    settings.timeBeforeShoot = defaultTimeBeforeShootValue
+                    resetAlarmsForEvents(this, MainPresenter.events, settings)
+                }
                 MainPresenter.saveSettings(settings)
                 finish()
             }

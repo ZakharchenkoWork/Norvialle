@@ -1,5 +1,9 @@
 package com.hast.norvialle.gui.main
 
+import android.app.AlarmManager
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -11,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.navigation.NavigationView
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Event
+import com.hast.norvialle.gui.BaseActivity
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.SettingsActivity
 import com.hast.norvialle.gui.calendar.CalendarActivity
@@ -18,11 +23,14 @@ import com.hast.norvialle.gui.contacts.ContactsListActivity
 import com.hast.norvialle.gui.dresses.DressesListActivity
 import com.hast.norvialle.gui.makeup.MakeupListActivity
 import com.hast.norvialle.gui.studio.StudiosListActivity
+import com.hast.norvialle.utils.notifications.AlarmReceiver
 import com.hast.norvialle.utils.notifications.createNotificationChannels
+import com.hast.norvialle.utils.notifications.deleteAlarmForEvent
+import com.hast.norvialle.utils.showDeleteDialog
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     companion object {
         val SCROLL_TO = "SCROLL_TO"
@@ -62,6 +70,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             adapter.showPrevious()
             swipeRefresh.isRefreshing = false
         }
+
+
     }
 
     override fun onResume() {
@@ -69,7 +79,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         prepareAdapter()
         if (intent != null) {
             val dateToScroll = intent.getLongExtra(SCROLL_TO, 0)
-            list.smoothScrollToPosition((list.adapter as EventsAdapter).getPositionByDate(dateToScroll))
+            list.smoothScrollToPosition(
+                (list.adapter as EventsAdapter).getPositionByDate(
+                    dateToScroll
+                )
+            )
         }
     }
 
@@ -85,8 +99,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         adapter.onDeleteEventListener =
             EventsAdapter.OnAddEventListener { event ->
-                MainPresenter.delete(event)
-                prepareAdapter()
+                showDeleteDialog(this, R.string.delete_dialog_event) {
+                    deleteAlarmForEvent(this, event)
+                    MainPresenter.delete(event)
+                    prepareAdapter()
+                }
             }
     }
 

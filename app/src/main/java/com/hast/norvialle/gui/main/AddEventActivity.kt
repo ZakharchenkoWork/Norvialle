@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.hast.norvialle.R
 import com.hast.norvialle.data.*
+import com.hast.norvialle.gui.BaseActivity
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.contacts.AddContactActivity
 import com.hast.norvialle.gui.contacts.ContactsListActivity
@@ -31,6 +32,7 @@ import com.hast.norvialle.gui.utils.FullScreenPictureActivity
 import com.hast.norvialle.utils.getFloatValue
 import com.hast.norvialle.utils.getIntValue
 import com.hast.norvialle.utils.notifications.AlarmReceiver
+import com.hast.norvialle.utils.notifications.setAlarmForEvent
 import kotlinx.android.synthetic.main.activity_add_event.*
 import kotlinx.android.synthetic.main.activity_add_event.contactsList
 import kotlinx.android.synthetic.main.activity_add_event.phone
@@ -43,10 +45,8 @@ import kotlin.collections.ArrayList
 /**
  * Created by Konstantyn Zakharchenko on 20.09.2019.
  */
-class AddEventActivity : AppCompatActivity() {
-    //var  event : Event? = Event()
-    val presenter: MainPresenter =
-        MainPresenter
+class AddEventActivity : BaseActivity() {
+
     lateinit var event: Event
     lateinit var finalCalendar: Calendar
     lateinit var finalMakupCalendar: Calendar
@@ -307,7 +307,7 @@ class AddEventActivity : AppCompatActivity() {
 
                 MainPresenter.addEvent(event)
 
-                AlarmReceiver().setAlarm(this, event = event, settings = MainPresenter.settings)
+                setAlarmForEvent(this, event = event, settings = MainPresenter.settings)
                 finish()
             }
 
@@ -357,7 +357,7 @@ class AddEventActivity : AppCompatActivity() {
                 .setMessage(getString(R.string.dialog_add_contact_save))
                 .setCancelable(true)
                 .setOkListener {
-                    presenter.addContact(contactData)
+                    MainPresenter.addContact(contactData)
                 }.build()
         }
         addContactDialog.show(supportFragmentManager, "editDescription")

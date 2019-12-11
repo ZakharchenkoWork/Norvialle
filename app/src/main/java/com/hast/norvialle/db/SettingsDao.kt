@@ -15,6 +15,8 @@ interface SettingsDao {
     @Query("SELECT * FROM Settings WHERE id = 'settings'")
     fun get() : Settings
 
+    @Insert
+    fun insert(settings : Settings)
     @Update
     fun update(settings : Settings)
 
