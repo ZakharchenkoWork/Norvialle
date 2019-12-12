@@ -16,6 +16,7 @@ class Settings {
     var timeOfSameDay :Long=0
     var notifyTimeBefore = false
     var timeBeforeShoot :Long= 0
+    var useWheelsInput = false
 
     fun setDefault(){
         id = "settings"
@@ -25,5 +26,6 @@ class Settings {
         timeOfSameDay = 8*60*60*1000
         notifyTimeBefore = true
         timeBeforeShoot = 8*60*60*1000
+        useWheelsInput = true
     }
 }

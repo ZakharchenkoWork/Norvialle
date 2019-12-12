@@ -1,21 +1,16 @@
 package com.hast.norvialle.gui.contacts
 
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Contact
 import com.hast.norvialle.gui.BaseFragment
 
 import com.hast.norvialle.gui.MainPresenter
-import com.hast.norvialle.gui.events.EventsList
 import com.hast.norvialle.utils.getSearchTextWatcher
 import com.hast.norvialle.utils.showDeleteDialog
 import kotlinx.android.synthetic.main.activity_search_list.*
@@ -111,4 +106,8 @@ class ContactsListFragment : BaseFragment() {
         startActivityForResult(intent, AddContactActivity.EDIT)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        context?.let { prepareAdapter(it) }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
 }

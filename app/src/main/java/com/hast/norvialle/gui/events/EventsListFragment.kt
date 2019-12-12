@@ -17,13 +17,13 @@ import kotlinx.android.synthetic.main.fragment_list.view.*
 /**
  * Created by Konstantyn Zakharchenko on 11.12.2019.
  */
-class EventsList : BaseFragment() {
+class EventsListFragment : BaseFragment() {
 
     var dateToScroll = 0L
 
     companion object {
         fun newInstance(dateToScroll: Long = 0L): BaseFragment {
-            val eventsList = EventsList()
+            val eventsList = EventsListFragment()
             eventsList.dateToScroll = dateToScroll
             return eventsList
         }
@@ -45,7 +45,7 @@ class EventsList : BaseFragment() {
         root.list.layoutManager = LinearLayoutManager(context)
         root.swipeRefresh.setOnRefreshListener {
             val adapter = root.list.adapter as EventsAdapter
-            adapter.showPrevious()
+         //   adapter.showPrevious()
             root.swipeRefresh.isRefreshing = false
         }
         return root

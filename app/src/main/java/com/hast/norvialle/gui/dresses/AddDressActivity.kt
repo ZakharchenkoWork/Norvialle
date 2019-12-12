@@ -68,7 +68,7 @@ class AddDressActivity : AppCompatActivity() {
         if (actionBar != null) {
             getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
             getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
-            getSupportActionBar()?.setTitle(R.string.adding_makeup_artist);
+            getSupportActionBar()?.setTitle(R.string.adding_dress);
         }
 
         dress = intent?.extras?.getSerializable(DRESS) as Dress

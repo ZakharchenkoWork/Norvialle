@@ -178,21 +178,23 @@
 
         <TextView
                 android:id="@+id/locationName"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_standard"
                 android:ellipsize="end"
                 android:maxLines="1"
+                app:layout_constraintHorizontal_bias="0"
                 android:text="Локация"
                 android:textSize="@dimen/text_big_ish"
                 app:layout_constraintLeft_toRightOf="@id/orders"
                 app:layout_constraintRight_toLeftOf="@id/time"
                 app:layout_constraintStart_toEndOf="@+id/orders"
+                app:layout_constraintEnd_toStartOf="@+id/time"
                 app:layout_constraintTop_toTopOf="@id/time" />
 
         <TextView
                 android:id="@+id/locationRoom"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
 
                 android:layout_marginLeft="@dimen/margin_standard"
@@ -200,24 +202,27 @@
                 android:maxLines="1"
                 android:text="Зал"
                 android:textSize="@dimen/text_big_ish"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toRightOf="@id/orders"
                 app:layout_constraintRight_toLeftOf="@id/makeupTime"
                 app:layout_constraintStart_toEndOf="@+id/orders"
+                app:layout_constraintEnd_toStartOf="@+id/makeupTime"
                 app:layout_constraintTop_toBottomOf="@id/locationName" />
 
         <TextView
                 android:id="@+id/description"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-
                 android:layout_marginLeft="@dimen/margin_standard"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:text="Комментарий"
                 android:textSize="@dimen/text_normal"
+                android:ellipsize="end"
+                android:maxLines="1"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toRightOf="@id/orders"
                 app:layout_constraintRight_toLeftOf="@id/makeupTime"
                 app:layout_constraintStart_toEndOf="@+id/orders"
+                app:layout_constraintEnd_toStartOf="@+id/makeupTime"
                 app:layout_constraintTop_toBottomOf="@id/locationRoom" />
 
         <LinearLayout

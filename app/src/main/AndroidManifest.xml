@@ -23,12 +23,9 @@
         </activity>
         <activity android:name=".gui.SettingsActivity"/>
         <activity android:name=".gui.events.AddEventActivity"/>
-        <activity android:name=".gui.makeup.MakeupListActivity"/>
         <activity android:name=".gui.makeup.AddMakeupArtistActivity"/>
-        <activity android:name=".gui.dresses.DressesListActivity"/>
         <activity android:name=".gui.dresses.AddDressActivity"/>
         <activity android:name=".gui.utils.FullScreenPictureActivity"/>
-        <activity android:name=".gui.studio.StudiosListActivity"/>
         <activity android:name=".gui.contacts.AddContactActivity"/>
         <activity android:name=".gui.studio.AddStudioActivity">
             <intent-filter>

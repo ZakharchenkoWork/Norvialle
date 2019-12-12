@@ -95,6 +95,38 @@
                         android:textColor="@color/blue"
                         android:textSize="@dimen/text_big_ish" />
             </LinearLayout>
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:layout_marginLeft="@dimen/margin_standard"
+                    android:layout_marginRight="@dimen/margin_standard"
+                    android:background="@drawable/line_separator"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/notifications_label"
+                    android:textSize="@dimen/text_normal" />
+            <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    >
+            <RadioButton
+                    android:id="@+id/wheels"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wheels"
+                    android:textSize="@dimen/text_big_ish"
+                    android:checked="true"/>
+                <RadioButton
+                        android:id="@+id/keyboard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/keyboards"
+                        android:textSize="@dimen/text_big_ish"/>
+            </RadioGroup>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -8,7 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.R
-import com.hast.norvialle.gui.events.EventsList
+import com.hast.norvialle.gui.events.EventsListFragment
 
 
 /**
@@ -18,12 +18,12 @@ abstract class BaseActivity : AppCompatActivity(){
 
     fun openEventsList(dateToScroll: Long = 0L) {
 
-        showFragment(EventsList.newInstance(dateToScroll))
+        showFragment(EventsListFragment.newInstance(dateToScroll))
     }
 
     fun showFragment(fragment: BaseFragment) {
         supportFragmentManager.beginTransaction()
-            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out)
             .addToBackStack("Fragments")
             .replace(R.id.contentLayout, fragment).commitAllowingStateLoss()
     }
@@ -68,6 +68,7 @@ abstract class BaseActivity : AppCompatActivity(){
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.clear()
         getMenuInflater().inflate(getMenuRes(), menu)
+        setToolBarTitle(getMenuTitleRes())
         return super.onPrepareOptionsMenu(menu)
     }
 

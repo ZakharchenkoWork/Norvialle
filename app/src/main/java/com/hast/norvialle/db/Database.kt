@@ -11,7 +11,8 @@ import com.hast.norvialle.data.*
 /**
  * Created by Konstantyn Zakharchenko on 28.11.2019.
  */
-@Database(entities = [Event::class, Studio::class, MakeupArtist::class, Dress::class, Settings::class, Contact::class], version = 7)
+@Database(entities = [Event::class, Studio::class, MakeupArtist::class, Dress::class, Settings::class, Contact::class],
+    version = 8)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {
@@ -77,6 +78,12 @@ abstract class AppDatabase : RoomDatabase() {
 
                 database.execSQL("ALTER TABLE Event ADD COLUMN additionalId INTEGER DEFAULT 555 NOT NULL")
                 migrationFrom6to7 = true
+            }
+        }
+            val MIGRATION_7_8: Migration? = object : Migration(7, 8) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+
+                database.execSQL("ALTER TABLE Settings ADD COLUMN useWheelsInput INTEGER DEFAULT  1 NOT NULL")
             }
 
         }

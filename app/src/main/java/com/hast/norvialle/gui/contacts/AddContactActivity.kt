@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.item_event.insta
  */
 class AddContactActivity : AppCompatActivity() {
     companion object {
-        val EDIT: Int = 1
+        val EDIT: Int = 111
         val DATA_TYPE = "CONTACT"
         val PICK_CONTACT: Int = 911
     }

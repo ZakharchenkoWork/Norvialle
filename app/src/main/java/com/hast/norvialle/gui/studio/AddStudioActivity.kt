@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
@@ -19,7 +20,14 @@ import com.hast.norvialle.data.PhotoRoom
 import com.hast.norvialle.data.Studio
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.dialogs.PricePickerDialog
+import com.hast.norvialle.gui.dialogs.SimpleDialog
+import com.hast.norvialle.utils.getFloatValue
+import kotlinx.android.synthetic.main.activity_add_event.*
 import kotlinx.android.synthetic.main.activity_add_studio.*
+import kotlinx.android.synthetic.main.activity_add_studio.studioAddress
+import kotlinx.android.synthetic.main.activity_add_studio.studioName
+import kotlinx.android.synthetic.main.activity_add_studio.studioPhone
+import kotlinx.android.synthetic.main.activity_add_studio.toolbar
 import kotlinx.android.synthetic.main.item_room.view.*
 
 /**
@@ -48,6 +56,7 @@ class AddStudioActivity : AppCompatActivity() {
         if (intent?.action != Intent.ACTION_SEND) {
             studio = intent?.extras?.getSerializable(STUDIO) as Studio
         } else {
+            //TODO: Add support for Google Maps, Yandex and e.t.c.
             if ("text/plain" == intent.type) {
                 isForResult = false
                 studio = Studio()
@@ -117,13 +126,26 @@ class AddStudioActivity : AppCompatActivity() {
             } catch (nfe: NumberFormatException) {
                 value = 500f
             }
-            PricePickerDialog(this, getString(R.string.roomPriceWithDiscount), value)
-                .setOnDoneListener {
-                    view.priceWithDiscount.setText(("" + it).replace(".0", ""))
-                    paintBlack(view, R.id.price)
-                    paintBlack(view, R.id.priceWithDiscount)
-                }
-                .show()
+            if (!MainPresenter.settings.useWheelsInput){
+                PricePickerDialog(this, getString(R.string.roomPriceWithDiscount), value)
+                    .setOnDoneListener {
+                        view.priceWithDiscount.setText(("" + it).replace(".0", ""))
+                        paintBlack(view, R.id.price)
+                        paintBlack(view, R.id.priceWithDiscount)
+                    }
+                    .show()
+            }else {
+                SimpleDialog(this, SimpleDialog.DIALOG_TYPE.INPUT_ONLY)
+                    .setTitle(getString(R.string.roomPriceWithDiscount))
+                    .setMessage(""+value)
+                    .setInputType(InputType.TYPE_CLASS_NUMBER)
+                    .setOkListener { view.priceWithDiscount.setText(("" + it).replace(".0", ""))
+                        paintBlack(view, R.id.price)
+                        paintBlack(view, R.id.priceWithDiscount)
+                    }
+                    .build()
+
+            }
         }
         roomsContainer.addView(view)
     }

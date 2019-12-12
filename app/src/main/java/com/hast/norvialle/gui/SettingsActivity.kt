@@ -69,10 +69,14 @@ class SettingsActivity : AppCompatActivity() {
                 settings.notifySameDay = thisDay.isChecked
                 settings.notifyTimeBefore = timeBeforeShoot.isChecked
 
-                val defaultDayBeforeTimeValue = getTime(defaultDayBeforeTime)
-                if (settings.timeOfDayBefore != defaultDayBeforeTimeValue) {
-                    settings.timeOfDayBefore = defaultDayBeforeTimeValue
-                    resetDayBeforeAlarm(this, settings)
+                if (settings.notifyDayBefore) {
+                    val defaultDayBeforeTimeValue = getTime(defaultDayBeforeTime)
+                    if (settings.timeOfDayBefore != defaultDayBeforeTimeValue) {
+                        settings.timeOfDayBefore = defaultDayBeforeTimeValue
+                        resetDayBeforeAlarm(this, settings)
+                    }
+                } else{
+                    //TODO: Delete alarms
                 }
                 val defaultThisDayTimeValue = getTime(defaultThisDayTime)
                 if (settings.timeOfSameDay != defaultThisDayTimeValue){
@@ -86,6 +90,7 @@ class SettingsActivity : AppCompatActivity() {
                     settings.timeBeforeShoot = defaultTimeBeforeShootValue
                     resetAlarmsForEvents(this, MainPresenter.events, settings)
                 }
+               settings.useWheelsInput = wheels.isChecked
                 MainPresenter.saveSettings(settings)
                 finish()
             }

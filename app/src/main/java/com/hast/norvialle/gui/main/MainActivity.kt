@@ -2,7 +2,6 @@ package com.hast.norvialle.gui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
@@ -15,10 +14,10 @@ import com.hast.norvialle.gui.SettingsActivity
 
 import com.hast.norvialle.gui.calendar.CalendarFragment
 import com.hast.norvialle.gui.contacts.ContactsListFragment
-import com.hast.norvialle.gui.dresses.DressesListActivity
+import com.hast.norvialle.gui.dresses.DressesListFragment
 import com.hast.norvialle.gui.events.AddEventActivity
-import com.hast.norvialle.gui.makeup.MakeupListActivity
-import com.hast.norvialle.gui.studio.StudiosListActivity
+import com.hast.norvialle.gui.makeup.MakeupListFragment
+import com.hast.norvialle.gui.studio.StudiosListFragment
 import com.hast.norvialle.utils.notifications.createNotificationChannels
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -64,21 +63,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 R.id.calendar -> {
                     showFragment(CalendarFragment.newInstance())
                 }
-                R.id.contact -> {
-                    showFragment(ContactsListFragment.newInstance())
-                }
-                R.id.studio -> {
-                    startActivity(Intent(this, StudiosListActivity::class.java))
-                }
-                R.id.makeup -> {
-                    startActivity(Intent(this, MakeupListActivity::class.java))
-                }
-                R.id.dress -> {
-                    startActivity(Intent(this, DressesListActivity::class.java))
-                }
-                R.id.settings -> {
-                    startActivity(Intent(this, SettingsActivity::class.java))
-                }
                 R.id.eventsList -> {
                     openEventsList()
                 }
@@ -91,6 +75,23 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                         )
                     )
                 }
+                R.id.contact -> {
+                    showFragment(ContactsListFragment.newInstance())
+                }
+                R.id.studio -> {
+                    showFragment(StudiosListFragment.newInstance())
+                }
+                R.id.makeup -> {
+                    showFragment(MakeupListFragment.newInstance())
+                }
+                R.id.dress -> {
+                    showFragment(DressesListFragment.newInstance())
+
+                }
+                R.id.settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                }
+
             }
             }, 100L)
 

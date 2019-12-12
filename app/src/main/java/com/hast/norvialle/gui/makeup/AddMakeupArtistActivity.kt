@@ -103,6 +103,7 @@ class AddMakeupArtistActivity : AppCompatActivity() {
                 }
 
                     presenter.addMakeupArtist(makeupArtist)
+                setResult(Activity.RESULT_OK)
                 finish()
             }
 

@@ -3,41 +3,33 @@ package com.hast.norvialle.gui.events
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.text.InputType
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.hast.norvialle.R
-import com.hast.norvialle.data.*
+import com.hast.norvialle.data.Dress
+import com.hast.norvialle.data.Event
 import com.hast.norvialle.gui.BaseActivity
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.contacts.AddContactActivity
 import com.hast.norvialle.gui.contacts.ContactsListFragment
 import com.hast.norvialle.gui.dialogs.SimpleDialog
-import com.hast.norvialle.gui.dresses.DressesListActivity
-import com.hast.norvialle.gui.makeup.MakeupListActivity
-import com.hast.norvialle.gui.studio.StudiosListActivity
+import com.hast.norvialle.gui.dresses.DressesListFragment
+import com.hast.norvialle.gui.makeup.MakeupListFragment
+import com.hast.norvialle.gui.studio.StudiosListFragment
 import com.hast.norvialle.gui.utils.AddContactDialog
 import com.hast.norvialle.gui.utils.FullScreenPictureActivity
 import com.hast.norvialle.utils.getFloatValue
 import com.hast.norvialle.utils.getIntValue
 import com.hast.norvialle.utils.notifications.setAlarmForEvent
 import kotlinx.android.synthetic.main.activity_add_event.*
-import kotlinx.android.synthetic.main.activity_add_event.contactsList
-import kotlinx.android.synthetic.main.activity_add_event.phone
-import kotlinx.android.synthetic.main.activity_add_event.toolbar
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**
@@ -49,6 +41,7 @@ class AddEventActivity : BaseActivity() {
     lateinit var finalCalendar: Calendar
     lateinit var finalMakupCalendar: Calendar
     val addContactDialog = AddContactDialog.newInstance()
+
     companion object {
         const val EVENT_EXTRA: String = "EVENT"
         const val PICK_STUDIO: Int = 191
@@ -315,37 +308,40 @@ class AddEventActivity : BaseActivity() {
     override fun getMenuRes(): Int {
         return R.menu.menu_save
     }
+
     override fun getMenuTitleRes(): Int {
         return R.string.adding_event
     }
 
     private fun openStudiosList() {
-        var intent = Intent(this, StudiosListActivity::class.java)
-        intent.putExtra(StudiosListActivity.IS_FOR_RESULT, true)
-        startActivityForResult(intent,
-            PICK_STUDIO
-        )
+        showFragment(StudiosListFragment.newInstance { studio, photoRoom ->
+            studioName.setText(studio.name)
+            studioAddress.setText(studio.address)
+            studioPhone.setText(studio.phone)
+            studioGeo.setText(studio.link)
+            studioRoom.setText(photoRoom.name)
+        })
+
     }
 
     private fun openDressesList(dresses: ArrayList<Dress>) {
-        var intent = Intent(this, DressesListActivity::class.java)
-        intent.putExtra(DressesListActivity.IS_FOR_RESULT, true)
-        intent.putExtra(DressesListActivity.PICKED_DRESSES, dresses)
-        startActivityForResult(intent,
-            PICK_DRESSES
-        )
+        showFragment(DressesListFragment.newInstance(dresses) {
+            event.dresses = it
+            setAdapter()
+            dressesList.visibility = View.VISIBLE
+        })
     }
 
     private fun openMakeupArtistsList() {
-        var intent = Intent(this, MakeupListActivity::class.java)
-        intent.putExtra(MakeupListActivity.IS_FOR_RESULT, true)
-        startActivityForResult(intent,
-            PICK_MAKEUP_ARTIST
-        )
+        showFragment(MakeupListFragment.newInstance { makeupArtist ->
+            makeupPrice.setText("" + makeupArtist.defaultPrice)
+            makeupArtistsName.setText(makeupArtist.name)
+            makeupArtistsPhone.setText(makeupArtist.phone)
+        })
     }
 
     private fun openContactsList() {
-        showFragment(ContactsListFragment.newInstance(){
+        showFragment(ContactsListFragment.newInstance() {
             event.name = it.name
             event.link = it.link
             event.contactPhone = it.phone
@@ -356,10 +352,10 @@ class AddEventActivity : BaseActivity() {
 
     fun showContactDialog() {
 
-        addContactDialog .nameText = event.name
-        addContactDialog .linkText = event.link
-        addContactDialog .phoneText = event.contactPhone
-        addContactDialog .onOk = { contactData ->
+        addContactDialog.nameText = event.name
+        addContactDialog.linkText = event.link
+        addContactDialog.phoneText = event.contactPhone
+        addContactDialog.onOk = { contactData ->
             event.name = contactData.name
             event.link = contactData.link
             event.contactPhone = contactData.phone
@@ -378,44 +374,32 @@ class AddEventActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == PICK_STUDIO) {
-                var studio = data?.getSerializableExtra("STUDIO") as Studio
-                var photoRoom = data?.getSerializableExtra("ROOM") as PhotoRoom
-                studioName.setText(studio.name)
-                studioAddress.setText(studio.address)
-                studioPhone.setText(studio.phone)
-                studioGeo.setText(studio.link)
-                studioRoom.setText(photoRoom.name)
-            } else if (requestCode == PICK_MAKEUP_ARTIST) {
-                var makeupArtist = data?.getSerializableExtra("MAKEUP_ARTIST") as MakeupArtist
-                makeupPrice.setText("" + makeupArtist.defaultPrice)
-                makeupArtistsName.setText(makeupArtist.name)
-                makeupArtistsPhone.setText(makeupArtist.phone)
+        if (resultCode == Activity.RESULT_OK &&requestCode == AddContactActivity.PICK_CONTACT && data != null) {
+                data.data?.let { uri ->
 
-            } else if (requestCode == PICK_DRESSES) {
-                event.dresses =
-                    data?.getSerializableExtra(DressesListActivity.DRESS) as ArrayList<Dress>
-                setAdapter()
-                dressesList.visibility = View.VISIBLE
-            }  else if (requestCode == AddContactActivity.PICK_CONTACT && data != null) {
-                val contactUri = data?.getData();
-                val projection = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
-                val cursor: Cursor = contentResolver
-                    .query(contactUri, projection, null, null, null)
-                cursor.moveToFirst()
 
-                val columnPhone: Int = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
-                val columnName: Int = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+                    val projection = arrayOf(
+                        ContactsContract.CommonDataKinds.Phone.NUMBER,
+                        ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME
+                    )
+                    val cursor: Cursor? = contentResolver
+                        .query(uri, projection, null, null, null)
+                    cursor?.let { it ->
+                        it.moveToFirst()
 
-                addContactDialog .nameText = cursor.getString(columnName)
-                addContactDialog .phoneText = cursor.getString(columnPhone)
-                addContactDialog.update()
+                        val columnPhone: Int =
+                            it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                        val columnName: Int =
+                            it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+
+                        addContactDialog.nameText = it.getString(columnName)
+                        addContactDialog.phoneText = it.getString(columnPhone)
+                        addContactDialog.update()
+                        cursor.close()
+                    }
+                }
             }
-        }
     }
-
-
 
 
 }

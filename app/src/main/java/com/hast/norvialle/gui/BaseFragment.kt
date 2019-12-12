@@ -50,6 +50,9 @@ abstract class BaseFragment : Fragment(){
         activity?.let {
             menu.clear()
             it.menuInflater.inflate(getMenuId(), menu)
+            activity?.let {activity-> if (activity is BaseActivity){
+                activity.setToolBarTitle(getMenuTitleId())
+            } }
         }
     }
 
