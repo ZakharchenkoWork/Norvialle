@@ -41,62 +41,54 @@ class CalendarFragment : BaseFragment() {
         var date = 0L
         for (event in events) {
             val eventDate = getDateInMillis(event.time)
-            if (date != eventDate) {
-                eventsThisDay++
+            if(date == 0L){
                 date = eventDate
             }
-            val calendar: Calendar = Calendar.getInstance()
-            calendar.time = Date(event.time)
-            calendarEvents.add(
-                EventDay(
-                    calendar,
-                    when (eventsThisDay) {
-                        1 -> {
-                            R.drawable.photoshoot
-                        }
-                        2 -> {
-                            R.drawable.photoshoot2
-                        }
-                        3 -> {
-                            R.drawable.photoshoot3
-                        }
-                        4 -> {
-                            R.drawable.photoshoot4
-                        }
-                        else -> {
-                            R.drawable.photoshoot5
-                        }
-                    }
+
+            if (date != eventDate) {
+                val calendar: Calendar = Calendar.getInstance()
+                calendar.time = Date(date)
+                calendarEvents.add(
+                    EventDay(
+                        calendar,
+                        getIcon(eventsThisDay)
+                    )
                 )
-            )
+                eventsThisDay=0
+                date = eventDate
+            }
+            eventsThisDay++
+
         }
+
 
         root.calendarView.setEvents(calendarEvents)
         root.calendarView.setOnDayClickListener {
-            if (it != null) {
+
                 openEventsList(getDateInMillis(it.calendar.time.time))
-            }
+
         }
         return root
     }
 
-
-/*
-    override
-    fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.menu_back, menu);
-        return true
-    }
-
-    override
-    fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
-            android.R.id.home -> {
-                finish()
-            }
+fun getIcon(eventsCount : Int ) : Int{
+   return when (eventsCount) {
+        1 -> {
+            R.drawable.photoshoot
         }
-        return super.onOptionsItemSelected(item);
+        2 -> {
+            R.drawable.photoshoot2
+        }
+        3 -> {
+            R.drawable.photoshoot3
+        }
+        4 -> {
+            R.drawable.photoshoot4
+        }
+        else -> {
+            R.drawable.photoshoot5
+        }
     }
-*/
+}
 
 }

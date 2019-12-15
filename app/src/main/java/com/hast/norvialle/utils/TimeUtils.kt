@@ -36,12 +36,23 @@ fun getTimeLocal(date: Long): String {
     return timeFormatter.format(date)
 }
 
-fun showTimePickerDialog(context: Context, textView : TextView){
-    var time = textView.text.toString().split(":")
-    val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
-    timeFormatter.timeZone = TimeZone.getTimeZone("UTC")
-    val calendar = Calendar.getInstance()
-    calendar.timeZone= TimeZone.getTimeZone("UTC")
+fun showTimePickerDialog(context: Context, textView : TextView, defaultTime : Long = 0){
+
+        val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+        timeFormatter.timeZone = TimeZone.getTimeZone("UTC")
+        val calendar = Calendar.getInstance()
+        calendar.timeZone = TimeZone.getTimeZone("UTC")
+
+    try {
+        calendar.time = timeFormatter.parse(textView.text.toString())
+    } catch (e : Exception){
+        if (defaultTime !=  0L){
+            calendar.time = Date(defaultTime)
+        } else{
+            calendar.time = Date(System.currentTimeMillis())
+        }
+    }
+
     val tpd =
         android.app.TimePickerDialog(
             context,
@@ -50,8 +61,8 @@ fun showTimePickerDialog(context: Context, textView : TextView){
                 calendar.set(Calendar.HOUR_OF_DAY, h);
                 textView.setText(timeFormatter.format(Date(calendar.timeInMillis)))
             }),
-            time[0].toInt(),
-            time[1].toInt(),
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
             true
         )
 
@@ -59,6 +70,20 @@ fun showTimePickerDialog(context: Context, textView : TextView){
 }
 fun getTime(textView : TextView): Long {
     val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+    timeFormatter.timeZone = TimeZone.getTimeZone("UTC")
+    return timeFormatter.parse(textView.text.toString()).time
+}
+
+fun getTimeLocal(textView : TextView): Long {
+    val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return timeFormatter.parse(textView.text.toString()).time
+}
+fun getDateLocal(textView : TextView): Long {
+    val timeFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    return timeFormatter.parse(textView.text.toString()).time
+}
+fun getDate(textView : TextView): Long {
+    val timeFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     timeFormatter.timeZone = TimeZone.getTimeZone("UTC")
     return timeFormatter.parse(textView.text.toString()).time
 }

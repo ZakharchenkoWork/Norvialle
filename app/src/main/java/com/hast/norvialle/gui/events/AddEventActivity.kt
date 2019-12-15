@@ -18,16 +18,15 @@ import com.hast.norvialle.gui.BaseActivity
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.contacts.AddContactActivity
 import com.hast.norvialle.gui.contacts.ContactsListFragment
+import com.hast.norvialle.gui.dialogs.PickDateDialog
 import com.hast.norvialle.gui.dialogs.SimpleDialog
 import com.hast.norvialle.gui.dresses.DressesListFragment
 import com.hast.norvialle.gui.makeup.MakeupListFragment
 import com.hast.norvialle.gui.studio.StudiosListFragment
 import com.hast.norvialle.gui.utils.AddContactDialog
 import com.hast.norvialle.gui.utils.FullScreenPictureActivity
-import com.hast.norvialle.utils.getFloatValue
-import com.hast.norvialle.utils.getIntValue
+import com.hast.norvialle.utils.*
 import com.hast.norvialle.utils.notifications.setAlarmForEvent
-import com.hast.norvialle.utils.priceInputDialog
 import kotlinx.android.synthetic.main.activity_add_event.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -132,7 +131,7 @@ class AddEventActivity : BaseActivity() {
         val timeParser = SimpleDateFormat("HH:mm", Locale.getDefault())
 
 
-        val dateFormatter = SimpleDateFormat("dd:MM:yyyy", Locale.getDefault())
+        val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
         val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
 
         var dateToSet = Date(event.time)
@@ -162,67 +161,27 @@ class AddEventActivity : BaseActivity() {
         time.setText(timeFormatter.format(dateToSet))
 
         date.setOnClickListener {
-            c.time = dateToSet
-
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
-
-            val dpd = DatePickerDialog(
-                this,
-                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-
-                    dateToSet =
-                        dateParser.parse("" + dayOfMonth + "," + (monthOfYear + 1) + "," + year)
-                    date.setText(dateFormatter.format(dateToSet))
-                    finalCalendar.set(year, monthOfYear, dayOfMonth)
-
-                },
-                year,
-                month,
-                day
-            )
-
-            dpd.show()
+            PickDateDialog(this).build(dateFormatter.parse(date.text.toString()).time){
+                date.setText(dateFormatter.format(it))
+            }
         }
 
         time.setOnClickListener {
-
-            c.time = dateToSet
-            val hour = c.get(Calendar.HOUR_OF_DAY)
-            val minute = c.get(Calendar.MINUTE)
-
-            val tpd =
-                TimePickerDialog(this, TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
-
-                    var timeToSet = timeParser.parse("" + h.toString() + ":" + m)
-                    time.setText(timeFormatter.format(timeToSet))
-                    finalCalendar.set(Calendar.MINUTE, m);
-                    finalCalendar.set(Calendar.HOUR_OF_DAY, h);
-                }), hour, minute, true)
-
-            tpd.show()
+            showTimePickerDialog(this, time)
         }
+
+
         makeupTime.setOnClickListener {
+            var makeupTimeValue = 0L
+
             if (event.makeupTime == 0L) {
-                finalMakupCalendar.time = Date(dateToSet.time - ONE_HOUR_MILLIS)
+                makeupTimeValue = getTime(time) - ONE_HOUR_MILLIS
             } else {
-                finalMakupCalendar.time = Date(event.makeupTime)
+                makeupTimeValue = event.makeupTime
             }
 
+            showTimePickerDialog(this, makeupTime, makeupTimeValue)
 
-            val hour = finalMakupCalendar.get(Calendar.HOUR_OF_DAY)
-            val minute = finalMakupCalendar.get(Calendar.MINUTE)
-
-            val tpd =
-                TimePickerDialog(this, TimePickerDialog.OnTimeSetListener(function = { view, h, m ->
-                    var timeToSet = timeParser.parse("" + h.toString() + ":" + m)
-                    makeupTime.setText(timeFormatter.format(timeToSet))
-                    finalMakupCalendar.set(Calendar.MINUTE, m);
-                    finalMakupCalendar.set(Calendar.HOUR_OF_DAY, h);
-                }), hour, minute, true)
-
-            tpd.show()
         }
 
         contact.setOnClickListener {
@@ -258,7 +217,7 @@ class AddEventActivity : BaseActivity() {
     fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
             R.id.save -> {
-                event.time = finalCalendar.timeInMillis
+                event.time = getDate(date) + getTime(time)
                 event.contactPhone = phone.text.toString()
                 event.description = description.text.toString()
                 event.orderStudio = studio.isChecked
@@ -272,10 +231,10 @@ class AddEventActivity : BaseActivity() {
                 if (makeup.isChecked) {
                     event.makeupArtistName = makeupArtistsName.text.toString()
                     event.makeupPrice = getIntValue(makeupPrice)
-                    if (makeupTime.text.toString().equals(getString(R.string.one_hour_before))) {
-                        event.makeupTime = finalMakupCalendar.timeInMillis
-                    } else {
-                        event.makeupTime = finalCalendar.timeInMillis - ONE_HOUR_MILLIS
+                    try {
+                        event.makeupTime = getTime(makeupTime)
+                    } catch (e : Exception){
+                        event.makeupTime = getTime(time)- ONE_HOUR_MILLIS
                     }
                     event.makeupPhone = makeupArtistsPhone.text.toString()
                 }

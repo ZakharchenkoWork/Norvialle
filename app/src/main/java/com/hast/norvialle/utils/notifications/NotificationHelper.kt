@@ -41,16 +41,15 @@ import java.io.Serializable
 fun composeBigText(context: Context, event: Event): String {
     var text = ""
     if (!event.studioName.equals("")){
-        text += context.getString(R.string.shoot_location, event.studioName)
+        text += context.getString(R.string.shoot_location, event.studioName) + " "
     }
     if (!event.studioAddress.equals("")){
-        text += context.getString(R.string.shoot_address, event.studioAddress)
+        text += context.getString(R.string.shoot_address, event.studioAddress) + " "
     }
     if (!event.name.equals("")){
         text += context.getString(R.string.shoot_client, event.name)
     }
     return text
-    //return "Локация: " + event.studioName + " по адрессу: " + event.studioAddress + " Клиент: " + event.name)
 
 }
 fun composeBigText(context: Context, events: ArrayList<Event>): String {
@@ -69,7 +68,7 @@ fun composeBigText(context: Context, events: ArrayList<Event>): String {
     }
 
     return text
-    //return "Локация: " + event.studioName + " по адрессу: " + event.studioAddress + " Клиент: " + event.name)
+    
 
 }
 fun createSampleDataNotification(context: Context, event: Event){
