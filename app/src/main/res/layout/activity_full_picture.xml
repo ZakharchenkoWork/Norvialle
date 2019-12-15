@@ -8,12 +8,15 @@
             android:id="@+id/controls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_small">
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_standard"
+            >
 
         <ImageView
                 android:id="@+id/back"
-                android:layout_width="@dimen/icon_size_standard"
-                android:layout_height="@dimen/icon_size_standard"
+                android:layout_width="@dimen/icon_size_medium"
+                android:layout_height="@dimen/icon_size_medium"
                 android:src="@drawable/back_white"
 
                 />
@@ -24,8 +27,8 @@
         android:layout_toStartOf="@id/rotate">
     <ImageView
             android:id="@+id/edit"
-            android:layout_width="@dimen/icon_size_standard"
-            android:layout_height="@dimen/icon_size_standard"
+            android:layout_width="@dimen/icon_size_medium"
+            android:layout_height="@dimen/icon_size_medium"
             android:layout_alignParentEnd="true"
 
             android:layout_marginRight="@dimen/margin_small"
@@ -33,8 +36,8 @@
             />
     <ImageView
             android:id="@+id/delete"
-            android:layout_width="@dimen/icon_size_standard"
-            android:layout_height="@dimen/icon_size_standard"
+            android:layout_width="@dimen/icon_size_medium"
+            android:layout_height="@dimen/icon_size_medium"
         android:layout_toStartOf="@id/edit"
             android:layout_marginLeft="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_small"
@@ -45,8 +48,8 @@
 
         <ImageView
                 android:id="@+id/rotate"
-                android:layout_width="@dimen/icon_size_standard"
-                android:layout_height="@dimen/icon_size_standard"
+                android:layout_width="@dimen/icon_size_medium"
+                android:layout_height="@dimen/icon_size_medium"
                 android:layout_alignParentEnd="true"
                 android:layout_marginLeft="@dimen/margin_small"
 

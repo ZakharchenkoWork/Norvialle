@@ -26,6 +26,6 @@ class Settings {
         timeOfSameDay = 8*60*60*1000
         notifyTimeBefore = true
         timeBeforeShoot = 8*60*60*1000
-        useWheelsInput = true
+        useWheelsInput = false
     }
 }

@@ -9,6 +9,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.R
 import com.hast.norvialle.gui.events.EventsListFragment
+import com.hast.norvialle.utils.extractFromFloat
 
 
 /**
@@ -47,7 +48,7 @@ abstract class BaseActivity : AppCompatActivity(){
     }
 
     fun setToolBarTitle(@StringRes title: Int) {
-        supportActionBar!!.title = getString(title)
+        supportActionBar?.title = getString(title)
     }
 
     fun AppCompatActivity.hideKeyboard() {
@@ -79,5 +80,14 @@ abstract class BaseActivity : AppCompatActivity(){
     abstract fun getMenuRes():Int
     abstract fun getMenuTitleRes(): Int
 
-
+    fun stringPriceWithPlaceholder(value: String, placeholder : String) : String{
+        return if (!value.equals("") && !value.equals("0") ) {
+            return value
+        } else{
+            return placeholder
+        }
+    }
+    fun stringPriceWithPlaceholder(value: String, placeholder : Int) : String{
+        return stringPriceWithPlaceholder(value, getString(placeholder))
+    }
 }

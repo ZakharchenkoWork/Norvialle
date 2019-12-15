@@ -27,6 +27,7 @@ import com.hast.norvialle.gui.utils.FullScreenPictureActivity
 import com.hast.norvialle.utils.getFloatValue
 import com.hast.norvialle.utils.getIntValue
 import com.hast.norvialle.utils.notifications.setAlarmForEvent
+import com.hast.norvialle.utils.priceInputDialog
 import kotlinx.android.synthetic.main.activity_add_event.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -234,29 +235,19 @@ class AddEventActivity : BaseActivity() {
 
         studiosList.setOnClickListener { openStudiosList() }
         totalPrice.setOnClickListener {
-            SimpleDialog(this, SimpleDialog.DIALOG_TYPE.INPUT_ONLY)
-                .setTitle(getString(R.string.totalPrice))
-                .setMessage("" + getFloatValue(totalPrice))
-                .setInputType(InputType.TYPE_CLASS_NUMBER)
-                .setOkListener { totalPrice.setText(("" + it).replace(".0", "")) }
-                .build()
-
+            priceInputDialog(this, R.string.totalPrice, getFloatValue(totalPrice, 1400f)){
+                totalPrice.text = stringPriceWithPlaceholder(it, "0")
+            }
         }
         paid.setOnClickListener {
-            SimpleDialog(this, SimpleDialog.DIALOG_TYPE.INPUT_ONLY)
-                .setTitle(getString(R.string.paid))
-                .setMessage("" + getFloatValue(paid))
-                .setInputType(InputType.TYPE_CLASS_NUMBER)
-                .setOkListener { paid.setText(("" + it).replace(".0", "")) }
-                .build()
+            priceInputDialog(this, R.string.paid, getFloatValue(paid, 1400f)){
+                paid.text = stringPriceWithPlaceholder(it, "0")
+            }
         }
         makeupPrice.setOnClickListener {
-            SimpleDialog(this, SimpleDialog.DIALOG_TYPE.INPUT_ONLY)
-                .setTitle(getString(R.string.makeupPrice))
-                .setMessage("" + getFloatValue(makeupPrice))
-                .setInputType(InputType.TYPE_CLASS_NUMBER)
-                .setOkListener { makeupPrice.setText(("" + it).replace(".0", "")) }
-                .build()
+            priceInputDialog(this, R.string.makeupPrice, getFloatValue(makeupPrice)){
+                makeupPrice.text = stringPriceWithPlaceholder(it, R.id.price)
+            }
         }
 
         makeupArtistsList.setOnClickListener { openMakeupArtistsList() }

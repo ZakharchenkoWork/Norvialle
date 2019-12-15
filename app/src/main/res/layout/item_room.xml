@@ -1,48 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-<ImageView
-        android:id="@+id/delete"
-        android:layout_width="@dimen/icon_size_standard"
-        android:layout_height="@dimen/icon_size_standard"
-        android:src="@drawable/delete"
 
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@id/roomName"
-        app:layout_constraintBottom_toBottomOf="@id/roomName"
-        />
-    <EditText
-            android:id="@+id/roomName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+    <ImageView
+            android:id="@+id/delete"
+            android:layout_width="@dimen/icon_size_standard"
+            android:layout_height="@dimen/icon_size_standard"
+            android:layout_marginTop="@dimen/margin_standard"
+
+            android:layout_marginBottom="@dimen/margin_standard"
+            android:src="@drawable/delete"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="@dimen/margin_small"
+
+            />
+
+    <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+
+            app:layout_constraintBottom_toBottomOf="@id/delete"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toRightOf="@id/delete"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintRight_toLeftOf="@id/priceWithDiscount"
-            android:layout_marginLeft="@dimen/margin_standard"
-            android:hint="@string/roomName"
-            />
-    <TextView
-            android:id="@+id/price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/roomName"
-            app:layout_constraintBottom_toBottomOf="@id/roomName"
             app:layout_constraintRight_toRightOf="parent"
-            android:text="Цена"
-            />
-    <TextView
-            android:id="@+id/priceWithDiscount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/roomName"
-            app:layout_constraintRight_toLeftOf="@id/price"
-            app:layout_constraintBottom_toBottomOf="@id/roomName"
-            android:layout_marginRight="@dimen/margin_small"
-            android:text="Скидка"
-            />
+            app:layout_constraintStart_toEndOf="@id/delete"
+            app:layout_constraintTop_toTopOf="@id/delete">
+
+        <EditText
+                android:id="@+id/roomName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_standard"
+                android:layout_marginRight="@dimen/margin_standard"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@id/priceWithDiscount"
+                android:hint="@string/roomName"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:id="@+id/priceWithDiscount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/price"
+
+                android:layout_marginRight="@dimen/margin_standard"
+                android:minWidth="@dimen/icon_size_standard"
+                android:text="@string/discount" />
+
+        <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+            android:minWidth="@dimen/icon_size_standard"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:gravity="center"
+                android:text="@string/price" />
+
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

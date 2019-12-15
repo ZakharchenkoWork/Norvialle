@@ -6,9 +6,11 @@
     <string name="makeup">Заказ макияжа</string>
     <string name="studioName">Название студии</string>
     <string name="studioPhone">Телефон студии</string>
+    <string name="phone">Телефон</string>
     <string name="roomName">Название зала</string>
     <string name="address">Адресс</string>
     <string name="name">Имя контакта</string>
+    <string name="name_makeup_artist">Имя визажиста</string>
     <string name="norvialle">Norvialle</string>
     <string name="studios">Студии</string>
     <string name="makeupArtists">Визажисты</string>
@@ -39,6 +41,8 @@
     <string name="totalPrice">Общая цена</string>
     <string name="paid">Сумма залога</string>
     <string name="makeupPrice">Стоимость макияжа</string>
+    <string name="dressPrice">Стоимость платья</string>
+
     <string name="monyLeft">Остаток: %1$d</string>
     <string name="events_list">События</string>
     <string name="calendar">Календарь</string>
@@ -77,6 +81,9 @@
     <string name="delete_dialog_studio">студию</string>
     <string name="wheels">Барабанный</string>
     <string name="keyboards">Клавиатурный</string>
+    <string name="discount">Скидка</string>
+    <string name="price">Цена</string>
+    <string name="comment">Комментарий</string>
 
     <plurals name="plurals_shoot">
         <item quantity="zero">нет съемок</item>

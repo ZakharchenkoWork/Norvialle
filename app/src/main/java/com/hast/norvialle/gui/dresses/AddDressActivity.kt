@@ -22,14 +22,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Dress
+import com.hast.norvialle.gui.BaseActivity
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.utils.FullScreenPictureActivity
-import com.hast.norvialle.utils.deleteFile
-import com.hast.norvialle.utils.getIntValue
-import com.hast.norvialle.utils.loadPicture
-import com.hast.norvialle.utils.saveFile
+import com.hast.norvialle.utils.*
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_add_dress.*
+import kotlinx.android.synthetic.main.activity_add_dress.price
+import kotlinx.android.synthetic.main.activity_add_dress.toolbar
+import kotlinx.android.synthetic.main.activity_add_makeup_artist.*
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -41,7 +42,7 @@ import java.util.*
 /**
  * Created by Konstantyn Zakharchenko on 29.11.2019.
  */
-class AddDressActivity : AppCompatActivity() {
+class AddDressActivity : BaseActivity() {
     companion object {
         val EDIT: Int = 1
         val DRESS: String = "DRESS"
@@ -64,12 +65,6 @@ class AddDressActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_dress)
         setSupportActionBar(toolbar)
-        var actionBar = getSupportActionBar()
-        if (actionBar != null) {
-            getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
-            getSupportActionBar()?.setTitle(R.string.adding_dress);
-        }
 
         dress = intent?.extras?.getSerializable(DRESS) as Dress
 
@@ -87,6 +82,11 @@ class AddDressActivity : AppCompatActivity() {
         }
 
         rotate.setOnClickListener { rotate() }
+        price.setOnClickListener {
+            priceInputDialog(this, R.string.dressPrice, getFloatValue(price)) {
+                price.setText(stringPriceWithPlaceholder(it, ""))
+            }
+        }
     }
 
     fun selectImage() {
@@ -137,18 +137,10 @@ class AddDressActivity : AppCompatActivity() {
         }
     }
 
-    override
-    fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.menu_save, menu);
-        return true
-    }
 
     override
     fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
-            android.R.id.home -> {
-                finish()
-            }
             R.id.save -> {
                 if (bitmap.get() != null) {
                     if(isTempUploaded) {
@@ -168,6 +160,14 @@ class AddDressActivity : AppCompatActivity() {
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    override fun getMenuRes(): Int {
+        return R.menu.menu_save
+    }
+
+    override fun getMenuTitleRes(): Int {
+        return R.string.adding_dress
     }
 
     override fun onDestroy() {
@@ -288,10 +288,8 @@ class AddDressActivity : AppCompatActivity() {
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 try {
                     val photoFile = createImageFile()
-                    if (photoFile != null) {
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile.toURI())
                         startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
-                    }
                 } catch (ex: IOException) {
                     ex.printStackTrace()
 

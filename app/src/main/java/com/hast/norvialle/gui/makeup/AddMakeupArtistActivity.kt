@@ -14,23 +14,25 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.R
 import com.hast.norvialle.data.MakeupArtist
+import com.hast.norvialle.gui.BaseActivity
 import com.hast.norvialle.gui.MainPresenter
-import com.hast.norvialle.utils.getIntValue
+import com.hast.norvialle.utils.*
 import kotlinx.android.synthetic.main.activity_add_makeup_artist.*
-
+import kotlinx.android.synthetic.main.activity_add_makeup_artist.contactsList
+import kotlinx.android.synthetic.main.activity_add_makeup_artist.phone
 
 
 /**
  * Created by Konstantyn Zakharchenko on 29.11.2019.
  */
-class AddMakeupArtistActivity : AppCompatActivity() {
+class AddMakeupArtistActivity : BaseActivity() {
     companion object {
         val EDIT: Int = 1
         val MAKEUP_ARTIST: String = "MAKEUP_ARTIST"
         val PICK_CONTACT: Int = 197
     }
 
-    val presenter: MainPresenter = MainPresenter
+
 
     lateinit var makeupArtist: MakeupArtist
 
@@ -38,13 +40,6 @@ class AddMakeupArtistActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_makeup_artist)
         setSupportActionBar(toolbar)
-        var actionBar = getSupportActionBar()
-        if (actionBar != null) {
-            getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
-            getSupportActionBar()?.setTitle(R.string.adding_makeup_artist);
-        }
-
             makeupArtist = intent?.extras?.getSerializable(MAKEUP_ARTIST) as MakeupArtist
 
         if (makeupArtist == null) {
@@ -60,14 +55,14 @@ class AddMakeupArtistActivity : AppCompatActivity() {
         phone.addTextChangedListener(TextListener(phone))
         price.addTextChangedListener(TextListener(price))
         contactsList.setOnClickListener { openContactsList() }
+        price.setOnClickListener {
+            priceInputDialog(this, R.string.makeupPrice, getFloatValue(price)){
+                price.setText(stringPriceWithPlaceholder(it, ""))
+            }
+        }
     }
 
 
-    override
-    fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.menu_save, menu);
-        return true
-    }
 
     override
     fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -102,13 +97,21 @@ class AddMakeupArtistActivity : AppCompatActivity() {
                     return true
                 }
 
-                    presenter.addMakeupArtist(makeupArtist)
+                    MainPresenter.addMakeupArtist(makeupArtist)
                 setResult(Activity.RESULT_OK)
                 finish()
             }
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    override fun getMenuRes(): Int {
+      return R.menu.menu_save
+    }
+
+    override fun getMenuTitleRes(): Int {
+      return R.string.adding_makeup_artist
     }
 
     private fun openContactsList() {

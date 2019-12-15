@@ -113,19 +113,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_standard"
                     >
+                <RadioButton
+                        android:id="@+id/keyboard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/keyboards"
+                        android:textSize="@dimen/text_big_ish"
+                        android:checked="true"/>
             <RadioButton
                     android:id="@+id/wheels"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/wheels"
                     android:textSize="@dimen/text_big_ish"
-                    android:checked="true"/>
-                <RadioButton
-                        android:id="@+id/keyboard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/keyboards"
-                        android:textSize="@dimen/text_big_ish"/>
+                  />
+
             </RadioGroup>
         </LinearLayout>
     </ScrollView>

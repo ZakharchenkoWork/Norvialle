@@ -47,7 +47,8 @@ class SettingsActivity : AppCompatActivity() {
                 defaultTimeBeforeShoot
             )
         }
-
+        wheels.isChecked = settings.useWheelsInput
+        keyboard.isChecked = !settings.useWheelsInput
 //        defaultDayBeforeTime
     }
 

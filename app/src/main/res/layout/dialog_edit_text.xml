@@ -26,6 +26,8 @@
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/contactsList"
                     android:layout_marginRight="@dimen/margin_standard"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:hint="Имя" />
             <ImageView
                     android:id="@+id/contactsList"

@@ -33,7 +33,9 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/contactsList"
                 android:layout_marginRight="@dimen/margin_standard"
-                android:hint="Имя" />
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:hint="@string/name_makeup_artist" />
     <ImageView
             android:id="@+id/contactsList"
             android:layout_width="@dimen/icon_size_medium"
@@ -49,17 +51,22 @@
                 android:id="@+id/phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Телефон"
+                android:hint="@string/phone"
                 android:inputType="phone"
-
+                android:maxLines="1"
+                android:ellipsize="end"
                 />
 
         <EditText
                 android:id="@+id/price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Цена"
-                android:inputType="number" />
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:inputType="none"
+                android:focusable="false"
+                android:hint="@string/makeupPrice"
+                />
 
 
     </LinearLayout>

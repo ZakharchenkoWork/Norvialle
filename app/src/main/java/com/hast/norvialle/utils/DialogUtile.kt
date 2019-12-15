@@ -1,8 +1,11 @@
 package com.hast.norvialle.utils
 
 import android.content.Context
+import android.text.InputType
 import androidx.annotation.StringRes
 import com.hast.norvialle.R
+import com.hast.norvialle.gui.MainPresenter
+import com.hast.norvialle.gui.dialogs.PricePickerDialog
 import com.hast.norvialle.gui.dialogs.SimpleDialog
 
 /**
@@ -17,4 +20,23 @@ fun showDeleteDialog(context : Context, @StringRes itemName : Int, onDeleteListe
         .setCancelButtonText(context.getString(R.string.delete_dialog_no))
         .setCancelable(true)
         .build()
+}
+
+fun priceInputDialog(context : Context, @StringRes title : Int, startValue : Float, onDone : ((result : String) -> Unit)){
+    if (MainPresenter.settings.useWheelsInput){
+        PricePickerDialog(context,context.getString(title), startValue)
+            .setOnDoneListener {
+                onDone(extractFromFloat(it))
+            }
+            .show()
+    }else {
+        SimpleDialog(context, SimpleDialog.DIALOG_TYPE.INPUT_ONLY)
+            .setTitle(context.getString(title))
+            .setEditTextDefaultData(extractFromFloat(startValue))
+            .setInputType(InputType.TYPE_CLASS_NUMBER)
+            .setOkListener {
+                onDone(extractFromFloat(it))
+            }
+            .build()
+    }
 }

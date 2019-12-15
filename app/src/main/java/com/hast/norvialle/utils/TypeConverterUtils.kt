@@ -25,12 +25,18 @@ fun getIntValue(text: String): Int {
     return value
 }
 
-fun getFloatValue(view: TextView): Float {
-    var value = 0f
+fun getFloatValue(view: TextView, default: Float = 0f): Float {
+    var value = default
     try {
         value = view.text.toString().toFloat()
     } catch (nfe: NumberFormatException) {
-        value = 1400f
     }
     return value
+}
+
+fun extractFromFloat(float: Float): String {
+    return ("" + float).replace(".0", "")
+}
+fun extractFromFloat(float: String): String {
+    return float.replace(".0", "")
 }

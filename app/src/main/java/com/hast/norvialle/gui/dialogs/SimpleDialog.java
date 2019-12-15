@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.text.Html;
+import android.text.InputType;
+import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,6 +16,9 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.StyleRes;
 
 import com.hast.norvialle.R;
+import com.hast.norvialle.utils.TextWatchersUtilsKt;
+
+import kotlin.Unit;
 
 
 /**
@@ -40,12 +45,14 @@ public class SimpleDialog extends AlertDialog.Builder {
     private String editTextDefaultData = null;
     private String editTextHint = null;
     private String positiveButtonText = "OK";
-    private String negativeButtonText= "Cancel";
+    private String negativeButtonText = "Cancel";
 
     private int inputType = DEFAULT;
     protected LinearLayout layout;
     private OKListener okListener = null;
     boolean isCancaleble = false;
+    private AlertDialog lastInstance = null;
+
     /**
      * Easy to use tool for simple dialogs.
      *
@@ -92,18 +99,20 @@ public class SimpleDialog extends AlertDialog.Builder {
         this.positiveButtonText = positiveButtonText;
         return this;
     }
+
     /**
      * Set text for the negative button inside this dialog.
      * <p>
      * Call of this method is not necessary.
      *
-     * @param negativeButtonText  text for button.
+     * @param negativeButtonText text for button.
      * @return this
      */
     public SimpleDialog setCancelButtonText(String negativeButtonText) {
-        this.negativeButtonText = negativeButtonText ;
+        this.negativeButtonText = negativeButtonText;
         return this;
     }
+
     /**
      * Set typeface for any text inside all of the OneButtonDialogs.
      * Ignored if setCustomTypeface() is called with no null value.
@@ -209,6 +218,11 @@ public class SimpleDialog extends AlertDialog.Builder {
         return this;
     }
 
+    public SimpleDialog setEditTextDefaultData(String editTextDefaultData) {
+        this.editTextDefaultData = editTextDefaultData;
+        return this;
+    }
+
     /**
      * @param icon pass Resource id for icon, or SimpleDialog.DEFAULT if no icon needed
      */
@@ -273,7 +287,16 @@ public class SimpleDialog extends AlertDialog.Builder {
             input.setLayoutParams(lp);
 
             if (!isDefault(editTextDefaultData)) {
-                input.setText(editTextDefaultData);
+                if (inputType == InputType.TYPE_CLASS_NUMBER) {
+                    if (editTextDefaultData.equals("0") ){
+                        input.setText("");
+                    } else {
+                        input.setText(editTextDefaultData);
+                    }
+                } else {
+                    input.setText(editTextDefaultData);
+                }
+
             }
             if (!isDefault(editTextHint)) {
                 input.setHint(editTextHint);
@@ -281,9 +304,18 @@ public class SimpleDialog extends AlertDialog.Builder {
             if (inputType != DEFAULT) {
                 input.setInputType(inputType);
 
+
             }
             configureStyle(input);
+            input.setImeActionLabel("ok", KeyEvent.KEYCODE_ENTER);
+            input.setOnEditorActionListener((TextView v, int actionId, KeyEvent event)->{
+                if (okListener != null) {
+                    okListener.onOKpressed(getData(input));
+                }
+                lastDialog = null;
 
+                return true;
+            });
 
             if (dialogType == DIALOG_TYPE.MESSAGE_AND_INPUT) {
 
@@ -310,24 +342,29 @@ public class SimpleDialog extends AlertDialog.Builder {
             }
         }
 
-        setPositiveButton(positiveButtonText, (DialogInterface dialog, int which) ->{
-                if (okListener != null) {
-                    okListener.onOKpressed(getData(input));
-                }
-                lastDialog = null;
-                dialog.dismiss();
+        setPositiveButton(positiveButtonText, (DialogInterface dialog, int which) -> {
+            if (okListener != null) {
+                okListener.onOKpressed(getData(input));
+            }
+            lastDialog = null;
+            dialog.dismiss();
 
         });
-        if (isCancaleble){
-            setNegativeButton(negativeButtonText, (DialogInterface dialog, int which) ->{
+        if (isCancaleble) {
+            setNegativeButton(negativeButtonText, (DialogInterface dialog, int which) -> {
                 lastDialog = null;
                 dialog.dismiss();
             });
         }
+        setOnCancelListener((dialog)->{
+            lastDialog = null;
+        });
         setView(layout);
         super.show();
+
         return this;
     }
+
 
     @Override
     public SimpleDialog setCancelable(boolean cancelable) {
@@ -344,7 +381,13 @@ public class SimpleDialog extends AlertDialog.Builder {
             return "";
         }
     }
-
+public void hide(){
+    if (lastInstance != null) {
+        try{
+            lastInstance.dismiss();
+        }catch (Exception e){}
+    }
+}
     private void configureStyle(TextView view) {
         if (customTypeface != null) {
             view.setTypeface(customTypeface);
@@ -389,4 +432,5 @@ public class SimpleDialog extends AlertDialog.Builder {
     public interface OKListener {
         void onOKpressed(String userInput);
     }
+
 }
