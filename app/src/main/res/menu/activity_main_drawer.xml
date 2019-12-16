@@ -30,6 +30,11 @@
                 android:id="@+id/makeup"
                 android:icon="@drawable/makeup"
                 android:title="@string/makeupArtists" />
+
+        <item
+                android:id="@+id/assistant"
+                android:icon="@drawable/assistent"
+                android:title="@string/assistants" />
         <item
                 android:id="@+id/studio"
                 android:icon="@drawable/studio"

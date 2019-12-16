@@ -7,7 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hast.norvialle.R
-import com.hast.norvialle.data.MakeupArtist
+import com.hast.norvialle.data.Assistant
 import com.hast.norvialle.gui.BaseFragment
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.makeup.AddAssistantActivity.Companion.MAKEUP_ARTIST
@@ -19,13 +19,13 @@ import kotlinx.android.synthetic.main.activity_search_list.view.*
 /**
  * Created by Konstantyn Zakharchenko on 29.11.2019.
  */
-class MakeupListFragment : BaseFragment() {
-    var onResultListener: ((makeupArtist: MakeupArtist) -> Unit)? = null
+class AssistantListFragment : BaseFragment() {
+    var onResultListener: ((assistant: Assistant) -> Unit)? = null
     var isSearchShown = false
 
     companion object {
-        fun newInstance(onResultListener: ((makeupArtist: MakeupArtist) -> Unit)? = null): BaseFragment {
-            val fragment = MakeupListFragment()
+        fun newInstance(onResultListener: ((assistant: Assistant) -> Unit)? = null): BaseFragment {
+            val fragment = AssistantListFragment()
             fragment.onResultListener = onResultListener
             return fragment
         }
@@ -40,7 +40,7 @@ class MakeupListFragment : BaseFragment() {
     }
 
     override fun getMenuTitleId(): Int {
-        return R.string.makeupArtists
+        return R.string.assistants
     }
 
     override fun onCreateView(view: View): View {
@@ -60,23 +60,23 @@ class MakeupListFragment : BaseFragment() {
     }
 
     fun prepareAdapter(context: Context) {
-        val adapter = MakeupAdapter(MainPresenter.makupArtists, context)
+        val adapter = AssistantAdapter(MainPresenter.assistants, context)
         val isForResult = onResultListener != null
         adapter.isForResult = isForResult
         root.list.adapter = adapter
         if (!isForResult) {
             adapter.onEditistener = {
-                openMakeupArtistEditor(it)
+                openAssistentEditor(it)
             }
             adapter.onDeleteListener = {
                 showDeleteDialog(context, R.string.delete_dialog_makeup_artist) {
-                    MainPresenter.deleteMakeupArtist(it)
+                    MainPresenter.deleteAssistent(it)
                     prepareAdapter(context)
                 }
             }
         } else {
-            adapter.onPickListener = { makeupArtist: MakeupArtist ->
-                onResultListener?.invoke(makeupArtist)
+            adapter.onPickListener = { assistant: Assistant ->
+                onResultListener?.invoke(assistant)
                 fragmentManager?.popBackStack()
             }
         }
@@ -88,7 +88,7 @@ class MakeupListFragment : BaseFragment() {
         when (item.getItemId()) {
 
             R.id.plus -> {
-                openMakeupArtistEditor(MakeupArtist("", 0, ""))
+                openAssistentEditor(Assistant("", 0, ""))
             }
             R.id.search -> {
                 isSearchShown = !isSearchShown
@@ -99,11 +99,11 @@ class MakeupListFragment : BaseFragment() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun openMakeupArtistEditor(makeupArtist: MakeupArtist) {
+    private fun openAssistentEditor(assistant: Assistant) {
         context?.let {
-            var intent = Intent(context, AddMakeupArtistActivity::class.java)
-            intent.putExtra(MAKEUP_ARTIST, makeupArtist)
-            startActivityForResult(intent, AddMakeupArtistActivity.EDIT)
+            var intent = Intent(context, AddAssistantActivity::class.java)
+            intent.putExtra(MAKEUP_ARTIST, assistant)
+            startActivityForResult(intent, AddAssistantActivity.EDIT)
         }
     }
 

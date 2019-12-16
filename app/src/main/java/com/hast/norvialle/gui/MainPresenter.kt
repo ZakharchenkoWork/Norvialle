@@ -16,6 +16,7 @@ object MainPresenter {
     var events: ArrayList<Event> = ArrayList()
     var studios: ArrayList<Studio> = ArrayList()
     var makupArtists: ArrayList<MakeupArtist> = ArrayList()
+    var assistants: ArrayList<Assistant> = ArrayList()
     var dresses: ArrayList<Dress> = ArrayList()
     var contacts: ArrayList<Contact> = ArrayList()
     var settings: Settings = Settings()
@@ -183,6 +184,29 @@ object MainPresenter {
     fun saveSettings(settings: Settings) {
         App.db.settingsDao().update(settings)
         this.settings = settings
+    }
+
+    fun addAssistent(assistant: Assistant) {
+        if (assistant.id.equals("")) {
+            assistant.id = UUID.randomUUID().toString()
+
+            App.db.assistentDao().insert(assistant)
+            assistants.add(assistant)
+        } else {
+            App.db.assistentDao().update(assistant)
+            for ((index, oldAssistent) in assistants.withIndex()) {
+                if (oldAssistent.id.equals(assistant.id)) {
+                    assistants.set(index, assistant)
+                    return
+                }
+            }
+            assistants.add(assistant)
+        }
+    }
+
+    fun deleteAssistent(assistant: Assistant) {
+        App.db.assistentDao().delete(assistant)
+        assistants.remove(assistant)
     }
 
 }

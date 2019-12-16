@@ -16,6 +16,7 @@ import com.hast.norvialle.gui.calendar.CalendarFragment
 import com.hast.norvialle.gui.contacts.ContactsListFragment
 import com.hast.norvialle.gui.dresses.DressesListFragment
 import com.hast.norvialle.gui.events.AddEventActivity
+import com.hast.norvialle.gui.makeup.AssistantListFragment
 import com.hast.norvialle.gui.makeup.MakeupListFragment
 import com.hast.norvialle.gui.studio.StudiosListFragment
 import com.hast.norvialle.utils.notifications.createNotificationChannels
@@ -83,6 +84,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 }
                 R.id.makeup -> {
                     showFragment(MakeupListFragment.newInstance())
+                }
+                R.id.assistant -> {
+                    showFragment(AssistantListFragment.newInstance())
                 }
                 R.id.dress -> {
                     showFragment(DressesListFragment.newInstance())

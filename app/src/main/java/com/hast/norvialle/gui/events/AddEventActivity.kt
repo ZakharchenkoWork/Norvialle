@@ -1,13 +1,10 @@
 package com.hast.norvialle.gui.events
 
 import android.app.Activity
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.text.InputType
 import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,6 +18,7 @@ import com.hast.norvialle.gui.contacts.ContactsListFragment
 import com.hast.norvialle.gui.dialogs.PickDateDialog
 import com.hast.norvialle.gui.dialogs.SimpleDialog
 import com.hast.norvialle.gui.dresses.DressesListFragment
+import com.hast.norvialle.gui.makeup.AssistantListFragment
 import com.hast.norvialle.gui.makeup.MakeupListFragment
 import com.hast.norvialle.gui.studio.StudiosListFragment
 import com.hast.norvialle.gui.utils.AddContactDialog
@@ -127,10 +125,6 @@ class AddEventActivity : BaseActivity() {
 
         studioRoom.setText(event.studioRoom)
 
-        val dateParser = SimpleDateFormat("dd,M,yyyy", Locale.getDefault())
-        val timeParser = SimpleDateFormat("HH:mm", Locale.getDefault())
-
-
         val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
         val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
 
@@ -161,7 +155,7 @@ class AddEventActivity : BaseActivity() {
         time.setText(timeFormatter.format(dateToSet))
 
         date.setOnClickListener {
-            PickDateDialog(this).build(dateFormatter.parse(date.text.toString()).time){
+            PickDateDialog(this).build(dateFormatter.parse(date.text.toString()).time) {
                 date.setText(dateFormatter.format(it))
             }
         }
@@ -194,22 +188,43 @@ class AddEventActivity : BaseActivity() {
 
         studiosList.setOnClickListener { openStudiosList() }
         totalPrice.setOnClickListener {
-            priceInputDialog(this, R.string.totalPrice, getFloatValue(totalPrice, 1400f)){
+            priceInputDialog(this, R.string.totalPrice, getFloatValue(totalPrice, 1400f)) {
                 totalPrice.text = stringPriceWithPlaceholder(it, "0")
             }
         }
         paid.setOnClickListener {
-            priceInputDialog(this, R.string.paid, getFloatValue(paid, 1400f)){
+            priceInputDialog(this, R.string.paid, getFloatValue(paid, 1400f)) {
                 paid.text = stringPriceWithPlaceholder(it, "0")
             }
         }
         makeupPrice.setOnClickListener {
-            priceInputDialog(this, R.string.makeupPrice, getFloatValue(makeupPrice)){
+            priceInputDialog(this, R.string.makeupPrice, getFloatValue(makeupPrice)) {
                 makeupPrice.text = stringPriceWithPlaceholder(it, R.id.price)
             }
         }
 
         makeupArtistsList.setOnClickListener { openMakeupArtistsList() }
+
+
+        if (event.orderAssistant) {
+            assistantLayout.visibility = View.VISIBLE
+        } else {
+            assistantLayout.visibility = View.GONE
+        }
+
+        assistant.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                assistantLayout.visibility = View.VISIBLE
+            } else {
+                assistantLayout.visibility = View.GONE
+            }
+        }
+        assistantPrice.setText("" + event.assistantPrice)
+        assistantName.setText(event.assistantName)
+        assistantPhone.setText(event.assistantPhone)
+        assistantsList.setOnClickListener { openAssistantsList() }
+
+
         hideKeyboard()
     }
 
@@ -217,7 +232,7 @@ class AddEventActivity : BaseActivity() {
     fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
             R.id.save -> {
-                event.time = getDate(date) + getTime(time)
+                event.time = getDateLocal(date) + getTime(time)
                 event.contactPhone = phone.text.toString()
                 event.description = description.text.toString()
                 event.orderStudio = studio.isChecked
@@ -232,9 +247,9 @@ class AddEventActivity : BaseActivity() {
                     event.makeupArtistName = makeupArtistsName.text.toString()
                     event.makeupPrice = getIntValue(makeupPrice)
                     try {
-                        event.makeupTime = getTime(makeupTime)
-                    } catch (e : Exception){
-                        event.makeupTime = getTime(time)- ONE_HOUR_MILLIS
+                        event.makeupTime = getTimeLocal(makeupTime)
+                    } catch (e: Exception) {
+                        event.makeupTime = getTimeLocal(time) - ONE_HOUR_MILLIS
                     }
                     event.makeupPhone = makeupArtistsPhone.text.toString()
                 }
@@ -289,6 +304,13 @@ class AddEventActivity : BaseActivity() {
             makeupArtistsPhone.setText(makeupArtist.phone)
         })
     }
+   private fun openAssistantsList() {
+        showFragment(AssistantListFragment.newInstance { assistant ->
+            assistantPrice.setText("" + assistant.defaultPrice)
+            assistantName.setText(assistant.name)
+            assistantPhone.setText(assistant.phone)
+        })
+    }
 
     private fun openContactsList() {
         showFragment(ContactsListFragment.newInstance() {
@@ -324,31 +346,31 @@ class AddEventActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK &&requestCode == AddContactActivity.PICK_CONTACT && data != null) {
-                data.data?.let { uri ->
+        if (resultCode == Activity.RESULT_OK && requestCode == AddContactActivity.PICK_CONTACT && data != null) {
+            data.data?.let { uri ->
 
 
-                    val projection = arrayOf(
-                        ContactsContract.CommonDataKinds.Phone.NUMBER,
-                        ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME
-                    )
-                    val cursor: Cursor? = contentResolver
-                        .query(uri, projection, null, null, null)
-                    cursor?.let { it ->
-                        it.moveToFirst()
+                val projection = arrayOf(
+                    ContactsContract.CommonDataKinds.Phone.NUMBER,
+                    ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME
+                )
+                val cursor: Cursor? = contentResolver
+                    .query(uri, projection, null, null, null)
+                cursor?.let { it ->
+                    it.moveToFirst()
 
-                        val columnPhone: Int =
-                            it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
-                        val columnName: Int =
-                            it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+                    val columnPhone: Int =
+                        it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                    val columnName: Int =
+                        it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
 
-                        addContactDialog.nameText = it.getString(columnName)
-                        addContactDialog.phoneText = it.getString(columnPhone)
-                        addContactDialog.update()
-                        cursor.close()
-                    }
+                    addContactDialog.nameText = it.getString(columnName)
+                    addContactDialog.phoneText = it.getString(columnPhone)
+                    addContactDialog.update()
+                    cursor.close()
                 }
             }
+        }
     }
 
 

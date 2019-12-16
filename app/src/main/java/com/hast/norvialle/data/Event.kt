@@ -34,6 +34,12 @@ class Event(@PrimaryKey var id: String, var name: String, var time: Long) : Seri
     var makeupPhone: String = ""
 
     var makeupTime: Long = 0
+
+    var orderAssistant: Boolean = false
+    var assistantName: String = ""
+    var assistantPrice: Int = 0
+    var assistantPhone: String = ""
+
     var paidPrice: Int = 0
     var totalPrice: Int = 0
     var additionalId:Int = 0

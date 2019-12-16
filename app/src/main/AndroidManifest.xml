@@ -23,16 +23,22 @@
         </activity>
         <activity android:name=".gui.SettingsActivity"/>
         <activity android:name=".gui.events.AddEventActivity"/>
-        <activity android:name=".gui.makeup.AddMakeupArtistActivity"/>
+        <activity android:name=".gui.makeup.AddAssistantActivity"/>
         <activity android:name=".gui.dresses.AddDressActivity"/>
         <activity android:name=".gui.utils.FullScreenPictureActivity"/>
         <activity android:name=".gui.contacts.AddContactActivity"/>
+        <activity android:name=".gui.makeup.AddMakeupArtistActivity"/>
         <activity android:name=".gui.studio.AddStudioActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
+                <intent-filter>
+                    <action android:name="android.intent.action.VIEW" />
+                    <data android:scheme="geo" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                </intent-filter>
         </activity>
         <provider
                 android:name="androidx.core.content.FileProvider"

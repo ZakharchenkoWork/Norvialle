@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -50,6 +51,7 @@ class AddStudioActivity : AppCompatActivity() {
             studio = intent?.extras?.getSerializable(STUDIO) as Studio
         } else {
             //TODO: Add support for Google Maps, Yandex and e.t.c.
+            Log.d("Shared location", "" + intent?.clipData)
             if ("text/plain" == intent.type) {
                 isForResult = false
                 studio = Studio()
@@ -58,7 +60,7 @@ class AddStudioActivity : AppCompatActivity() {
                 studio.address = parts[1]
                 studio.phone = parts[2]
                 studio.link =
-                    if (parts[3].contains("go.2gis.com")) parts[3] else if (parts[4].contains("go.2gis.com")) parts[4] else ""
+                    if (checkHasMapLink(parts[3])) parts[3] else if (checkHasMapLink(parts[4])) parts[4] else ""
 
             }
         }
@@ -81,7 +83,9 @@ class AddStudioActivity : AppCompatActivity() {
             addRoom(null)
         }
     }
-
+fun checkHasMapLink(text : String) : Boolean{
+        return (text.contains("go.2gis.com") || text.contains("maps.app.goo.gl"))
+    }
     fun addRoom(photoRoom: PhotoRoom?) {
         var view = LayoutInflater.from(this).inflate(R.layout.item_room, roomsContainer, false)
         roomsViews.add(view)

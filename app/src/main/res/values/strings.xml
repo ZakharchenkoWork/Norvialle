@@ -4,20 +4,23 @@
     <string name="studio">Заказ Студии</string>
     <string name="dress">Заказ платья</string>
     <string name="makeup">Заказ макияжа</string>
+
     <string name="studioName">Название студии</string>
     <string name="studioPhone">Телефон студии</string>
     <string name="phone">Телефон</string>
     <string name="roomName">Название зала</string>
     <string name="address">Адресс</string>
     <string name="name">Имя контакта</string>
-    <string name="name_makeup_artist">Имя визажиста</string>
+    <string name="name_makeup_artist">Имя</string>
     <string name="norvialle">Norvialle</string>
     <string name="studios">Студии</string>
     <string name="makeupArtists">Визажисты</string>
 
+
     <string name="add_studio">Добавление студии</string>
     <string name="adding_event">Добавление события</string>
     <string name="adding_makeup_artist">Добавление визажиста</string>
+    <string name="adding_assistant">Добавление ассистента</string>
     <string name="adding_dress">Добавление платья</string>
     <string name="adding_contact">Добавление Контакта</string>
 
@@ -40,7 +43,7 @@
     <string name="roomPriceWithDiscount">Цена со скидкой</string>
     <string name="totalPrice">Общая цена</string>
     <string name="paid">Сумма залога</string>
-    <string name="makeupPrice">Стоимость макияжа</string>
+    <string name="makeupPrice">Стоимость</string>
     <string name="dressPrice">Стоимость платья</string>
 
     <string name="monyLeft">Остаток: %1$d</string>
@@ -78,12 +81,16 @@
     <string name="insta">Инстаграм</string>
     <string name="dialog_add_contact_save">Хотите сохранить контакт в список?</string>
     <string name="delete_dialog_makeup_artist">визажиста</string>
+    <string name="delete_dialog_assistent">ассистент</string>
     <string name="delete_dialog_studio">студию</string>
     <string name="wheels">Барабанный</string>
     <string name="keyboards">Клавиатурный</string>
     <string name="discount">Скидка</string>
     <string name="price">Цена</string>
     <string name="comment">Комментарий</string>
+    <string name="assistants">Ассистенты</string>
+    <string name="assistant">Ассистент</string>
+    <string name="makeup_artist">Визажист</string>
 
     <plurals name="plurals_shoot">
         <item quantity="zero">нет съемок</item>

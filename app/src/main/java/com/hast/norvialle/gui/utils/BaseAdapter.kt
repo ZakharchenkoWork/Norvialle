@@ -40,13 +40,21 @@ abstract class BaseAdapter<DataType> (private val allItems: ArrayList<DataType>,
 
 
     fun open2gis(link: String) {
-        val uri = Uri.parse(link.replace("http://", "dgis://"))
 
-        val intent = Intent(Intent.ACTION_VIEW, uri)
+        if (link.contains("goo.gl")){
 
-        intent.setPackage("ru.dublgis.dgismobile") // Если не планируете работать с публичной бета-версией, эту строчку надо указать
+            val uri = Uri.parse(link)
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            context.startActivity(intent)
 
-        context.startActivity(intent)
+        } else{
+            val uri = Uri.parse(link.replace("http://", "dgis://"))
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            intent.setPackage("ru.dublgis.dgismobile") // Если не планируете работать с публичной бета-версией, эту строчку надо указать
+            context.startActivity(intent)
+        }
+
+
     }
 
     fun dial(phone: String) {

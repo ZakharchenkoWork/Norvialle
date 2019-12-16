@@ -224,14 +224,14 @@
             android:layout_marginLeft="@dimen/margin_standard"
             android:layout_marginRight="@dimen/margin_standard"
             android:layout_marginTop="@dimen/margin_small"
-
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/makeup"
             app:layout_constraintLeft_toLeftOf="@id/makeup">
         <EditText
                 android:id="@+id/makeupArtistsName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Визажист"
+                android:hint="@string/makeup_artist"
                 android:layout_toLeftOf="@id/makeupTime"
                 android:layout_alignParentLeft="true"
                 android:maxLines="1"
@@ -284,7 +284,71 @@
 
 
     </RelativeLayout>
+    <CheckBox
+            android:id="@+id/assistant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/makeupLayout"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="@dimen/margin_standard"
+            android:text="@string/assistant"
+            />
+    <RelativeLayout
+            android:id="@+id/assistantLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/margin_standard"
+            android:layout_marginRight="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_small"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/assistant"
+            app:layout_constraintLeft_toLeftOf="@id/assistant">
+        <EditText
+                android:id="@+id/assistantName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/assistant"
+                android:layout_toLeftOf="@id/assistantPrice"
+                android:layout_alignParentLeft="true"
+                android:maxLines="1"
+                android:ellipsize="end"
 
+                />
+        <TextView
+                android:id="@+id/assistantPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/assistantName"
+                android:layout_alignTop="@id/assistantName"
+                android:gravity="center"
+                android:text="@string/price"
+                android:layout_marginRight="@dimen/margin_standard"
+                android:layout_toLeftOf="@id/assistantsList"
+                />
+        <ImageView
+                android:id="@+id/assistantsList"
+                android:layout_width="@dimen/icon_size_standard"
+                android:layout_height="@dimen/icon_size_standard"
+
+                android:layout_alignParentRight="true"
+                android:src="@drawable/list"/>
+        <EditText
+                android:id="@+id/assistantPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Телефон"
+                android:layout_below="@id/assistantName"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:maxLines="1"
+                android:ellipsize="end"
+
+                />
+
+
+    </RelativeLayout>
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -292,7 +356,7 @@
             android:weightSum="2"
             android:layout_marginTop="@dimen/margin_standard"
             android:layout_marginBottom="@dimen/margin_standard"
-            app:layout_constraintTop_toBottomOf="@id/makeupLayout">
+            app:layout_constraintTop_toBottomOf="@id/assistantLayout">
         <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

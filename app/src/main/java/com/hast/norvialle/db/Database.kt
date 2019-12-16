@@ -11,8 +11,8 @@ import com.hast.norvialle.data.*
 /**
  * Created by Konstantyn Zakharchenko on 28.11.2019.
  */
-@Database(entities = [Event::class, Studio::class, MakeupArtist::class, Dress::class, Settings::class, Contact::class],
-    version = 8)
+@Database(entities = [Event::class, Studio::class, MakeupArtist::class, Dress::class, Settings::class, Contact::class, Assistant::class],
+    version = 9)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {
@@ -87,6 +87,21 @@ abstract class AppDatabase : RoomDatabase() {
             }
 
         }
+
+        val MIGRATION_8_9: Migration? = object : Migration(8, 9) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE IF NOT EXISTS Assistant (`id` TEXT NOT NULL, PRIMARY KEY(`id`))")
+                database.execSQL("ALTER TABLE Assistant ADD COLUMN name TEXT DEFAULT '' NOT NULL")
+                database.execSQL("ALTER TABLE Assistant ADD COLUMN defaultPrice INTEGER DEFAULT 0 NOT NULL")
+                database.execSQL("ALTER TABLE Assistant ADD COLUMN phone TEXT DEFAULT '' NOT NULL")
+
+                database.execSQL("ALTER TABLE Event ADD COLUMN orderAssistant INTEGER DEFAULT 0 NOT NULL")
+                database.execSQL("ALTER TABLE Event ADD COLUMN assistantName TEXT DEFAULT '' NOT NULL")
+                database.execSQL("ALTER TABLE Event ADD COLUMN assistantPrice INTEGER DEFAULT 0 NOT NULL")
+                database.execSQL("ALTER TABLE Event ADD COLUMN assistantPhone TEXT DEFAULT '' NOT NULL")
+
+            }
+        }
     }
 
     abstract fun eventDao(): EventsDao
@@ -95,4 +110,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun dressDao(): DressDao
     abstract fun settingsDao(): SettingsDao
     abstract fun contactsDao(): ContactDao
+    abstract fun assistentDao(): AssistentDao
 }
