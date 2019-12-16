@@ -8,6 +8,7 @@ import android.os.Build;
 import android.text.Html;
 import android.text.InputType;
 import android.view.KeyEvent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -68,7 +69,7 @@ public class SimpleDialog extends AlertDialog.Builder {
             lastDialog = this;
         }
 
-        create();
+        lastInstance = create();
 
         this.dialogType = dialogType;
     }
@@ -304,18 +305,22 @@ public class SimpleDialog extends AlertDialog.Builder {
             if (inputType != DEFAULT) {
                 input.setInputType(inputType);
 
-
             }
             configureStyle(input);
             input.setImeActionLabel("ok", KeyEvent.KEYCODE_ENTER);
             input.setOnEditorActionListener((TextView v, int actionId, KeyEvent event)->{
                 if (okListener != null) {
+
                     okListener.onOKpressed(getData(input));
                 }
                 lastDialog = null;
-
+                hide();
                 return true;
             });
+            input.postDelayed(()->{
+                InputMethodManager mgr = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                mgr.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
+            },300);
 
             if (dialogType == DIALOG_TYPE.MESSAGE_AND_INPUT) {
 
@@ -360,7 +365,7 @@ public class SimpleDialog extends AlertDialog.Builder {
             lastDialog = null;
         });
         setView(layout);
-        super.show();
+       lastInstance =  super.show();
 
         return this;
     }
@@ -385,6 +390,8 @@ public void hide(){
     if (lastInstance != null) {
         try{
             lastInstance.dismiss();
+            lastInstance.cancel();
+            lastInstance.hide();
         }catch (Exception e){}
     }
 }
