@@ -6,8 +6,8 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.hast.norvialle.R
-import kotlinx.android.synthetic.main.data_dialog.*
+import com.hast.norvialle.data.Dress
+import com.hast.norvialle.gui.dresses.DressesListFragment
 
 /**
  * Created by Konstantyn Zakharchenko on 11.12.2019.
@@ -34,6 +34,13 @@ abstract class BaseFragment : Fragment(){
             it.openEventsList(dateToScroll)
         } }
 
+    }
+    fun openDressList(dressList: ArrayList<Dress>, onResultListener: ((pickedDresses : ArrayList<Dress>) -> Unit)) {
+        activity?.let {
+            if (it is BaseActivity){
+                it.showFragment(DressesListFragment.newInstance(dressList, onResultListener))
+            }
+        }
     }
     override fun onResume() {
         super.onResume()

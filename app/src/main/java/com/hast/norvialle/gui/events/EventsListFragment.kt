@@ -76,6 +76,13 @@ class EventsListFragment : BaseFragment() {
             EventsAdapter.OnAddEventListener {
                 openEventEditor(it)
             }
+        adapter.onDressClickListener = {event ->
+            openDressList(event.dresses) { newPickedDresses ->
+                event.dresses = newPickedDresses
+                MainPresenter.addEvent(event)
+                adapter.updateItem(event)
+            }
+        }
         adapter.onDeleteEventListener =
             EventsAdapter.OnAddEventListener { event ->
                 showDeleteDialog(context, R.string.delete_dialog_event) {

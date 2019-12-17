@@ -4,6 +4,7 @@
     <dimen name="avatar_size">60dp</dimen>
     <dimen name="margin_huge">64dp</dimen>
     <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_minimum">4dp</dimen>
     <dimen name="margin_border">2dp</dimen>
 
     <dimen name="icon_size_big">80dp</dimen>

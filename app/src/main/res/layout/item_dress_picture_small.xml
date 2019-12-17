@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/foregroundLayout"
+        android:layout_width="@dimen/icon_size_small"
+        android:layout_margin="@dimen/margin_minimum"
+        android:layout_height="@dimen/icon_size_small"
+        >
+    <ImageView
+            android:id="@+id/dressPhoto"
+            android:layout_width="@dimen/icon_size_small"
+            android:layout_height="@dimen/icon_size_small"
+            android:scaleType="centerCrop"
+            android:src="@drawable/dress_wide"
+         />
+    <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+          android:layout_centerInParent="true"
+            android:visibility="gone"
+
+            />
+</RelativeLayout>
