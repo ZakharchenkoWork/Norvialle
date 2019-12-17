@@ -101,17 +101,33 @@
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintTop_toBottomOf="@id/time"
-            android:layout_margin="@dimen/margin_standard"
+            android:layout_marginLeft="@dimen/margin_standard"
+            android:layout_marginRight="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_standard"
             android:hint="@string/description"
+            />
+    <EditText
+            android:id="@+id/location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/description"
+            android:layout_marginLeft="@dimen/margin_standard"
+            android:layout_marginRight="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_small"
+            android:hint="@string/location"
             />
     <CheckBox
             android:id="@+id/studio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/description"
+            app:layout_constraintTop_toBottomOf="@id/location"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_standard"
+            android:animateLayoutChanges="true"
             android:text="@string/studio"
         />
     <LinearLayout
@@ -126,6 +142,7 @@
             android:layout_marginRight="@dimen/margin_standard"
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginBottom="@dimen/margin_small"
+            android:animateLayoutChanges="true"
              android:visibility="gone">
         <RelativeLayout
                 android:layout_width="match_parent"

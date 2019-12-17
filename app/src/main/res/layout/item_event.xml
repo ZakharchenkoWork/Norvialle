@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -83,6 +84,7 @@
                 android:text="Контакт"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toLeftOf="@id/delete"
+                app:layout_constraintRight_toLeftOf="@id/dressesListLayout"
                 app:layout_constraintTop_toBottomOf="@+id/delete" />
 
         <TextView
@@ -93,6 +95,7 @@
                 android:text="Телефон"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toLeftOf="@id/delete"
+                app:layout_constraintRight_toLeftOf="@id/dressesListLayout"
                 app:layout_constraintTop_toBottomOf="@+id/contact" />
 
         <TextView
@@ -104,6 +107,7 @@
                 android:text="Локация"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toLeftOf="@id/delete"
+                app:layout_constraintRight_toLeftOf="@id/dressesListLayout"
                 app:layout_constraintTop_toBottomOf="@+id/phone" />
 
         <TextView
@@ -111,10 +115,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
-
                 android:text="Адресс"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toLeftOf="@id/delete"
+                app:layout_constraintRight_toLeftOf="@id/dressesListLayout"
                 app:layout_constraintTop_toBottomOf="@+id/location" />
 
         <TextView
@@ -126,13 +130,44 @@
                 android:text="Телефон студии"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toLeftOf="@id/delete"
+                app:layout_constraintRight_toLeftOf="@id/dressesListLayout"
                 app:layout_constraintTop_toBottomOf="@+id/address" />
+<RelativeLayout
+        android:id="@+id/dressesListLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/margin_standard"
+
+        app:layout_constraintBottom_toBottomOf="@id/studioPhone"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/delete"
+        >
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/dressList"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                tools:itemCount="12"
+                tools:layoutManager="GridLayoutManager"
+                tools:listitem="@layout/item_dress_picture_small"
+                tools:spanCount="3"
+                />
+    <View
+            android:id="@+id/dressesClickInterceptor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/dressList"
+            android:layout_alignStart="@id/dressList"
+            android:layout_alignEnd="@id/dressList"
+            android:layout_alignBottom="@id/dressList"
+            />
+</RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/foregroundLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:layout_margin="@dimen/margin_small"
             android:background="@drawable/background_plate">
 
@@ -170,8 +205,15 @@
                     android:id="@+id/makeup"
                     android:layout_width="@dimen/icon_size_medium"
                     android:layout_height="@dimen/icon_size_medium"
-
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/margin_small"
                     android:src="@drawable/makeup" />
+
+            <ImageView
+                    android:id="@+id/assistant"
+                    android:layout_width="@dimen/icon_size_medium"
+                    android:layout_height="@dimen/icon_size_medium"
+                    android:src="@drawable/assistent" />
 
         </LinearLayout>
 
@@ -183,13 +225,13 @@
                 android:layout_marginLeft="@dimen/margin_standard"
                 android:ellipsize="end"
                 android:maxLines="1"
-                app:layout_constraintHorizontal_bias="0"
                 android:text="Локация"
                 android:textSize="@dimen/text_big_ish"
+                app:layout_constraintEnd_toStartOf="@+id/time"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toRightOf="@id/orders"
                 app:layout_constraintRight_toLeftOf="@id/time"
                 app:layout_constraintStart_toEndOf="@+id/orders"
-                app:layout_constraintEnd_toStartOf="@+id/time"
                 app:layout_constraintTop_toTopOf="@id/time" />
 
         <TextView
@@ -202,11 +244,11 @@
                 android:maxLines="1"
                 android:text="Зал"
                 android:textSize="@dimen/text_big_ish"
+                app:layout_constraintEnd_toStartOf="@+id/assistantData"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toRightOf="@id/orders"
-                app:layout_constraintRight_toLeftOf="@id/makeupTime"
+                app:layout_constraintRight_toLeftOf="@id/assistantData"
                 app:layout_constraintStart_toEndOf="@+id/orders"
-                app:layout_constraintEnd_toStartOf="@+id/makeupTime"
                 app:layout_constraintTop_toBottomOf="@id/locationName" />
 
         <TextView
@@ -214,15 +256,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_standard"
-                android:text="Комментарий"
-                android:textSize="@dimen/text_normal"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:text="Комментарий"
+                android:textSize="@dimen/text_normal"
+                app:layout_constraintEnd_toStartOf="@+id/assistantData"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toRightOf="@id/orders"
-                app:layout_constraintRight_toLeftOf="@id/makeupTime"
+                app:layout_constraintRight_toLeftOf="@id/assistantData"
                 app:layout_constraintStart_toEndOf="@+id/orders"
-                app:layout_constraintEnd_toStartOf="@+id/makeupTime"
                 app:layout_constraintTop_toBottomOf="@id/locationRoom" />
 
         <LinearLayout
@@ -307,6 +349,16 @@
                 android:text="@string/makeup_label"
                 app:layout_constraintRight_toRightOf="@id/time"
                 app:layout_constraintTop_toBottomOf="@id/time" />
+
+        <TextView
+                android:id="@+id/assistantData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:gravity="center"
+                android:text="@string/assistant_label"
+                app:layout_constraintRight_toLeftOf="@id/makeupTime"
+                app:layout_constraintTop_toTopOf="@id/makeupTime" />
 
         <TextView
                 android:id="@+id/time"

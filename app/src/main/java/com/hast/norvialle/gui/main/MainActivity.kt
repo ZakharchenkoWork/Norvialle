@@ -1,17 +1,21 @@
 package com.hast.norvialle.gui.main
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Event
 import com.hast.norvialle.gui.BaseActivity
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.SettingsActivity
-
 import com.hast.norvialle.gui.calendar.CalendarFragment
 import com.hast.norvialle.gui.contacts.ContactsListFragment
 import com.hast.norvialle.gui.dresses.DressesListFragment
@@ -30,20 +34,36 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun getMenuTitleRes(): Int {
         return R.string.app_name
     }
+inner class BarToogle(activity: Activity , drawerLayout : DrawerLayout,
+                toolbar : Toolbar, openDrawerContentDescRes : Int,
+                closeDrawerContentDescRes: Int) : ActionBarDrawerToggle(
+    activity, drawerLayout,
+     toolbar, openDrawerContentDescRes,
+    closeDrawerContentDescRes){
+   override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+      /*  if (slideOffset == 0f && actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_STANDARD) { // drawer closed
 
+        } else if (slideOffset != 0f && actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS) { // started opening
+
+        }*/
+        super.onDrawerSlide(drawerView, slideOffset)
+    }
+
+}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
 
         setSupportActionBar(toolbar)
         val toggle =
-            ActionBarDrawerToggle(
+            BarToogle(
                 this,
                 drawerLayout,
                 toolbar,
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close
             )
+
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         drawerLayout.closeDrawer(GravityCompat.START)

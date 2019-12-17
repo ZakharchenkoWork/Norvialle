@@ -8,9 +8,12 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hast.norvialle.R
+import com.hast.norvialle.data.Dress
 import com.hast.norvialle.data.Event
+import com.hast.norvialle.gui.utils.GridLayoutRightToLeftManager
 import com.hast.norvialle.utils.*
 import kotlinx.android.synthetic.main.item_date.view.*
 import kotlinx.android.synthetic.main.item_event.view.*
@@ -24,6 +27,7 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
         OnAddEventListener {}
     var onDeleteEventListener: OnAddEventListener =
         OnAddEventListener {}
+    var onDressClickListener: ((event: Event)->Unit)? = null
     var eventsBack = 0
     companion object {
         private const val TYPE_DATE = 0
@@ -35,6 +39,22 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
         prepareItems()
         dates = prepareDates()
 
+    }
+
+    fun updateItem(event: Event) {
+        for ((index, allItem) in allItems.withIndex()) {
+            if (allItem.id.equals(event.id)){
+                allItems[index] = event
+            }
+        }
+        for ((index, item) in items.withIndex()) {
+            if (item.id.equals(event.id)){
+                items[index] = event
+            }
+        }
+
+
+        notifyDataSetChanged()
     }
 
     fun prepareItems() {
@@ -218,7 +238,16 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
                 itemView.address.setTextColor(context.resources.getColor(R.color.black))
                 itemView.geo.visibility = View.GONE
             }
-
+            if(event.orderDress && event.dresses.size > 0){
+                itemView.dressList.layoutManager = GridLayoutRightToLeftManager(context, 3)
+                itemView.dressList.adapter = DressesPicturesAdapter(event.dresses, context, true)
+                itemView.dressesListLayout.visibility = View.VISIBLE
+               itemView.dressesClickInterceptor.setOnClickListener {
+                    onDressClickListener?.invoke(event)
+                }
+            } else{
+                itemView.dressesListLayout.visibility = View.GONE
+            }
             itemView.time.setText(getTimeLocal(event.time))
             itemView.studio.setImageResource(if (event.orderStudio) R.drawable.studio else R.drawable.studio_disabled)
             itemView.dress.setImageResource(if (event.orderDress) R.drawable.dress else R.drawable.dress_disabled)
@@ -244,6 +273,19 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
                 itemView.studioPhone.visibility = View.VISIBLE
 
             }
+            if (event.orderAssistant) {
+                itemView.assistant.setImageResource(R.drawable.assistent)
+                itemView.assistantData.visibility = View.VISIBLE
+                itemView.assistantData.setText(context.resources.getText(R.string.assistant_label, event.assistantName))
+                if(!event.assistantPhone.isEmpty()){
+                    itemView.assistantData.setTextColor(context.resources.getColor(R.color.blue))
+                    itemView.assistantData.setOnClickListener { dial(event.assistantPhone) }
+                }
+            } else{
+                itemView.assistant.setImageResource(R.drawable.assistent_disabled)
+                itemView.assistantData.visibility = View.GONE
+            }
+
             if (!event.link.equals("")) {
                 itemView.insta.setOnClickListener {
                     val uri = Uri.parse(event.link)
@@ -283,6 +325,7 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
                 )
             )
         }
+
     }
 
     inner class DragListener(val layout: View, val toLeft: Boolean) : View.OnTouchListener {
@@ -375,6 +418,8 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
             return 0
         }
     }
+
+
 
 
 }

@@ -91,6 +91,7 @@ class AddEventActivity : BaseActivity() {
         contact.setText(if (!event.name.equals("")) event.name else getString(R.string.name))
         studio.setOnCheckedChangeListener { button, isChecked ->
             studioData.visibility = if (isChecked) View.VISIBLE else View.GONE
+            location.visibility = if (!isChecked) View.VISIBLE else View.GONE
         }
         makeup.setOnCheckedChangeListener { buttonView, isChecked ->
             makeupLayout.visibility = if (isChecked) View.VISIBLE else View.GONE
@@ -120,6 +121,9 @@ class AddEventActivity : BaseActivity() {
 
         totalPrice.setText("" + event.totalPrice)
         paid.setText("" + event.paidPrice)
+        if (event.orderStudio){
+            location.setText(event.studioName)
+        }
         studioName.setText(event.studioName)
         studioAddress.setText(event.studioAddress)
 
@@ -242,6 +246,8 @@ class AddEventActivity : BaseActivity() {
                     event.studioAddress = studioAddress.text.toString()
                     event.studioGeo = studioGeo.text.toString()
                     event.studioPhone = studioPhone.text.toString()
+                } else{
+                    event.studioName = location.text.toString()
                 }
                 if (makeup.isChecked) {
                     event.makeupArtistName = makeupArtistsName.text.toString()

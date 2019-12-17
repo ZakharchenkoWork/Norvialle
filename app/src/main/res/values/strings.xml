@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Norvialle</string>
     <string name="description">Комментарий</string>
+    <string name="location">Локация</string>
     <string name="studio">Заказ Студии</string>
     <string name="dress">Заказ платья</string>
     <string name="makeup">Заказ макияжа</string>
@@ -55,6 +56,7 @@
     <string name="makeup_artist_price">Цена %1$d</string>
     <string name="one_hour_before">За час</string>
     <string name="makeup_label">Макияж: \n %1$s \n%2$s</string>
+    <string name="assistant_label">Ассистент:\n%1$s</string>
     <string name="view">Посмтореть</string>
     <string name="take_photo">Сфотографировать</string>
     <string name="from_gallery">Из галереи</string>
