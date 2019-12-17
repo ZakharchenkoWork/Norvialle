@@ -13,7 +13,7 @@
             android:supportsRtl="true"
             android:name=".App"
             android:theme="@style/AppTheme">
-        <activity android:name=".gui.main.MainActivity">
+        <activity android:name=".gui.auth.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN"/>
@@ -21,6 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".gui.main.MainActivity"/>
         <activity android:name=".gui.SettingsActivity"/>
         <activity android:name=".gui.events.AddEventActivity"/>
         <activity android:name=".gui.makeup.AddAssistantActivity"/>

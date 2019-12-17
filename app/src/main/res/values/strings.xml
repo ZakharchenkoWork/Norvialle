@@ -92,7 +92,16 @@
     <string name="comment">Комментарий</string>
     <string name="assistants">Ассистенты</string>
     <string name="assistant">Ассистент</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="confirm_password">Повторить пароль</string>
+    <string name="sign_in">Войти</string>
+    <string name="registration">Регистрация</string>
+    <string name="photograph">Фотограф</string>
     <string name="makeup_artist">Визажист</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="remember">Запомнить</string>
+    <string name="fingerprint">Отпечаток</string>
 
     <plurals name="plurals_shoot">
         <item quantity="zero">нет съемок</item>

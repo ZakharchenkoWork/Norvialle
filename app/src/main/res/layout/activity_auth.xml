@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@drawable/main_back">
+<ImageView
+        android:id="@+id/asdf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo_white"
+        android:scaleType="centerInside"
+        />
+    <LinearLayout
+            android:id="@+id/loginLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/margin_standard"
+            android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/signLoginField"
+                style="@style/authEditLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    style="@style/authEditText"
+                    android:hint="@string/login" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/signPasswordField"
+
+                style="@style/authPasswordLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    style="@style/authEditText"
+                    android:hint="@string/password"
+                    android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+                android:id="@+id/signIn"
+                android:text="@string/sign_in"
+                style="@style/authButton" />
+
+        <TextView
+                android:id="@+id/registration"
+                android:text="@string/registration"
+                style="@style/authButton" />
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/registerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/margin_standard"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/regLoginField"
+                style="@style/authEditLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    style="@style/authEditText"
+                    android:hint="@string/login" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/regPasswordField"
+                style="@style/authPasswordLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    style="@style/authEditText"
+                    android:hint="@string/password"
+                    android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/regConfirmPasswordField"
+                style="@style/authPasswordLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    style="@style/authEditText"
+                    android:hint="@string/confirm_password"
+                    android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                <CheckBox
+                        android:id="@+id/checkPhotograph"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/colorPrimaryDark"
+                        android:checked="true" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:text="@string/photograph"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/text_big_ish" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                <CheckBox
+                        android:id="@+id/checkMakeupArtist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/colorPrimaryDark" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:text="@string/makeup_artist"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/text_big_ish" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                <CheckBox
+                        android:id="@+id/checkAssistant"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/colorPrimaryDark" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:text="@string/assistant"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="@dimen/text_big_ish" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+                android:text="@string/register"
+                style="@style/authButton" />
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/loginLayout"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            >
+        <CheckBox
+                android:id="@+id/remember"
+                android:buttonTint="@color/colorPrimaryDark"
+                style="@style/authButton"
+                android:text="@string/remember"
+                android:checked="true"
+                />
+        <CheckBox
+                android:id="@+id/fingerprint"
+                android:buttonTint="@color/colorPrimaryDark"
+                style="@style/authButton"
+                android:text="@string/fingerprint"
+                android:visibility="gone"
+                />
+    </LinearLayout>
+</RelativeLayout>
