@@ -16,8 +16,10 @@ import com.hast.norvialle.data.Event
 import com.hast.norvialle.gui.BaseActivity
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.gui.SettingsActivity
+import com.hast.norvialle.gui.auth.AuthActivity
 import com.hast.norvialle.gui.calendar.CalendarFragment
 import com.hast.norvialle.gui.contacts.ContactsListFragment
+import com.hast.norvialle.gui.dialogs.SimpleDialog
 import com.hast.norvialle.gui.dresses.DressesListFragment
 import com.hast.norvialle.gui.events.AddEventActivity
 import com.hast.norvialle.gui.makeup.AssistantListFragment
@@ -44,7 +46,7 @@ inner class BarToogle(activity: Activity , drawerLayout : DrawerLayout,
       /*  if (slideOffset == 0f && actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_STANDARD) { // drawer closed
 
         } else if (slideOffset != 0f && actionBar.getNavigationMode() == ActionBar.NAVIGATION_MODE_TABS) { // started opening
-
+        //TODO: close keyboard on drawer open
         }*/
         super.onDrawerSlide(drawerView, slideOffset)
     }
@@ -75,6 +77,7 @@ inner class BarToogle(activity: Activity , drawerLayout : DrawerLayout,
         createNotificationChannels(this)
 
         openEventsList()
+        navigationView.getMenu().getItem(1).setChecked(true);
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean { // Handle navigation view item clicks here.
@@ -115,6 +118,18 @@ inner class BarToogle(activity: Activity , drawerLayout : DrawerLayout,
                 R.id.settings -> {
                     startActivity(Intent(this, SettingsActivity::class.java))
                 }
+                R.id.exit ->{
+                    SimpleDialog(this, SimpleDialog.DIALOG_TYPE.MESSAGE_ONLY)
+                        .setTitle(getString(R.string.exit))
+                        .setMessage(getString(R.string.exit_warning))
+                        .setOkButtonText(getString(R.string.delete_dialog_yes))
+                        .setCancelButtonText(getString(R.string.delete_dialog_no))
+                        .setCancelable(true)
+                        .setOkListener{
+                            logout()
+                        }.build()
+
+                }
 
             }
             }, 100L)
@@ -122,6 +137,12 @@ inner class BarToogle(activity: Activity , drawerLayout : DrawerLayout,
         return true
     }
 
+    private fun logout() {
+        clearAuthData()
+        val intent = Intent(this, AuthActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+    }
 
 
     fun openEventEditor(event: Event) {

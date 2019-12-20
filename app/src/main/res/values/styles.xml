@@ -48,4 +48,15 @@
         <item name="android:textSize">@dimen/text_big_ish</item>
     </style>
 
+
+    <style parent="BaseBottomSheetDialog" name="BottomSheetDialogTheme"/>
+
+    <style parent="@style/Theme.Design.Light.BottomSheetDialog" name="BaseBottomSheetDialog">
+    <item name="android:windowIsFloating">true</item>
+    <item name="bottomSheetStyle">@style/BottomSheet</item>
+</style>
+    <style parent="@style/Widget.Design.BottomSheet.Modal" name="BottomSheet">
+    <item name="android:background">@drawable/bg_bottom_sheet</item>
+
+</style>
 </resources>

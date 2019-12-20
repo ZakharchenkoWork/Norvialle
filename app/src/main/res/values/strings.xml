@@ -71,6 +71,10 @@
     <string name="shoot_client"> Клиент: %1$s </string>
     <string name="shoot_dress"> Платья: %1$d </string>
     <string name="notifications_label">Напоминания о съемках</string>
+    <string name="price_settings">Ввод цен</string>
+    <string name="login_settings">Параметры входа</string>
+    <string name="auto_login_label">Входить автоматически</string>
+    <string name="fingerprint_label">Вход по отпечатку пальца</string>
     <string name="input_types_label">Ввод цен</string>
     <string name="day_before">За день, в: </string>
     <string name="default_day_before_time">22:00</string>
@@ -92,7 +96,7 @@
     <string name="comment">Комментарий</string>
     <string name="assistants">Ассистенты</string>
     <string name="assistant">Ассистент</string>
-    <string name="login">Логин</string>
+    <string name="login">Электронная почта</string>
     <string name="password">Пароль</string>
     <string name="confirm_password">Повторить пароль</string>
     <string name="sign_in">Войти</string>
@@ -101,7 +105,18 @@
     <string name="makeup_artist">Визажист</string>
     <string name="register">Зарегистрироваться</string>
     <string name="remember">Запомнить</string>
-    <string name="fingerprint">Отпечаток</string>
+    <string name="fingerprint">Вход с отпечатком</string>
+    <string name="restore_password">Восстановление пароля</string>
+
+
+    <string name="biometric_failed">Отпечаток не распознан</string>
+    <string name="biometric_title">Проверка личности</string>
+    <string name="biometric_subtitle">Отпечаток пальца</string>
+    <string name="biometric_description">Прислоните палец к сенсору, чтобы подтвердить вашу личность и быстро войти в приложение.</string>
+    <string name="biometric_negative_button_text">Отменить</string>
+    <string name="exit">Выход</string>
+    <string name="restore_password_message">Введите Электронную почту, указанную при регистрации, и мы отправим на нее пароль.</string>
+    <string name="exit_warning">Вы действительно хотите выйти?</string>
 
     <plurals name="plurals_shoot">
         <item quantity="zero">нет съемок</item>

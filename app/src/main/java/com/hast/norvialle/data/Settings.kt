@@ -17,6 +17,7 @@ class Settings {
     var notifyTimeBefore = false
     var timeBeforeShoot :Long= 0
     var useWheelsInput = false
+    var useFingerprint = false // not used
 
     fun setDefault(){
         id = "settings"
@@ -27,5 +28,6 @@ class Settings {
         notifyTimeBefore = true
         timeBeforeShoot = 8*60*60*1000
         useWheelsInput = false
+        useFingerprint = false
     }
 }

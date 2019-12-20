@@ -12,7 +12,7 @@ import com.hast.norvialle.data.*
  * Created by Konstantyn Zakharchenko on 28.11.2019.
  */
 @Database(entities = [Event::class, Studio::class, MakeupArtist::class, Dress::class, Settings::class, Contact::class, Assistant::class],
-    version = 9)
+    version = 10)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {
@@ -99,6 +99,13 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("ALTER TABLE Event ADD COLUMN assistantName TEXT DEFAULT '' NOT NULL")
                 database.execSQL("ALTER TABLE Event ADD COLUMN assistantPrice INTEGER DEFAULT 0 NOT NULL")
                 database.execSQL("ALTER TABLE Event ADD COLUMN assistantPhone TEXT DEFAULT '' NOT NULL")
+
+            }
+        }
+
+        val MIGRATION_9_10: Migration? = object : Migration(9, 10) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE Settings ADD COLUMN useFingerprint INTEGER DEFAULT 0 NOT NULL")
 
             }
         }

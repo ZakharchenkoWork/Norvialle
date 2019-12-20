@@ -28,6 +28,7 @@ class App : Application() {
             .addMigrations(AppDatabase.MIGRATION_6_7)
             .addMigrations(AppDatabase.MIGRATION_7_8)
             .addMigrations(AppDatabase.MIGRATION_8_9)
+            .addMigrations(AppDatabase.MIGRATION_9_10)
             .allowMainThreadQueries().build();
 
     }

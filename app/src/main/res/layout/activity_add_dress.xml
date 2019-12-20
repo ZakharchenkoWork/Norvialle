@@ -21,16 +21,23 @@
             android:scaleType="centerCrop"
             android:src="@drawable/dress_wide"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
-    <ProgressBar
+
+    <RelativeLayout
             android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:visibility="gone"
+        >
+    <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/dressPhoto"
-            app:layout_constraintBottom_toBottomOf="@id/dressPhoto"
-            app:layout_constraintLeft_toLeftOf="@id/dressPhoto"
-            app:layout_constraintRight_toRightOf="@id/dressPhoto"
-            android:visibility="gone"
+            android:layout_centerInParent="true"
         />
+    </RelativeLayout>
 
 
     <ImageView

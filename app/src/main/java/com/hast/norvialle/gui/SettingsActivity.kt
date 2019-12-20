@@ -1,11 +1,14 @@
 package com.hast.norvialle.gui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Settings
+import com.hast.norvialle.utils.SETTING_AUTO_LOGIN
+import com.hast.norvialle.utils.SETTING_FINGERPRINT
 import com.hast.norvialle.utils.getTime
 import com.hast.norvialle.utils.notifications.AlarmReceiver
 import com.hast.norvialle.utils.notifications.resetAlarmsForEvents
@@ -49,7 +52,27 @@ class SettingsActivity : AppCompatActivity() {
         }
         wheels.isChecked = settings.useWheelsInput
         keyboard.isChecked = !settings.useWheelsInput
-//        defaultDayBeforeTime
+
+        autoSignIn.isChecked = getSharedPreferences(packageName, Context.MODE_PRIVATE).getBoolean(
+            SETTING_AUTO_LOGIN, false)
+        val isFingerprintChekedByDefault = getSharedPreferences(packageName, Context.MODE_PRIVATE).getBoolean(
+            SETTING_FINGERPRINT, false
+        )
+        fingerprint.isChecked = isFingerprintChekedByDefault
+        if (autoSignIn.isChecked){
+            fingerprint.isEnabled = false
+            fingerprint.isChecked = false
+        }
+        autoSignIn.setOnCheckedChangeListener{a , isChecked ->
+            if(isChecked){
+                fingerprint.isEnabled = false
+                fingerprint.isChecked = false
+            } else{
+                fingerprint.isEnabled = true
+                fingerprint.isChecked = isFingerprintChekedByDefault
+            }
+        }
+
     }
 
     override
@@ -92,6 +115,13 @@ class SettingsActivity : AppCompatActivity() {
                     resetAlarmsForEvents(this, MainPresenter.events, settings)
                 }
                settings.useWheelsInput = wheels.isChecked
+
+                val prefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
+
+                prefs.edit().putBoolean(SETTING_FINGERPRINT,fingerprint.isChecked)
+                    .putBoolean(SETTING_AUTO_LOGIN, autoSignIn.isChecked).apply()
+
+
                 MainPresenter.saveSettings(settings)
                 finish()
             }

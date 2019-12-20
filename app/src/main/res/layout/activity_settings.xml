@@ -106,7 +106,7 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/notifications_label"
+                    android:text="@string/price_settings"
                     android:textSize="@dimen/text_normal" />
             <RadioGroup
                     android:layout_width="match_parent"
@@ -129,6 +129,30 @@
                   />
 
             </RadioGroup>
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="@dimen/margin_standard"
+                    android:layout_marginLeft="@dimen/margin_standard"
+                    android:layout_marginRight="@dimen/margin_standard"
+                    android:background="@drawable/line_separator"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_settings"
+                    android:textSize="@dimen/text_normal" />
+            <CheckBox
+                    android:id="@+id/autoSignIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/auto_login_label"
+                    android:textSize="@dimen/text_big_ish" />
+            <CheckBox
+                    android:id="@+id/fingerprint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fingerprint_label"
+                    android:textSize="@dimen/text_big_ish" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
