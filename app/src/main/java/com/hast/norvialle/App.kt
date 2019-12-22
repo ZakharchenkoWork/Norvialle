@@ -11,6 +11,7 @@ import com.hast.norvialle.db.AppDatabase
  */
 
 class App : Application() {
+
     companion object {
         lateinit var db : AppDatabase
     }
@@ -30,6 +31,7 @@ class App : Application() {
             .addMigrations(AppDatabase.MIGRATION_8_9)
             .addMigrations(AppDatabase.MIGRATION_9_10)
             .allowMainThreadQueries().build();
+
 
     }
 }

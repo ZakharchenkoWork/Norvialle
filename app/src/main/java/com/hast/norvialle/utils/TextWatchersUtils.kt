@@ -1,6 +1,7 @@
 package com.hast.norvialle.utils
 
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.widget.EditText
 import java.lang.NumberFormatException
@@ -41,5 +42,21 @@ fun getNonZeroTextWatcher(
             listener.invoke("" + text)
         }
     }
+}
+fun getEmailWatcher(
+    listener: ((isValidEmail: Boolean) -> Unit)
+): TextWatcher {
+    return object : TextWatcher {
+        override fun afterTextChanged(text: Editable?) {
+        }
+
+        override fun beforeTextChanged(text: CharSequence, p1: Int, p2: Int, p3: Int) {
+        }
+
+        override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            listener.invoke(!TextUtils.isEmpty(text) && android.util.Patterns.EMAIL_ADDRESS.matcher(text).matches())
+        }
+    }
+
 }
 

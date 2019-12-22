@@ -10,10 +10,13 @@ import com.hast.norvialle.data.AuthData
 import com.hast.norvialle.gui.BaseActivity
 import com.hast.norvialle.gui.dialogs.SimpleDialog
 import com.hast.norvialle.gui.main.MainActivity
+import com.hast.norvialle.model.ApiImpl
 import com.hast.norvialle.utils.SETTING_AUTO_LOGIN
 import com.hast.norvialle.utils.SETTING_FINGERPRINT
 import com.hast.norvialle.utils.biometric.BiometricCallback
 import com.hast.norvialle.utils.biometric.BiometricManager
+import com.hast.norvialle.utils.getEmailWatcher
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_auth.*
 
 
@@ -43,10 +46,17 @@ class AuthActivity : BaseActivity(), BiometricCallback {
         loginLayout.visibility = View.VISIBLE
         registerLayout.visibility = View.GONE
         registration.setOnClickListener {
-            loginLayout.visibility = View.GONE
             registerLayout.visibility = View.VISIBLE
+            back.visibility = View.VISIBLE
+            loginLayout.visibility = View.GONE
+            forgotPassword.visibility = View.GONE
         }
-
+        back.setOnClickListener {
+            registerLayout.visibility = View.GONE
+            back.visibility = View.GONE
+            loginLayout.visibility = View.VISIBLE
+            forgotPassword.visibility = View.VISIBLE
+        }
         checkPhotograph.setOnCheckedChangeListener { a, isChecked ->
             if (isChecked) {
                 checkAssistant.isChecked = false
@@ -74,6 +84,14 @@ class AuthActivity : BaseActivity(), BiometricCallback {
                 )
             )
         }
+        signLogin.addTextChangedListener(getEmailWatcher { isValidEmail->
+            if (!isValidEmail){
+                signLogin.setBackgroundColor(resources.getColor(R.color.red))
+            } else{
+                signLogin.setBackgroundColor(resources.getColor(R.color.white
+                ))
+            }
+        })
         remember.setOnCheckedChangeListener { a, isChecked ->
             fingerprint.visibility = if (!isChecked) View.VISIBLE else View.GONE
         }
@@ -98,6 +116,10 @@ class AuthActivity : BaseActivity(), BiometricCallback {
                     //TODO: Send message to server
                 }
                 .build()
+        }
+
+        registerButton.setOnClickListener {
+            register(AuthData(regLogin.text.toString().toLowerCase(), regPassword.text.toString()))
         }
     }
 
@@ -151,7 +173,14 @@ class AuthActivity : BaseActivity(), BiometricCallback {
     ) { //        Toast.makeText(getApplicationContext(), errString, Toast.LENGTH_LONG).show();
     }
 
+fun register(authData: AuthData){
+    ApiImpl().registration(authData).subscribeBy (onNext = {
+        Log.i("rest", it.userId)
+    }, onError = {
+        it.printStackTrace()
+    })
 
+}
 
     fun login(authData: AuthData) {
         saveData(SETTING_AUTO_LOGIN, remember.isChecked)
