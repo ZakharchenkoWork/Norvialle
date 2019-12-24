@@ -22,21 +22,26 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_big_ish</item>
-        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="android:textColorHint">@color/gold</item>
         <item name="android:backgroundTint">@color/colorPrimaryDark</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/gold</item>
         <item name="android:paddingLeft">@dimen/margin_small</item>
     </style>
 
     <style name="authEditLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="android:textColorHint">@color/gold</item>
+        <item name="android:textColor">@color/gold</item>
+
     </style>
-    <style name="authPasswordLayout" parent="authEditLayout">
-        <item name="passwordToggleEnabled">true</item>
-        <item name="passwordToggleTint">@color/colorPrimaryDark</item>
+    <style name="nameErrorEditLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColorHint">@color/red</item>
+        <item name="android:textColor">@color/red</item>
     </style>
+
 
     <style name="authButton">
         <item name="android:layout_width">match_parent</item>
@@ -44,7 +49,7 @@
         <item name="android:gravity">center</item>
         <item name="android:paddingTop">@dimen/margin_small</item>
         <item name="android:paddingBottom">@dimen/margin_small</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@drawable/button_text_color</item>
         <item name="android:textSize">@dimen/text_big_ish</item>
     </style>
 
@@ -59,4 +64,26 @@
     <item name="android:background">@drawable/bg_bottom_sheet</item>
 
 </style>
+
+
+
+
+    <style name="editLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColorHint">@color/gold</item>
+        <item name="android:textColor">@color/gold</item>
+    </style>
+    <style name="authPasswordLayout" parent="editLayout">
+        <item name="passwordToggleEnabled">true</item>
+        <item name="passwordToggleTint">@color/gold</item>
+        <item name="android:inputType">textPassword</item>
+    </style>
+    <style name="editText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_big_ish</item>
+    </style>
+
+
 </resources>

@@ -54,7 +54,7 @@ fun getEmailWatcher(
         }
 
         override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            listener.invoke(!TextUtils.isEmpty(text) && android.util.Patterns.EMAIL_ADDRESS.matcher(text).matches())
+            listener.invoke(TextUtils.isEmpty(text) || android.util.Patterns.EMAIL_ADDRESS.matcher(text).matches())
         }
     }
 

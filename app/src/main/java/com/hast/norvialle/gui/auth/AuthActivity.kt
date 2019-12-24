@@ -1,10 +1,12 @@
 package com.hast.norvialle.gui.auth
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
 import android.view.View
+import androidx.core.view.ViewCompat
 import com.hast.norvialle.R
 import com.hast.norvialle.data.AuthData
 import com.hast.norvialle.gui.BaseActivity
@@ -15,6 +17,8 @@ import com.hast.norvialle.utils.SETTING_AUTO_LOGIN
 import com.hast.norvialle.utils.SETTING_FINGERPRINT
 import com.hast.norvialle.utils.biometric.BiometricCallback
 import com.hast.norvialle.utils.biometric.BiometricManager
+import com.hast.norvialle.utils.data_validation.DataValidationController
+import com.hast.norvialle.utils.data_validation.Validatable
 import com.hast.norvialle.utils.getEmailWatcher
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_auth.*
@@ -24,7 +28,8 @@ import kotlinx.android.synthetic.main.activity_auth.*
  * Created by Konstantyn Zakharchenko on 17.12.2019.
  */
 class AuthActivity : BaseActivity(), BiometricCallback {
-
+    val loginValidation = DataValidationController()
+    val registerValidation = DataValidationController()
     var biometricManager: BiometricManager? = null
     override fun getMenuRes(): Int {
         return NO_VIEW
@@ -76,22 +81,19 @@ class AuthActivity : BaseActivity(), BiometricCallback {
                 checkAssistant.isChecked = false
             }
         }
+
+        loginValidation.add(signLogin)
+        loginValidation.add(signPassword)
+        loginValidation.onStateChanged = { signIn.isEnabled = it }
         signIn.setOnClickListener {
             login(
                 AuthData(
-                    signLogin.text.toString(),
-                    signPassword.text.toString()
+                    signLogin.getText(),
+                    signPassword.getText()
                 )
             )
         }
-        signLogin.addTextChangedListener(getEmailWatcher { isValidEmail->
-            if (!isValidEmail){
-                signLogin.setBackgroundColor(resources.getColor(R.color.red))
-            } else{
-                signLogin.setBackgroundColor(resources.getColor(R.color.white
-                ))
-            }
-        })
+
         remember.setOnCheckedChangeListener { a, isChecked ->
             fingerprint.visibility = if (!isChecked) View.VISIBLE else View.GONE
         }
@@ -119,8 +121,21 @@ class AuthActivity : BaseActivity(), BiometricCallback {
         }
 
         registerButton.setOnClickListener {
-            register(AuthData(regLogin.text.toString().toLowerCase(), regPassword.text.toString()))
+            register(AuthData(regLogin.getText().toLowerCase(), regPassword.getText()))
         }
+
+        registerValidation.add(regLogin)
+        registerValidation.add(regPassword)
+        registerValidation.add(regConfirmPassword)
+        registerValidation.add(PasswordsMatcher())
+        registerValidation.onStateChanged = {registerButton.isEnabled = it}
+    }
+    inner class PasswordsMatcher : Validatable{
+        override var onStateChanged: () -> Unit = {}
+        override fun validationCheck(): Boolean {
+            return regPassword.getText().equals(regConfirmPassword.getText())
+        }
+
     }
 
     override fun onSdkVersionNotSupported() {

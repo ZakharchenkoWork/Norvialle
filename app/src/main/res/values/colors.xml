@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#D6C6C7</color>
-    <color name="colorPrimaryDark">#E1CABA</color>
+    <color name="colorPrimary">@color/rose</color>
+    <color name="colorPrimaryDark">@color/gold</color>
     <color name="colorAccent">#E1CABA</color>
     <color name="items_back">#FFFFFF</color>
     <color name="red">#FF0000</color>
@@ -10,6 +10,9 @@
     <color name="light_grey">#AAAAAA</color>
     <color name="blue">#3F51B5</color>
     <color name="roseTransparent">#80D9949C</color>
+    <color name="gold">#E1CABA</color>
+    <color name="rose">#D6C6C7</color>
+
     <color name="standard_layout_background">#FAECF4</color>
 
 

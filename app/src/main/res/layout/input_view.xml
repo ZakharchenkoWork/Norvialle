@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.textfield.TextInputLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/editLayout"
+style="@style/authPasswordLayout">
+
+<com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/editText"
+        style="@style/editText"
+        />
+</com.google.android.material.textfield.TextInputLayout>

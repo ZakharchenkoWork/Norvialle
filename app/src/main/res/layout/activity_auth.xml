@@ -14,7 +14,7 @@
             android:layout_marginLeft="@dimen/margin_small"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-
+            android:visibility="gone"
             />
 <ImageView
         android:id="@+id/logo"
@@ -37,28 +37,22 @@
             android:layout_margin="@dimen/margin_standard"
             android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/signLoginField"
-                style="@style/authEditLayout">
+        <com.hast.norvialle.gui.utils.InputView
+                android:id="@+id/signLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:expectedInputType="email"
+                app:hint="@string/login"
+                />
+  <com.hast.norvialle.gui.utils.InputView
+                android:id="@+id/signPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:expectedInputType="password"
+                app:hint="@string/password"
+                />
 
-            <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/signLogin"
-                    style="@style/authEditText"
-                    android:inputType="textEmailAddress"
-                    android:hint="@string/login" />
-        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/signPasswordField"
-
-                style="@style/authPasswordLayout">
-
-            <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/signPassword"
-                    style="@style/authEditText"
-                    android:hint="@string/password"
-                    android:inputType="textPassword" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
                 android:id="@+id/signIn"
@@ -69,6 +63,7 @@
                 android:id="@+id/registration"
                 android:text="@string/registration"
                 style="@style/authButton" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -82,38 +77,30 @@
             android:visibility="gone"
             android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/regLoginField"
-                style="@style/authEditLayout">
 
-            <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/regLogin"
-                    style="@style/authEditText"
-                    android:inputType="textEmailAddress"
-                    android:hint="@string/login" />
-        </com.google.android.material.textfield.TextInputLayout>
+        <com.hast.norvialle.gui.utils.InputView
+                android:id="@+id/regLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:expectedInputType="email"
+                app:hint="@string/login"
+                />
 
-        <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/regPasswordField"
-                style="@style/authPasswordLayout">
+        <com.hast.norvialle.gui.utils.InputView
+                android:id="@+id/regPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:expectedInputType="password"
+                app:hint="@string/password"
+                />
+        <com.hast.norvialle.gui.utils.InputView
+                android:id="@+id/regConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:expectedInputType="password"
+                app:hint="@string/confirm_password"
+                />
 
-            <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/regPassword"
-                    style="@style/authEditText"
-                    android:hint="@string/password"
-                    android:inputType="textPassword" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/regConfirmPasswordField"
-                style="@style/authPasswordLayout">
-
-            <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/regPasswordConfirm"
-                    style="@style/authEditText"
-                    android:hint="@string/confirm_password"
-                    android:inputType="textPassword" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
                 android:layout_width="match_parent"
