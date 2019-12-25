@@ -1,6 +1,7 @@
 package com.hast.norvialle.gui
 
 import android.content.Context
+import android.os.Build
 import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
@@ -126,5 +127,13 @@ companion object {
             .putString(SAVED_LOGIN, authData.login)
             .putString(SAVED_PASSWORD, authData.password)
             .apply()
+    }
+
+    fun getResolvedColor(colorRes: Int): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            this.resources.getColor(colorRes, null)
+        } else {
+            this.resources.getColor(colorRes)
+        }
     }
 }

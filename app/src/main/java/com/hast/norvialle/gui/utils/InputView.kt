@@ -25,6 +25,7 @@ class InputView(context: Context, attrs: AttributeSet) : FrameLayout(context, at
     Validatable {
 
     override var onStateChanged: (() -> Unit)={}
+    var onFocusChanged: ((hasFocus : Boolean) -> Unit)={}
     var view = LayoutInflater.from(context).inflate(R.layout.input_view, this, false)
     var expectedType = EXPECTED_INPUT_TYPE.TEXT
 
@@ -33,6 +34,11 @@ class InputView(context: Context, attrs: AttributeSet) : FrameLayout(context, at
         addView(view)
         handleAttributes(context, attrs)
         prepareEditTextStyle()
+        view.editText.setOnFocusChangeListener { v, hasFocus ->
+           v.post{ setColors(validationCheck())
+               onFocusChanged(hasFocus)}
+
+        }
 
     }
 
@@ -40,6 +46,7 @@ class InputView(context: Context, attrs: AttributeSet) : FrameLayout(context, at
         view.editText.setTextColor(getColor(R.color.gold))
         view.editText.setHintTextColor(getColor(R.color.gold))
         view.editText.backgroundTintList = ColorStateList.valueOf(getColor(R.color.gold))
+        view.editText.background.setColorFilter(getColor(R.color.gold), PorterDuff.Mode.SRC_IN)
 
 
     }
@@ -105,14 +112,20 @@ class InputView(context: Context, attrs: AttributeSet) : FrameLayout(context, at
             val errorStateList = ColorStateList.valueOf(getColor(R.color.red))
             view.editText.backgroundTintList = errorStateList
             view.editLayout.backgroundTintList = errorStateList
+            view.editLayout.setHintTextAppearance(R.style.errorHintAppearance)
+            view.editLayout.defaultHintTextColor = errorStateList
+            view.editText.background.setColorFilter(getColor(R.color.red), PorterDuff.Mode.SRC_IN)
             view.editText.setHintTextColor(getColor(R.color.red))
-
 
         } else {
             val okStateList = ColorStateList.valueOf(getColor(R.color.gold))
             view.editText.backgroundTintList = okStateList
             view.editLayout.backgroundTintList = okStateList
+            view.editLayout.setHintTextAppearance(R.style.normalHintAppearance)
+            view.editLayout.defaultHintTextColor = okStateList
             view.editText.setHintTextColor(getColor(R.color.gold))
+
+            view.editText.background.setColorFilter(getColor(R.color.gold), PorterDuff.Mode.SRC_IN)
 
         }
     }
@@ -156,6 +169,7 @@ class InputView(context: Context, attrs: AttributeSet) : FrameLayout(context, at
             }
         }
     }
+
 
 
     enum class EXPECTED_INPUT_TYPE {

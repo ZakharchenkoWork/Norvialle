@@ -84,6 +84,12 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/text_big_ish</item>
     </style>
-
-
+    <style name="errorHintAppearance">
+        <item name="android:textColorHint">@color/red</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
+    <style name="normalHintAppearance">
+        <item name="android:textColorHint">@color/gold</item>
+        <item name="android:textColor">@color/gold</item>
+    </style>
 </resources>

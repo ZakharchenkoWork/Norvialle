@@ -63,29 +63,21 @@ class AuthActivity : BaseActivity(), BiometricCallback {
             forgotPassword.visibility = View.VISIBLE
         }
         checkPhotograph.setOnCheckedChangeListener { a, isChecked ->
-            if (isChecked) {
-                checkAssistant.isChecked = false
-                checkMakeupArtist.isChecked = false
-            }
+            validateCheckBoxes()
         }
         checkAssistant.setOnCheckedChangeListener { a, isChecked ->
-            if (isChecked) {
-                checkPhotograph.isChecked = false
-                checkMakeupArtist.isChecked = false
-            }
+            validateCheckBoxes()
         }
 
         checkMakeupArtist.setOnCheckedChangeListener { a, isChecked ->
-            if (isChecked) {
-                checkPhotograph.isChecked = false
-                checkAssistant.isChecked = false
-            }
+            validateCheckBoxes()
         }
 
         loginValidation.add(signLogin)
         loginValidation.add(signPassword)
         loginValidation.onStateChanged = { signIn.isEnabled = it }
         signIn.setOnClickListener {
+
             login(
                 AuthData(
                     signLogin.getText(),
@@ -123,17 +115,77 @@ class AuthActivity : BaseActivity(), BiometricCallback {
         registerButton.setOnClickListener {
             register(AuthData(regLogin.getText().toLowerCase(), regPassword.getText()))
         }
+        registerButton.isEnabled = false
 
         registerValidation.add(regLogin)
         registerValidation.add(regPassword)
         registerValidation.add(regConfirmPassword)
         registerValidation.add(PasswordsMatcher())
-        registerValidation.onStateChanged = {registerButton.isEnabled = it}
+        registerValidation.add(ChecksWatcher())
+        registerValidation.onStateChanged = {
+            registerButton.isEnabled = it
+        }
+    }
+
+    fun validateCheckBoxes() : Boolean {
+        return if (!checkPhotograph.isChecked &&
+        !checkAssistant.isChecked &&
+        !checkMakeupArtist.isChecked){
+            checkPhotograph.buttonTintList = ColorStateList.valueOf(getResolvedColor(R.color.red))
+            checkAssistant.buttonTintList = ColorStateList.valueOf(getResolvedColor(R.color.red))
+            checkMakeupArtist.buttonTintList = ColorStateList.valueOf(getResolvedColor(R.color.red))
+            false
+        } else{
+            checkPhotograph.buttonTintList = ColorStateList.valueOf(getResolvedColor(R.color.gold))
+            checkAssistant.buttonTintList = ColorStateList.valueOf(getResolvedColor(R.color.gold))
+            checkMakeupArtist.buttonTintList = ColorStateList.valueOf(getResolvedColor(R.color.gold))
+            true
+        }
     }
     inner class PasswordsMatcher : Validatable{
+        init{
+            regPassword.onFocusChanged = {
+
+                    validationCheck()
+
+            }
+            regConfirmPassword.onFocusChanged = {
+
+                    validationCheck()
+
+            }
+        }
         override var onStateChanged: () -> Unit = {}
         override fun validationCheck(): Boolean {
-            return regPassword.getText().equals(regConfirmPassword.getText())
+            val equals = regPassword.getText().equals(regConfirmPassword.getText())
+            if (!equals) {
+                regPassword.post {
+                    regPassword.setColors(false)
+                    regConfirmPassword.setColors(false)
+                }
+            }
+            return equals
+        }
+
+    }
+
+    inner class ChecksWatcher : Validatable{
+
+        init{
+            checkPhotograph.setOnCheckedChangeListener{ v, h->
+                onStateChanged()
+            }
+            checkMakeupArtist.setOnCheckedChangeListener{ v, h->
+                onStateChanged()
+            }
+            checkAssistant.setOnCheckedChangeListener{ v, h->
+                onStateChanged()
+            }
+        }
+        override var onStateChanged: () -> Unit = {}
+        override fun validationCheck(): Boolean {
+
+            return validateCheckBoxes()
         }
 
     }
