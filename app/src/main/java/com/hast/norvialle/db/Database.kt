@@ -6,13 +6,14 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hast.norvialle.data.*
+import com.hast.norvialle.data.server.UpdateData
 
 
 /**
  * Created by Konstantyn Zakharchenko on 28.11.2019.
  */
-@Database(entities = [Event::class, Studio::class, MakeupArtist::class, Dress::class, Settings::class, Contact::class, Assistant::class],
-    version = 10)
+@Database(entities = [Event::class, Studio::class, MakeupArtist::class, Dress::class, Settings::class, Contact::class, Assistant::class, UpdateData::class],
+    version = 11)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {
@@ -109,6 +110,16 @@ abstract class AppDatabase : RoomDatabase() {
 
             }
         }
+        val MIGRATION_10_11: Migration? = object : Migration(10, 11) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE IF NOT EXISTS UpdateData (`time` INTEGER NOT NULL, PRIMARY KEY(`time`))")
+                database.execSQL("ALTER TABLE UpdateData ADD COLUMN dataType TEXT DEFAULT '' NOT NULL")
+                database.execSQL("ALTER TABLE UpdateData ADD COLUMN actionType TEXT DEFAULT '' NOT NULL")
+                database.execSQL("ALTER TABLE UpdateData ADD COLUMN itemId TEXT DEFAULT '' NOT NULL")
+
+
+            }
+        }
     }
 
     abstract fun eventDao(): EventsDao
@@ -118,4 +129,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun settingsDao(): SettingsDao
     abstract fun contactsDao(): ContactDao
     abstract fun assistentDao(): AssistentDao
+    abstract fun updatesDao(): UpdatesDao
 }

@@ -2,6 +2,9 @@ package com.hast.norvialle.gui
 
 import com.hast.norvialle.App
 import com.hast.norvialle.data.*
+import com.hast.norvialle.data.server.ACTION_TYPE
+import com.hast.norvialle.data.server.DATA_TYPE
+import com.hast.norvialle.data.server.UpdateData
 import com.hast.norvialle.db.AppDatabase
 import java.util.*
 import kotlin.collections.ArrayList
@@ -19,6 +22,7 @@ object MainPresenter {
     var assistants: ArrayList<Assistant> = ArrayList()
     var dresses: ArrayList<Dress> = ArrayList()
     var contacts: ArrayList<Contact> = ArrayList()
+    var localUpdates: ArrayList<UpdateData> = ArrayList()
     var settings: Settings = Settings()
 
     fun getEventsList(): ArrayList<Event> {
@@ -34,7 +38,8 @@ object MainPresenter {
         makupArtists = java.util.ArrayList(App.db.makeupDao().getAll())
         dresses = java.util.ArrayList(App.db.dressDao().getAll())
         contacts = java.util.ArrayList(App.db.contactsDao().getAll())
-
+        assistants = java.util.ArrayList(App.db.assistentDao().getAll())
+        localUpdates = java.util.ArrayList(App.db.updatesDao().getAll())
         if(AppDatabase.migrateFrom4to5){
             settings.setDefault()
             App.db.settingsDao().insert(settings)
@@ -60,6 +65,7 @@ object MainPresenter {
             events.add(event)
             App.db.eventDao().insert(event)
             sort()
+            addUpdate(UpdateData(dataType = DATA_TYPE.EVENT, actionType = ACTION_TYPE.ADD, itemId = event.id))
         } else {
 
             for ((index, oldEvent) in events.withIndex()) {
@@ -67,6 +73,7 @@ object MainPresenter {
                     events.set(index, event)
                     sort()
                     App.db.eventDao().update(event)
+                    addUpdate(UpdateData(dataType = DATA_TYPE.EVENT, actionType = ACTION_TYPE.EDIT, itemId = event.id))
                     return
                 }
             }
@@ -74,15 +81,22 @@ object MainPresenter {
 
 
     }
+    fun addUpdate(updateData: UpdateData){
+        App.db.updatesDao().insert(updateData)
+        localUpdates.add(updateData)
+
+    }
 
     fun delete(event: Event) {
         App.db.eventDao().delete(event)
         events.remove(event)
+        addUpdate(UpdateData(dataType = DATA_TYPE.EVENT, actionType = ACTION_TYPE.REMOVE, itemId = event.id))
     }
 
     fun deleteStudio(studio: Studio) {
         App.db.studioDao().delete(studio)
         studios.remove(studio)
+        addUpdate(UpdateData(dataType = DATA_TYPE.STUDIO, actionType = ACTION_TYPE.REMOVE, itemId = studio.id))
     }
 
     fun addStudio(studio: Studio) {
@@ -91,14 +105,17 @@ object MainPresenter {
 
             App.db.studioDao().insert(studio)
             studios.add(studio)
+            addUpdate(UpdateData(dataType = DATA_TYPE.STUDIO, actionType = ACTION_TYPE.ADD, itemId = studio.id))
         } else {
             App.db.studioDao().update(studio)
             for ((index, oldStudio) in studios.withIndex()) {
                 if (oldStudio.id.equals(studio.id)) {
                     studios.set(index, studio)
+
                     return
                 }
             }
+            addUpdate(UpdateData(dataType = DATA_TYPE.STUDIO, actionType = ACTION_TYPE.EDIT, itemId = studio.id))
             studios.add(studio)
         }
     }
@@ -109,6 +126,7 @@ object MainPresenter {
 
             App.db.makeupDao().insert(makupArtist)
             makupArtists.add(makupArtist)
+            addUpdate(UpdateData(dataType = DATA_TYPE.MAKEUP_ARTIST, actionType = ACTION_TYPE.ADD, itemId = makupArtist.id))
         } else {
             App.db.makeupDao().update(makupArtist)
             for ((index, oldMakupArtists) in makupArtists.withIndex()) {
@@ -117,6 +135,7 @@ object MainPresenter {
                     return
                 }
             }
+            addUpdate(UpdateData(dataType = DATA_TYPE.MAKEUP_ARTIST, actionType = ACTION_TYPE.EDIT, itemId = makupArtist.id))
             makupArtists.add(makupArtist)
         }
     }
@@ -127,6 +146,7 @@ object MainPresenter {
 
             App.db.contactsDao().insert(contact)
             contacts.add(contact)
+            addUpdate(UpdateData(dataType = DATA_TYPE.CONTACT, actionType = ACTION_TYPE.ADD, itemId = contact.id))
         } else {
             App.db.contactsDao().update(contact)
             for ((index, oldContact) in contacts.withIndex()) {
@@ -135,6 +155,7 @@ object MainPresenter {
                     return
                 }
             }
+            addUpdate(UpdateData(dataType = DATA_TYPE.CONTACT, actionType = ACTION_TYPE.EDIT, itemId = contact.id))
             contacts.add(contact)
         }
     }
@@ -142,11 +163,13 @@ object MainPresenter {
     fun deleteContact(contact: Contact) {
         App.db.contactsDao().delete(contact)
         contacts.remove(contact)
+        addUpdate(UpdateData(dataType = DATA_TYPE.CONTACT, actionType = ACTION_TYPE.REMOVE, itemId = contact.id))
     }
 
     fun deleteMakeupArtist(makupArtist: MakeupArtist) {
         App.db.makeupDao().delete(makupArtist)
         makupArtists.remove(makupArtist)
+        addUpdate(UpdateData(dataType = DATA_TYPE.MAKEUP_ARTIST, actionType = ACTION_TYPE.REMOVE, itemId = makupArtist.id))
     }
 
     fun addDress(dress: Dress) {
@@ -155,6 +178,8 @@ object MainPresenter {
 
             App.db.dressDao().insert(dress)
             dresses.add(dress)
+
+            addUpdate(UpdateData(dataType = DATA_TYPE.DRESS, actionType = ACTION_TYPE.ADD, itemId = dress.id))
         } else {
             App.db.dressDao().update(dress)
             for ((index, oldDress) in dresses.withIndex()) {
@@ -164,11 +189,13 @@ object MainPresenter {
                 }
             }
             dresses.add(dress)
+            addUpdate(UpdateData(dataType = DATA_TYPE.DRESS, actionType = ACTION_TYPE.EDIT, itemId = dress.id))
         }
     }
 
     fun deleteDress(dress: Dress) {
         App.db.dressDao().delete(dress)
+        addUpdate(UpdateData(dataType = DATA_TYPE.DRESS, actionType = ACTION_TYPE.REMOVE, itemId = dress.id))
         if (dresses.contains(dress)) {
             dresses.remove(dress)
         } else {
@@ -192,6 +219,7 @@ object MainPresenter {
 
             App.db.assistentDao().insert(assistant)
             assistants.add(assistant)
+            addUpdate(UpdateData(dataType = DATA_TYPE.ASSISTANT, actionType = ACTION_TYPE.ADD, itemId = assistant.id))
         } else {
             App.db.assistentDao().update(assistant)
             for ((index, oldAssistent) in assistants.withIndex()) {
@@ -201,12 +229,42 @@ object MainPresenter {
                 }
             }
             assistants.add(assistant)
+            addUpdate(UpdateData(dataType = DATA_TYPE.ASSISTANT, actionType = ACTION_TYPE.EDIT, itemId = assistant.id))
         }
     }
 
     fun deleteAssistent(assistant: Assistant) {
         App.db.assistentDao().delete(assistant)
         assistants.remove(assistant)
+        addUpdate(UpdateData(dataType = DATA_TYPE.ASSISTANT, actionType = ACTION_TYPE.REMOVE, itemId = assistant.id))
+    }
+
+    // допустим на сервере 3 устройства.
+    // Когда первый закидывает апдейт.
+fun handleUpdates(serverUpdates : ArrayList<UpdateData>){
+        val pendingUpdatesFromServer = ArrayList<UpdateData>()
+        for (serverUpdate in serverUpdates) {
+            if (!localUpdates.contains(serverUpdate)){
+                pendingUpdatesFromServer.add(serverUpdate)
+            }
+        }
+
+        val pendingUpdatesFromLocal = ArrayList<UpdateData>()
+        for (localUpdate in localUpdates) {
+            if (!serverUpdates.contains(localUpdate)){
+                pendingUpdatesFromLocal.add(localUpdate)
+            }
+        }
+        handleServerUpdates(pendingUpdatesFromServer)
+        handleLocalUpdates(pendingUpdatesFromServer)
+    }
+
+    fun handleServerUpdates(pendingUpdatesFromServer: ArrayList<UpdateData>) {
+
+    }
+
+    fun handleLocalUpdates(pendingUpdatesFromServer: ArrayList<UpdateData>) {
+        
     }
 
 
