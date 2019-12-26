@@ -54,29 +54,26 @@
             android:padding="5dp"
             app:layout_constraintRight_toRightOf="parent" />
 
-    <EditText
+    <com.hast.norvialle.gui.utils.InputView
             android:id="@+id/comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_standard"
-            android:hint="@string/comment"
-            android:maxLines="1"
-            android:ellipsize="end"
+            app:hint="@string/comment"
+            app:expectedInputType="text"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dressPhoto" />
+            app:layout_constraintTop_toBottomOf="@id/dressPhoto"
+            />
 
 
-    <EditText
+    <com.hast.norvialle.gui.utils.InputView
             android:id="@+id/price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_standard"
-            android:hint="@string/price"
-            android:inputType="none"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:focusable="false"
+            app:hint="@string/price"
+            app:expectedInputType="price"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/comment" />

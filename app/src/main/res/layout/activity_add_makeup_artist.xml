@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/standard_layout_background">
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -27,15 +28,14 @@
 <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <EditText
+        <com.hast.norvialle.gui.utils.InputView
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/contactsList"
                 android:layout_marginRight="@dimen/margin_standard"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:hint="@string/name_makeup_artist" />
+                app:expectedInputType="name"
+                app:hint="@string/name_makeup_artist" />
     <ImageView
             android:id="@+id/contactsList"
             android:layout_width="@dimen/icon_size_medium"
@@ -47,25 +47,20 @@
             />
 </RelativeLayout>
 
-        <EditText
+        <com.hast.norvialle.gui.utils.InputView
                 android:id="@+id/phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/phone"
-                android:inputType="phone"
-                android:maxLines="1"
-                android:ellipsize="end"
+                app:hint="@string/phone"
+                app:expectedInputType="phone"
                 />
 
-        <EditText
+        <com.hast.norvialle.gui.utils.InputView
                 android:id="@+id/price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:inputType="none"
-                android:focusable="false"
-                android:hint="@string/makeupPrice"
+                app:expectedInputType="price"
+                app:hint="@string/makeupPrice"
                 />
 
 

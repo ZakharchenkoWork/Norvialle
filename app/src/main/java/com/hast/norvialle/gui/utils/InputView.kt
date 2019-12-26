@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.os.Build
+import android.telephony.PhoneNumberUtils
 import android.text.Editable
 import android.text.InputType
 import android.text.TextUtils
@@ -39,7 +40,6 @@ class InputView(context: Context, attrs: AttributeSet) : FrameLayout(context, at
                onFocusChanged(hasFocus)}
 
         }
-
     }
 
     fun prepareEditTextStyle(){
@@ -71,34 +71,44 @@ class InputView(context: Context, attrs: AttributeSet) : FrameLayout(context, at
             handleExpectedType(expectedType)
             val hint = styledAttributes.getString(R.styleable.InputView_hint)
             view.editLayout.hint = hint
+            view.editText.maxLines = 1
+            view.editText.ellipsize = TextUtils.TruncateAt.END
         } finally {
-            styledAttributes.recycle();
+            styledAttributes.recycle()
         }
 
     }
 
     fun handleExpectedType(expextedType: EXPECTED_INPUT_TYPE) {
+        view.editText.addTextChangedListener(getInnerWatcher(expextedType) {
+            setColors(it)
+            onStateChanged()
+        })
         when (expextedType) {
+            EXPECTED_INPUT_TYPE.TEXT -> {
+                view.editText.inputType = InputType.TYPE_CLASS_TEXT
+            }
             EXPECTED_INPUT_TYPE.EMAIL -> {
-                view.editText.addTextChangedListener(getEmailWatcher {
-                    setColors(it)
-                    onStateChanged()
-                })
                 view.editText.inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-
             }
             EXPECTED_INPUT_TYPE.PASSWORD -> {
                 view.editText.setTransformationMethod(PasswordTransformationMethod.getInstance())
                 view.editLayout.isPasswordVisibilityToggleEnabled = true
                 view.editLayout.setPasswordVisibilityToggleTintList(AppCompatResources.getColorStateList(context, R.color.gold))
 
-
-                view.editText.addTextChangedListener(getPasswordWatcher {
-                    setColors(it)
-                    onStateChanged()
-                })
-
-
+            }
+            EXPECTED_INPUT_TYPE.NAME -> {
+                view.editText.inputType = InputType.TYPE_CLASS_TEXT
+            }
+            EXPECTED_INPUT_TYPE.PHONE -> {
+                view.editText.inputType = InputType.TYPE_CLASS_PHONE
+            }
+            EXPECTED_INPUT_TYPE.PRICE -> {
+                view.editText.inputType = InputType.TYPE_NULL
+                view.editText.isFocusable = false
+            }
+            EXPECTED_INPUT_TYPE.INSTA_LINK -> {
+                view.editText.inputType = InputType.TYPE_CLASS_TEXT
             }
         }
     }
@@ -119,90 +129,100 @@ class InputView(context: Context, attrs: AttributeSet) : FrameLayout(context, at
 
         } else {
             val okStateList = ColorStateList.valueOf(getColor(R.color.gold))
-            view.editText.backgroundTintList = okStateList
             view.editLayout.backgroundTintList = okStateList
             view.editLayout.setHintTextAppearance(R.style.normalHintAppearance)
             view.editLayout.defaultHintTextColor = okStateList
+            view.editText.backgroundTintList = okStateList
+            view.editText.background.setColorFilter(getColor(R.color.gold), PorterDuff.Mode.SRC_IN)
             view.editText.setHintTextColor(getColor(R.color.gold))
 
-            view.editText.background.setColorFilter(getColor(R.color.gold), PorterDuff.Mode.SRC_IN)
 
         }
     }
-
-
-    fun getEmailWatcher(
-        listener: ((isValidEmail: Boolean) -> Unit)
-    ): TextWatcher {
-        return object : TextWatcher {
-            override fun afterTextChanged(text: Editable?) {
-
-            }
-
-            override fun beforeTextChanged(text: CharSequence, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(text: CharSequence, p1: Int, p2: Int, p3: Int) {
-                listener.invoke(
-                    TextUtils.isEmpty(text) || android.util.Patterns.EMAIL_ADDRESS.matcher(
-                        text
-                    ).matches()
-
-                )
-            }
+private fun textChangeValidation(expextedType: EXPECTED_INPUT_TYPE, text: CharSequence) : Boolean{
+    return when(expextedType){
+        EXPECTED_INPUT_TYPE.EMAIL->{
+            android.util.Patterns.EMAIL_ADDRESS.matcher(
+                text
+            ).matches()
+        }  EXPECTED_INPUT_TYPE.PASSWORD->{
+           text.length >= 8
         }
-    }
-    fun getPasswordWatcher(
-        listener: ((isValidEmail: Boolean) -> Unit)
-    ): TextWatcher {
-        return object : TextWatcher {
-            override fun afterTextChanged(text: Editable?) {
-            }
-
-            override fun beforeTextChanged(text: CharSequence, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(text: CharSequence, p1: Int, p2: Int, p3: Int) {
-                listener.invoke(
-                    TextUtils.isEmpty(text) || text.length >= 8
-                )
-            }
+        EXPECTED_INPUT_TYPE.NAME->{
+            text.length >= 2
         }
+        EXPECTED_INPUT_TYPE.PHONE->{
+            PhoneNumberUtils.isGlobalPhoneNumber(text.toString())
+        }
+        EXPECTED_INPUT_TYPE.PRICE->{
+           !TextUtils.isEmpty(text)
+        }
+        EXPECTED_INPUT_TYPE.INSTA_LINK->{
+            text.matches(Regex("(https://?)?(www)?instagram\\.com/[\\S+].{1,30}[?igshid=][a-z,A-Z,0-9].{13,14}"))
+
+        }
+        else -> true
     }
 
+}
 
 
-    enum class EXPECTED_INPUT_TYPE {
-        TEXT,
-        EMAIL,
-        PASSWORD,
-        PRRICE,
-        NAME,
-        INSTA_LINK,
-        PHONE
-
-    }
 
     override fun validationCheck(): Boolean {
-        val text = editText.text
-        if (text != null) {
-            if (expectedType == EXPECTED_INPUT_TYPE.EMAIL) {
-                val matches = android.util.Patterns.EMAIL_ADDRESS.matcher(text).matches()
-                setColors(matches)
-                return matches
-            } else if (expectedType == EXPECTED_INPUT_TYPE.PASSWORD) {
-                val matches = text.length >= 8
-                setColors(matches)
-                return matches
-            }
-        }
-        return true
 
-
+        val isMatching = textChangeValidation(expectedType, getText())
+        setColors(isMatching)
+        return isMatching
     }
 
     fun getText(): String {
         return editText.text.toString()
     }
 
+    fun setText(text: String) {
+        view.editText.setText(text)
+    }
+
+    fun addTextChangedListener(textListener: TextWatcher) {
+        view.editText.addTextChangedListener(textListener)
+    }
+    fun getInnerWatcher(expextedType: EXPECTED_INPUT_TYPE,
+                        listener: ((isValid: Boolean) -> Unit)
+    ): TextWatcher {
+        return object : TextWatcher {
+            override fun afterTextChanged(text: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(text: CharSequence, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(text: CharSequence, p1: Int, p2: Int, p3: Int) {
+                listener.invoke(textChangeValidation(expextedType, text))
+            }
+        }
+    }
+
+    fun getIntValue(): Int {
+          try {
+              return getText().toInt()
+            } catch (nfe: NumberFormatException) {
+              return 0
+            }
+    }
+
+    enum class EXPECTED_INPUT_TYPE {
+        TEXT,
+        EMAIL,
+        PASSWORD,
+        PRICE,
+        NAME,
+        INSTA_LINK,
+        PHONE
+
+    }
+
+    override fun setOnClickListener(listener: OnClickListener?) {
+        view.editText.setOnClickListener(listener)
+    }
 }

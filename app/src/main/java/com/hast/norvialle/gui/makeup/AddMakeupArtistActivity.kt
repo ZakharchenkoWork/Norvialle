@@ -51,13 +51,14 @@ class AddMakeupArtistActivity : BaseActivity() {
 
         }
 
-        name.addTextChangedListener(TextListener(name))
-        phone.addTextChangedListener(TextListener(phone))
-        price.addTextChangedListener(TextListener(price))
         contactsList.setOnClickListener { openContactsList() }
         price.setOnClickListener {
-            priceInputDialog(this, R.string.makeupPrice, getFloatValue(price)){
+            priceInputDialog(this, R.string.makeupPrice, price.getIntValue().toFloat()){
                 price.setText(stringPriceWithPlaceholder(it, ""))
+                price.postDelayed( {
+                    name.validationCheck()
+                    phone.validationCheck()
+                }, 100)
             }
         }
     }
@@ -76,28 +77,25 @@ class AddMakeupArtistActivity : BaseActivity() {
                 }
 
 
-                if (!name.text.equals("")) {
-                    makeupArtist.name = name.text.toString()
+                if (name.validationCheck()) {
+                    makeupArtist.name = name.getText()
                 } else {
-                    name.setBackgroundColor(resources.getColor(R.color.red))
                     return true
                 }
 
-                if (!phone.text.equals("")) {
-                    makeupArtist.phone = phone.text.toString()
+                if (phone.validationCheck()) {
+                    makeupArtist.phone = phone.getText()
                 } else {
-                    phone.setBackgroundColor(resources.getColor(R.color.red))
                     return true
                 }
 
-                if (!price.text.equals("")) {
-                    makeupArtist.defaultPrice = getIntValue(price)
+                if (price.validationCheck()) {
+                    makeupArtist.defaultPrice = price.getIntValue()
                 } else {
-                    price.setBackgroundColor(resources.getColor(R.color.red))
                     return true
                 }
 
-                    MainPresenter.addMakeupArtist(makeupArtist)
+                MainPresenter.addMakeupArtist(makeupArtist)
                 setResult(Activity.RESULT_OK)
                 finish()
             }
@@ -135,25 +133,5 @@ class AddMakeupArtistActivity : BaseActivity() {
                name.setText(cursor.getString(columnName))
             }
         }
-    }
-
-    inner class TextListener(val view: View) : TextWatcher {
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (s != null && s.length > 0) {
-                view.setBackgroundColor(resources.getColor(R.color.white))
-            } else {
-                view.setBackgroundColor(resources.getColor(R.color.red))
-            }
-        }
-
-        override fun afterTextChanged(s: Editable?) {
-
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-        }
-
-
     }
 }

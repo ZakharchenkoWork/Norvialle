@@ -52,13 +52,14 @@ class AddAssistantActivity : BaseActivity() {
 
         }
 
-        name.addTextChangedListener(TextListener(name))
-        phone.addTextChangedListener(TextListener(phone))
-        price.addTextChangedListener(TextListener(price))
         contactsList.setOnClickListener { openContactsList() }
         price.setOnClickListener {
-            priceInputDialog(this, R.string.makeupPrice, getFloatValue(price)){
+            priceInputDialog(this, R.string.makeupPrice, price.getIntValue().toFloat()){
                 price.setText(stringPriceWithPlaceholder(it, ""))
+                price.postDelayed( {
+                    name.validationCheck()
+                    phone.validationCheck()
+                }, 100)
             }
         }
     }
@@ -77,24 +78,22 @@ class AddAssistantActivity : BaseActivity() {
                 }
 
 
-                if (!name.text.equals("")) {
-                    assistant.name = name.text.toString()
+                if (name.getText().equals("")) {
+                    assistant.name = name.getText()
                 } else {
-                    name.setBackgroundColor(resources.getColor(R.color.red))
                     return true
                 }
 
-                if (!phone.text.equals("")) {
-                    assistant.phone = phone.text.toString()
+                if (phone.validationCheck()) {
+                    assistant.phone = phone.getText()
                 } else {
-                    phone.setBackgroundColor(resources.getColor(R.color.red))
+
                     return true
                 }
 
-                if (!price.text.equals("")) {
-                    assistant.defaultPrice = getIntValue(price)
+                if (price.validationCheck()) {
+                    assistant.defaultPrice = price.getIntValue()
                 } else {
-                    price.setBackgroundColor(resources.getColor(R.color.red))
                     return true
                 }
 
@@ -138,23 +137,4 @@ class AddAssistantActivity : BaseActivity() {
         }
     }
 
-    inner class TextListener(val view: View) : TextWatcher {
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (s != null && s.length > 0) {
-                view.setBackgroundColor(resources.getColor(R.color.white))
-            } else {
-                view.setBackgroundColor(resources.getColor(R.color.red))
-            }
-        }
-
-        override fun afterTextChanged(s: Editable?) {
-
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-        }
-
-
-    }
 }

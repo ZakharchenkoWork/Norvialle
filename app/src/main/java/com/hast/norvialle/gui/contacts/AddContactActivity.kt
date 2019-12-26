@@ -1,27 +1,22 @@
 package com.hast.norvialle.gui.contacts
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipDescription.MIMETYPE_TEXT_PLAIN
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract.CommonDataKinds.Phone
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Contact
-import com.hast.norvialle.data.MakeupArtist
 import com.hast.norvialle.gui.MainPresenter
-import com.hast.norvialle.utils.getIntValue
 import kotlinx.android.synthetic.main.activity_add_contact.*
-import kotlinx.android.synthetic.main.activity_add_contact.name
-import kotlinx.android.synthetic.main.activity_add_contact.phone
-import kotlinx.android.synthetic.main.item_contact.*
-import kotlinx.android.synthetic.main.item_event.*
-import kotlinx.android.synthetic.main.item_event.insta
 
 
 /**
@@ -60,7 +55,21 @@ class AddContactActivity : AppCompatActivity() {
 
         }
 
-        name.addTextChangedListener(TextListener(name))
+        paste.setOnClickListener{
+            val clipboard: ClipboardManager =
+                getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
+            val primaryClipDescription = clipboard.getPrimaryClipDescription()
+            if (!clipboard.hasPrimaryClip() || primaryClipDescription == null || !clipboard.getPrimaryClipDescription().hasMimeType(MIMETYPE_TEXT_PLAIN)) {
+                Toast.makeText(this, getString(R.string.insta_hint), Toast.LENGTH_SHORT).show()
+            } else {
+                val primaryClip = clipboard.getPrimaryClip()
+                if (primaryClip != null) {
+                    val item: ClipData.Item = primaryClip.getItemAt(0)
+                    link.setText(item.text.toString())
+                }
+            }
+        }
 
         contactsList.setOnClickListener { openContactsList() }
     }
@@ -84,19 +93,13 @@ class AddContactActivity : AppCompatActivity() {
                 }
 
 
-                if (!name.text.equals("")) {
-                    contact.name = name.text.toString()
+                if (name.validationCheck()) {
+                    contact.name = name.getText()
                 } else {
-                    name.setBackgroundColor(resources.getColor(R.color.red))
                     return true
                 }
-
-
-                    contact.phone = phone.text.toString()
-
-
-
-                    contact.link= link.text.toString()
+                    contact.phone = phone.getText()
+                    contact.link= link.getText()
 
 
                     MainPresenter.addContact(contact)
@@ -130,23 +133,4 @@ class AddContactActivity : AppCompatActivity() {
         }
     }
 
-    inner class TextListener(val view: View) : TextWatcher {
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (s != null && s.length > 0) {
-                view.setBackgroundColor(resources.getColor(R.color.white))
-            } else {
-                view.setBackgroundColor(resources.getColor(R.color.red))
-            }
-        }
-
-        override fun afterTextChanged(s: Editable?) {
-
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-        }
-
-
-    }
 }

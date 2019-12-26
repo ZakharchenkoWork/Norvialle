@@ -83,8 +83,11 @@ class AddDressActivity : BaseActivity() {
 
         rotate.setOnClickListener { rotate() }
         price.setOnClickListener {
-            priceInputDialog(this, R.string.dressPrice, getFloatValue(price)) {
+            priceInputDialog(this, R.string.dressPrice, price.getIntValue().toFloat()) {
                 price.setText(stringPriceWithPlaceholder(it, ""))
+                price.postDelayed( {
+                    comment.validationCheck()
+                }, 100)
             }
         }
     }
@@ -108,7 +111,7 @@ class AddDressActivity : BaseActivity() {
 
                 getString(R.string.view) -> {
                     if(bitmap.get() != null) {
-                        openPictureFullScreen(if (!isTempUploaded)dress.fileName else tempFileName, comment.text.toString())
+                        openPictureFullScreen(if (!isTempUploaded)dress.fileName else tempFileName, comment.getText())
                     }
                 }
                 getString(R.string.take_photo) -> {
@@ -151,8 +154,8 @@ class AddDressActivity : BaseActivity() {
                         }
                         dress.fileName = tempFileName
                     }
-                    dress.comment = comment.text.toString()
-                    dress.price = getIntValue(price.text.toString())
+                    dress.comment = comment.getText()
+                    dress.price = price.getIntValue()
                     presenter.addDress(dress)
                     finish()
                 }
