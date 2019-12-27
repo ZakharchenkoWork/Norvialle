@@ -12,6 +12,7 @@ import android.text.TextWatcher
 import android.text.method.PasswordTransformationMethod
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.ViewCompat
@@ -29,7 +30,8 @@ class InputView(context: Context, attrs: AttributeSet) : FrameLayout(context, at
     var onFocusChanged: ((hasFocus : Boolean) -> Unit)={}
     var view = LayoutInflater.from(context).inflate(R.layout.input_view, this, false)
     var expectedType = EXPECTED_INPUT_TYPE.TEXT
-
+    var minRequiredSymbols = -1
+    var requiredIfVisible = false
     init {
 
         addView(view)
@@ -68,11 +70,14 @@ class InputView(context: Context, attrs: AttributeSet) : FrameLayout(context, at
         try {
 
             expectedType = EXPECTED_INPUT_TYPE.values()[styledAttributes.getInteger(R.styleable.InputView_expectedInputType, 0)]
-            handleExpectedType(expectedType)
+
             val hint = styledAttributes.getString(R.styleable.InputView_hint)
             view.editLayout.hint = hint
+            minRequiredSymbols = styledAttributes.getInt(R.styleable.InputView_minRequiredSymbols, -1)
+            requiredIfVisible = styledAttributes.getBoolean(R.styleable.InputView_requiredIfVisible, false)
             view.editText.maxLines = 1
             view.editText.ellipsize = TextUtils.TruncateAt.END
+            handleExpectedType(expectedType)
         } finally {
             styledAttributes.recycle()
         }
@@ -139,27 +144,39 @@ class InputView(context: Context, attrs: AttributeSet) : FrameLayout(context, at
 
         }
     }
+    fun default() : Boolean{
+        return minRequiredSymbols == -1
+    }
 private fun textChangeValidation(expextedType: EXPECTED_INPUT_TYPE, text: CharSequence) : Boolean{
+    if (minRequiredSymbols == 0){
+        return true
+    }
+    if(requiredIfVisible && (visibility == View.GONE || visibility == View.INVISIBLE)){
+        return true
+    }
     return when(expextedType){
+        EXPECTED_INPUT_TYPE.TEXT -> {
+            if (!default()) text.length >= minRequiredSymbols else true
+        }
         EXPECTED_INPUT_TYPE.EMAIL->{
             android.util.Patterns.EMAIL_ADDRESS.matcher(
                 text
             ).matches()
         }  EXPECTED_INPUT_TYPE.PASSWORD->{
-           text.length >= 8
+            if (!default()) text.length >= minRequiredSymbols else text.length >= 8
         }
         EXPECTED_INPUT_TYPE.NAME->{
-            text.length >= 2
+           if (!default()) text.length >= minRequiredSymbols else text.length >= 2
         }
         EXPECTED_INPUT_TYPE.PHONE->{
-            PhoneNumberUtils.isGlobalPhoneNumber(text.toString())
+            val minSymbols = if (!default()) minRequiredSymbols else 5
+            text.length >= minSymbols && PhoneNumberUtils.isGlobalPhoneNumber(getText())
         }
         EXPECTED_INPUT_TYPE.PRICE->{
            !TextUtils.isEmpty(text)
         }
         EXPECTED_INPUT_TYPE.INSTA_LINK->{
             text.matches(Regex("(https://?)?(www)?instagram\\.com/[\\S+].{1,30}[?igshid=][a-z,A-Z,0-9].{13,14}"))
-
         }
         else -> true
     }
@@ -224,5 +241,9 @@ private fun textChangeValidation(expextedType: EXPECTED_INPUT_TYPE, text: CharSe
 
     override fun setOnClickListener(listener: OnClickListener?) {
         view.editText.setOnClickListener(listener)
+    }
+
+    fun getHint(): String {
+        return view.editLayout.hint.toString()
     }
 }

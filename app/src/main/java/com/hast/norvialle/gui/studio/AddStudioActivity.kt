@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.R
 import com.hast.norvialle.data.PhotoRoom
 import com.hast.norvialle.data.Studio
+import com.hast.norvialle.gui.BaseActivity
 import com.hast.norvialle.gui.MainPresenter
 import com.hast.norvialle.utils.extractFromFloat
 import com.hast.norvialle.utils.priceInputDialog
@@ -27,7 +28,7 @@ import kotlinx.android.synthetic.main.item_room.view.*
 /**
  * Created by Konstantyn Zakharchenko on 29.11.2019.
  */
-class AddStudioActivity : AppCompatActivity() {
+class AddStudioActivity : BaseActivity() {
     companion object {
         val EDIT: Int = 1
         val STUDIO: String = "STUDIO"
@@ -41,12 +42,7 @@ class AddStudioActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_studio)
         setSupportActionBar(toolbar)
-        var actionBar = getSupportActionBar()
-        if (actionBar != null) {
-            getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
-            getSupportActionBar()?.setTitle(R.string.add_studio);
-        }
+
         if (intent?.action != Intent.ACTION_SEND) {
             studio = intent?.extras?.getSerializable(STUDIO) as Studio
         } else {
@@ -76,11 +72,13 @@ class AddStudioActivity : AppCompatActivity() {
         }
         if (roomsViews.isEmpty()) {
             addRoom(null)
+
         }
-        studioName.addTextChangedListener(TextListener(studioName))
-        studioAddress.addTextChangedListener(TextListener(studioAddress))
+
+
         addRoom.setOnClickListener {
             addRoom(null)
+            hideKeyboard()
         }
     }
 fun checkHasMapLink(text : String) : Boolean{
@@ -95,7 +93,7 @@ fun checkHasMapLink(text : String) : Boolean{
             view.priceWithDiscount.setText("" + photoRoom.priceWithDiscount)
 
         }
-        view.roomName.addTextChangedListener(TextListener(view.roomName))
+
         view.delete.setOnClickListener {
             roomsContainer.removeView(view)
             roomsViews.remove(view)
@@ -144,56 +142,30 @@ fun checkHasMapLink(text : String) : Boolean{
         return value
     }
 
-    override
-    fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.menu_save, menu);
-        return true
-    }
 
     override
     fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
-            android.R.id.home -> {
-                finish()
-            }
             R.id.save -> {
+                try{
                 if (studio == null) {
                     studio = Studio()
                 }
 
-                var studioNameString = studioName.text.toString()
+                    studio.name = checkToSave(studioName)
+                    studio.address = checkToSave(studioAddress)
+                    studio.phone = checkToSave(studioPhone)
 
-                if (!studioNameString.equals("")) {
-                    studio.name = studioNameString
-                } else {
-                    studioName.setBackgroundColor(resources.getColor(R.color.red))
-                    return true
-                }
-
-
-                var studioAddressString = studioAddress.text.toString()
-                if (!studioAddressString.equals("")) {
-                    studio.address = studioAddressString
-                } else {
-                    studioAddress.setBackgroundColor(resources.getColor(R.color.red))
-                    return true
-                }
-                studio.phone = studioPhone.text.toString()
                 if (roomsViews.isEmpty()) {
-                    Toast.makeText(this, "Добавьте хотя бы один зал", LENGTH_LONG).show()
-                    return true
+                    throw InvalidSavingData(getString(R.string.no_rooms_errors))
                 }
+
                 studio.cleanRooms()
                 for (roomsView in roomsViews) {
                     val photoRoom = PhotoRoom()
 
-                    var roomName =
-                        (roomsView.findViewById(R.id.roomName) as EditText).text.toString()
-                    if (roomName.equals("")) {
-                        paintRedBack(roomsView, R.id.roomName)
-                        return true
-                    }
-                    photoRoom.name = roomName
+                    photoRoom.name = checkToSave(roomsView.roomName)
+
                     var price = getPrice(roomsView, R.id.price)
                     var priceWithDiscount = getPrice(roomsView, R.id.priceWithDiscount)
 
@@ -218,11 +190,17 @@ fun checkHasMapLink(text : String) : Boolean{
                     presenter.addStudio(studio)
                 }
                 finish()
+                } catch (dataCheckFailed : InvalidSavingData){
+                    fastToast(dataCheckFailed)
+                    return true
+                }
             }
 
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 
     private fun paintRedBack(roomsView: View, view: Int) {
         (roomsView.findViewById(view) as TextView).setBackgroundColor(resources.getColor(R.color.red))
@@ -245,22 +223,12 @@ fun checkHasMapLink(text : String) : Boolean{
         (roomsView.findViewById(viewId) as TextView).setTextColor(resources.getColor(R.color.black))
     }
 
-    inner class TextListener(val view: View) : TextWatcher {
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (s != null && s.length > 0) {
-                view.setBackgroundColor(resources.getColor(R.color.white))
-            } else {
-                view.setBackgroundColor(resources.getColor(R.color.red))
-            }
-        }
+    override fun getMenuRes(): Int {
+        return R.menu.menu_save
+    }
 
-        override fun afterTextChanged(s: Editable?) {
-
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-        }
+    override fun getMenuTitleRes(): Int {
+        return R.string.add_studio
     }
 
 }

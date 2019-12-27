@@ -3,7 +3,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/standard_layout_background">
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -14,23 +15,27 @@
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize" />
 
-    <EditText
+    <com.hast.norvialle.gui.utils.InputView
             android:id="@+id/studioName"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
-
-            android:hint="@string/studioName"
+            app:hint="@string/studioName"
+            app:expectedInputType="text"
+            app:minRequiredSymbols="2"
             style="@style/full_width_constrained_view" />
 
-    <EditText
-                android:id="@+id/studioAddress"
+    <com.hast.norvialle.gui.utils.InputView
+            android:id="@+id/studioAddress"
             app:layout_constraintTop_toBottomOf="@id/studioName"
-            android:hint="Адрес"
+            app:hint="Адрес"
+            app:expectedInputType="text"
+            app:minRequiredSymbols="5"
             style="@style/full_width_constrained_view"/>
-    <EditText
+    <com.hast.norvialle.gui.utils.InputView
             android:id="@+id/studioPhone"
             app:layout_constraintTop_toBottomOf="@id/studioAddress"
-            android:hint="@string/studioPhone"
-            android:inputType="phone"
+            app:hint="@string/studioPhone"
+            app:expectedInputType="phone"
+            app:minRequiredSymbols="0"
             style="@style/full_width_constrained_view" />
     <TextView
             android:id="@+id/roomsLabel"
@@ -40,7 +45,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginTop="@dimen/margin_huge"
             android:layout_marginLeft="@dimen/margin_standard"
-
             android:maxLines="1"
             android:ellipsize="end"
             android:textSize="@dimen/text_big"
@@ -60,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-
+            android:animateLayoutChanges="true"
             app:layout_constraintTop_toBottomOf="@+id/roomsLabel"
             style="@style/full_width_constrained_view"
             />

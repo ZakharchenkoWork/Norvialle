@@ -68,36 +68,24 @@ class AddMakeupArtistActivity : BaseActivity() {
     override
     fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
-            android.R.id.home -> {
-                finish()
-            }
+
             R.id.save -> {
+                try {
                 if (makeupArtist == null) {
                     makeupArtist = MakeupArtist("",0,"")
                 }
+                    makeupArtist.name = checkToSave(name)
+                    makeupArtist.phone = checkToSave(phone)
+                    makeupArtist.defaultPrice = checkToSave(price)
 
-
-                if (name.validationCheck()) {
-                    makeupArtist.name = name.getText()
-                } else {
-                    return true
-                }
-
-                if (phone.validationCheck()) {
-                    makeupArtist.phone = phone.getText()
-                } else {
-                    return true
-                }
-
-                if (price.validationCheck()) {
-                    makeupArtist.defaultPrice = price.getIntValue()
-                } else {
-                    return true
-                }
 
                 MainPresenter.addMakeupArtist(makeupArtist)
                 setResult(Activity.RESULT_OK)
                 finish()
+                } catch (dataCheckFailed : InvalidSavingData){
+                    fastToast(dataCheckFailed)
+                    return true
+                }
             }
 
         }

@@ -30,17 +30,17 @@
             app:layout_constraintStart_toEndOf="@id/delete"
             app:layout_constraintTop_toTopOf="@id/delete">
 
-        <EditText
+        <com.hast.norvialle.gui.utils.InputView
                 android:id="@+id/roomName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_standard"
                 android:layout_marginRight="@dimen/margin_standard"
-                android:maxLines="1"
-                android:ellipsize="end"
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@id/priceWithDiscount"
-                android:hint="@string/roomName"
+                app:hint="@string/roomName"
+                app:minRequiredSymbols="2"
+                app:expectedInputType="text"
                 app:layout_constraintTop_toTopOf="parent" />
 
         <TextView

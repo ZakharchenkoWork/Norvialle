@@ -13,7 +13,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="parent "
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize" />
     <RelativeLayout
@@ -94,29 +94,29 @@
             android:text="00:00"
     />
 
-    <EditText
+    <com.hast.norvialle.gui.utils.InputView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:ellipsize="end"
             app:layout_constraintTop_toBottomOf="@id/time"
             android:layout_marginLeft="@dimen/margin_standard"
             android:layout_marginRight="@dimen/margin_standard"
             android:layout_marginTop="@dimen/margin_standard"
-            android:hint="@string/description"
+            app:hint="@string/description"
+            app:expectedInputType="text"
             />
-    <EditText
+    <com.hast.norvialle.gui.utils.InputView
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:ellipsize="end"
             app:layout_constraintTop_toBottomOf="@id/description"
             android:layout_marginLeft="@dimen/margin_standard"
             android:layout_marginRight="@dimen/margin_standard"
             android:layout_marginTop="@dimen/margin_small"
-            android:hint="@string/location"
+            app:hint="@string/location"
+            app:expectedInputType="text"
+            app:requiredIfVisible="true"
+            app:minRequiredSymbols="2"
             />
     <CheckBox
             android:id="@+id/studio"
@@ -143,47 +143,53 @@
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginBottom="@dimen/margin_small"
             android:animateLayoutChanges="true"
-             android:visibility="gone">
+            android:visibility="gone"
+            >
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 >
-        <EditText
+        <com.hast.norvialle.gui.utils.InputView
                 android:id="@+id/studioName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/studiosList"
-                android:hint="@string/studioName"/>
+                app:hint="@string/studioName"
+                app:expectedInputType="text"
+                app:minRequiredSymbols="2"
+                app:requiredIfVisible="true"/>
             <ImageView
                     android:id="@+id/studiosList"
                     android:layout_width="@dimen/icon_size_standard"
                     android:layout_height="@dimen/icon_size_standard"
                     android:layout_alignParentRight="true"
-                    android:maxLines="1"
-                    android:ellipsize="end"
+                    android:layout_alignTop="@id/studioName"
+                    android:layout_alignBottom="@id/studioName"
                     android:src="@drawable/list"/>
         </RelativeLayout>
-        <EditText
+        <com.hast.norvialle.gui.utils.InputView
                 android:id="@+id/studioRoom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:hint="@string/roomName"/>
-        <EditText
+                app:hint="@string/roomName"
+                app:expectedInputType="text"
+                app:minRequiredSymbols="2"
+                app:requiredIfVisible="true"/>
+        <com.hast.norvialle.gui.utils.InputView
                 android:id="@+id/studioAddress"
-                android:maxLines="1"
-                android:ellipsize="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/address"/>
-        <EditText
+                app:hint="@string/address"
+                app:minRequiredSymbols="5"
+                app:expectedInputType="text"
+                />
+        <com.hast.norvialle.gui.utils.InputView
                 android:id="@+id/studioPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:hint="Телефон"
+                app:expectedInputType="phone"
+                app:minRequiredSymbols="0"
+                app:hint="Телефон"
                 />
         <TextView
                 android:id="@+id/studioGeo"
@@ -244,16 +250,15 @@
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/makeup"
             app:layout_constraintLeft_toLeftOf="@id/makeup">
-        <EditText
+        <com.hast.norvialle.gui.utils.InputView
                 android:id="@+id/makeupArtistsName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/makeup_artist"
+                app:hint="@string/makeup_artist"
                 android:layout_toLeftOf="@id/makeupTime"
                 android:layout_alignParentLeft="true"
-                android:maxLines="1"
-                android:ellipsize="end"
-
+                app:expectedInputType="name"
+                app:requiredIfVisible="true"
                 />
         <TextView
                 android:id="@+id/makeupTime"
@@ -286,16 +291,15 @@
 
                 android:layout_alignParentRight="true"
                 android:src="@drawable/list"/>
-        <EditText
+        <com.hast.norvialle.gui.utils.InputView
                 android:id="@+id/makeupArtistsPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Телефон"
+                app:hint="@string/phone"
                 android:layout_below="@id/makeupArtistsName"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
-                android:maxLines="1"
-                android:ellipsize="end"
+
 
                 />
 
@@ -319,18 +323,18 @@
             android:layout_marginLeft="@dimen/margin_standard"
             android:layout_marginRight="@dimen/margin_standard"
             android:layout_marginTop="@dimen/margin_small"
-            android:visibility="gone"
+
             app:layout_constraintTop_toBottomOf="@id/assistant"
             app:layout_constraintLeft_toLeftOf="@id/assistant">
-        <EditText
+        <com.hast.norvialle.gui.utils.InputView
                 android:id="@+id/assistantName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/assistant"
+                app:hint="@string/assistant"
                 android:layout_toLeftOf="@id/assistantPrice"
                 android:layout_alignParentLeft="true"
-                android:maxLines="1"
-                android:ellipsize="end"
+                app:expectedInputType="name"
+                app:requiredIfVisible="true"
 
                 />
         <TextView
@@ -351,17 +355,16 @@
 
                 android:layout_alignParentRight="true"
                 android:src="@drawable/list"/>
-        <EditText
+        <com.hast.norvialle.gui.utils.InputView
                 android:id="@+id/assistantPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Телефон"
+                app:hint="@string/phone"
                 android:layout_below="@id/assistantName"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
-                android:maxLines="1"
-                android:ellipsize="end"
-
+                app:minRequiredSymbols="0"
+                app:expectedInputType="phone"
                 />
 
 

@@ -2,7 +2,7 @@
 <resources>
     <declare-styleable name="InputView">
         <attr name="expectedInputType" format="enum">
-
+            <!-- InputField gets marked as non required unless minRequiredSymbols is specified-->
             <enum name="text" value="0"/>
             <enum name="email" value="1"/>
             <enum name="password" value="2"/>
@@ -12,6 +12,15 @@
             <enum name="phone" value="6"/>
         </attr>
         <attr name="hint" format="string"/>
+        <!-- if the view is invisible or gone it will be marked as non required,
+         otherwise it will be checked by expectedInputType and minRequiredSymbols -->
+        <attr name="requiredIfVisible" format="boolean"/>
+        <!--  Specifies minimum number of chars required by this view
+        to become Valid. default value is -1, so it checks only specific
+         matchers for expected input type, Pass 0 to disable checks of
+          expected input type. Expected positive value.
+          Affects expectedInputType: text, name, password, phone  -->
+        <attr name="minRequiredSymbols" format="integer"/>
     </declare-styleable>
 
 

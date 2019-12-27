@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Dress
@@ -23,11 +24,13 @@ import com.hast.norvialle.gui.makeup.MakeupListFragment
 import com.hast.norvialle.gui.studio.StudiosListFragment
 import com.hast.norvialle.gui.utils.AddContactDialog
 import com.hast.norvialle.gui.utils.FullScreenPictureActivity
+import com.hast.norvialle.gui.utils.InputView
 import com.hast.norvialle.utils.*
 import com.hast.norvialle.utils.notifications.setAlarmForEvent
 import kotlinx.android.synthetic.main.activity_add_event.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -36,23 +39,17 @@ import java.util.*
 class AddEventActivity : BaseActivity() {
 
     lateinit var event: Event
-    lateinit var finalCalendar: Calendar
-    lateinit var finalMakupCalendar: Calendar
     val addContactDialog = AddContactDialog.newInstance()
 
     companion object {
         const val EVENT_EXTRA: String = "EVENT"
-        const val PICK_STUDIO: Int = 191
-        const val PICK_CONTACT: Int = 232
-        const val PICK_DRESSES: Int = 540
-        const val PICK_MAKEUP_ARTIST: Int = 168
         const val ONE_HOUR_MILLIS: Long = 60 * 60 * 1000
     }
 
-    fun setAdapter() {
+    fun setAdapter(dresses: ArrayList<Dress>) {
         val dressesPicturesAdapter =
             DressesPicturesAdapter(
-                event.dresses,
+                dresses,
                 this
             )
         dressesList.adapter = dressesPicturesAdapter
@@ -62,7 +59,7 @@ class AddEventActivity : BaseActivity() {
                     it
                 )
             }
-
+        dressesListPick.setOnClickListener { openDressesList(dresses) }
     }
 
     fun openPictureFullScreen(dress: Dress) {
@@ -78,12 +75,6 @@ class AddEventActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_event)
         setSupportActionBar(toolbar)
-        var actionBar = getSupportActionBar()
-        if (actionBar != null) {
-            getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
-            getSupportActionBar()?.setTitle(R.string.adding_event);
-        }
 
         event = intent.getSerializableExtra(EVENT_EXTRA) as Event
         dressesList.layoutManager = GridLayoutManager(this, 5)
@@ -96,16 +87,21 @@ class AddEventActivity : BaseActivity() {
         makeup.setOnCheckedChangeListener { buttonView, isChecked ->
             makeupLayout.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
+        setAdapter(event.dresses)
         dress.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 dressesList.visibility = View.VISIBLE
                 dressesListPick.visibility = View.VISIBLE
-                if (event.dresses.isEmpty()) {
-                    openDressesList(event.dresses)
-                } else {
-                    setAdapter()
+
+                val adapter = dressesList.adapter
+                if (adapter != null && adapter is DressesPicturesAdapter) {
+                    val dresses = adapter.items
+                    if (dresses.isEmpty()) {
+                        openDressesList(dresses)
+                    } else {
+                        setAdapter(dresses)
+                    }
                 }
-                dressesListPick.setOnClickListener { openDressesList(event.dresses) }
             } else {
                 dressesListPick.visibility = View.GONE
                 dressesList.visibility = View.GONE
@@ -121,7 +117,7 @@ class AddEventActivity : BaseActivity() {
 
         totalPrice.setText("" + event.totalPrice)
         paid.setText("" + event.paidPrice)
-        if (event.orderStudio){
+        if (!event.orderStudio){
             location.setText(event.studioName)
         }
         studioName.setText(event.studioName)
@@ -134,12 +130,11 @@ class AddEventActivity : BaseActivity() {
 
         var dateToSet = Date(event.time)
         val c = Calendar.getInstance()
-        finalMakupCalendar = Calendar.getInstance()
-        finalCalendar = Calendar.getInstance()
-        finalCalendar.time = dateToSet
+
+
         c.time = dateToSet
         if (event.makeupTime != 0L) {
-            finalMakupCalendar.time = Date(event.makeupTime)
+
             makeupTime.setText(timeFormatter.format(Date(event.makeupTime)))
         }
 
@@ -209,7 +204,7 @@ class AddEventActivity : BaseActivity() {
 
         makeupArtistsList.setOnClickListener { openMakeupArtistsList() }
 
-
+        assistant.isChecked = event.orderAssistant
         if (event.orderAssistant) {
             assistantLayout.visibility = View.VISIBLE
         } else {
@@ -232,44 +227,62 @@ class AddEventActivity : BaseActivity() {
         hideKeyboard()
     }
 
+
     override
     fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
             R.id.save -> {
-                event.time = getDateLocal(date) + getTime(time)
-                event.contactPhone = phone.text.toString()
-                event.description = description.text.toString()
-                event.orderStudio = studio.isChecked
-                if (studio.isChecked) {
-                    event.studioName = studioName.text.toString()
-                    event.studioRoom = studioRoom.text.toString()
-                    event.studioAddress = studioAddress.text.toString()
-                    event.studioGeo = studioGeo.text.toString()
-                    event.studioPhone = studioPhone.text.toString()
-                } else{
-                    event.studioName = location.text.toString()
-                }
-                if (makeup.isChecked) {
-                    event.makeupArtistName = makeupArtistsName.text.toString()
-                    event.makeupPrice = getIntValue(makeupPrice)
-                    try {
-                        event.makeupTime = getTimeLocal(makeupTime)
-                    } catch (e: Exception) {
-                        event.makeupTime = getTimeLocal(time) - ONE_HOUR_MILLIS
+                try {
+                    event.time = getDateLocal(date) + getTime(time)
+                    event.contactPhone = phone.text.toString()
+                    event.description = description.getText()
+                    event.orderStudio = studio.isChecked
+                    if (studio.isChecked) {
+
+                            event.studioName = checkToSave(studioName)
+                            event.studioRoom = checkToSave(studioRoom)
+                            event.studioAddress = checkToSave(studioAddress)
+
+                        event.studioGeo = studioGeo.text.toString()
+                        event.studioPhone = studioPhone.getText()
+                    } else {
+                        event.studioName = checkToSave(location)
                     }
-                    event.makeupPhone = makeupArtistsPhone.text.toString()
+
+                    event.orderMakeup = makeup.isChecked
+                    if (makeup.isChecked) {
+                        event.makeupArtistName = checkToSave(makeupArtistsName)
+                        event.makeupPrice = getIntValue(makeupPrice)
+                        try {
+                            event.makeupTime = getTimeLocal(makeupTime)
+                        } catch (e: Exception) {
+                            event.makeupTime = getTimeLocal(time) - ONE_HOUR_MILLIS
+                        }
+                        event.makeupPhone = makeupArtistsPhone.getText()
+                    }
+                    event.orderAssistant = assistant.isChecked
+                    if (assistant.isChecked) {
+                        event.assistantName = checkToSave(assistantName)
+                        event.assistantPrice = getIntValue(assistantPrice)
+                        event.assistantPhone = assistantPhone.getText()
+                    }
+
+                   event.orderDress = dress.isChecked
+                    if (dress.isChecked) {
+                        val adapter = dressesList.adapter
+                        event.dresses = if (adapter is DressesPicturesAdapter) adapter.items else ArrayList()
+                    }
+                    event.totalPrice = getIntValue(totalPrice)
+                    event.paidPrice = getIntValue(paid)
+
+                    MainPresenter.addEvent(event)
+
+                    setAlarmForEvent(this, event = event, settings = MainPresenter.settings)
+                    finish()
+                }catch (dataCheckFailed : InvalidSavingData){
+                    fastToast(dataCheckFailed)
+                    return true
                 }
-
-                event.orderDress = dress.isChecked
-                event.orderMakeup = makeup.isChecked
-
-                event.totalPrice = getIntValue(totalPrice)
-                event.paidPrice = getIntValue(paid)
-
-                MainPresenter.addEvent(event)
-
-                setAlarmForEvent(this, event = event, settings = MainPresenter.settings)
-                finish()
             }
 
         }
@@ -297,8 +310,7 @@ class AddEventActivity : BaseActivity() {
 
     private fun openDressesList(dresses: ArrayList<Dress>) {
         showFragment(DressesListFragment.newInstance(dresses) {
-            event.dresses = it
-            setAdapter()
+            setAdapter(it)
             dressesList.visibility = View.VISIBLE
         })
     }

@@ -6,11 +6,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.R
 import com.hast.norvialle.data.AuthData
 import com.hast.norvialle.gui.events.EventsListFragment
+import com.hast.norvialle.gui.utils.InputView
 import com.hast.norvialle.utils.SAVED_LOGIN
 import com.hast.norvialle.utils.SAVED_PASSWORD
 
@@ -18,10 +20,11 @@ import com.hast.norvialle.utils.SAVED_PASSWORD
 /**
  * Created by Konstantyn Zakharchenko on 11.12.2019.
  */
-abstract class BaseActivity : AppCompatActivity(){
-companion object {
-    val NO_VIEW = 0
-}
+abstract class BaseActivity : AppCompatActivity() {
+    companion object {
+        val NO_VIEW = 0
+    }
+
     fun openEventsList(dateToScroll: Long = 0L) {
 
         showFragment(EventsListFragment.newInstance(dateToScroll))
@@ -29,7 +32,12 @@ companion object {
 
     fun showFragment(fragment: BaseFragment) {
         supportFragmentManager.beginTransaction()
-            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out, android.R.animator.fade_in, android.R.animator.fade_out)
+            .setCustomAnimations(
+                android.R.animator.fade_in,
+                android.R.animator.fade_out,
+                android.R.animator.fade_in,
+                android.R.animator.fade_out
+            )
             .addToBackStack("Fragments")
             .replace(R.id.contentLayout, fragment).commitAllowingStateLoss()
     }
@@ -43,8 +51,9 @@ companion object {
         }
         return super.onOptionsItemSelected(item);
     }
+
     override fun onBackPressed() {
-        if(supportFragmentManager.backStackEntryCount != 0){
+        if (supportFragmentManager.backStackEntryCount != 0) {
             supportFragmentManager.popBackStack()
         } else {
             super.onBackPressed()
@@ -71,6 +80,7 @@ companion object {
         getMenuInflater().inflate(getMenuRes(), menu)
         return super.onCreateOptionsMenu(menu)
     }
+
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.clear()
         getMenuInflater().inflate(getMenuRes(), menu)
@@ -82,19 +92,22 @@ companion object {
         super.onResume()
         setToolBarTitle(getMenuTitleRes())
     }
-    abstract fun getMenuRes():Int
+
+    abstract fun getMenuRes(): Int
     abstract fun getMenuTitleRes(): Int
 
-    fun stringPriceWithPlaceholder(value: String, placeholder : String) : String{
-        return if (!value.equals("") && !value.equals("0") ) {
+    fun stringPriceWithPlaceholder(value: String, placeholder: String): String {
+        return if (!value.equals("") && !value.equals("0")) {
             return value
-        } else{
+        } else {
             return placeholder
         }
     }
-    fun stringPriceWithPlaceholder(value: String, placeholder : Int) : String{
+
+    fun stringPriceWithPlaceholder(value: String, placeholder: Int): String {
         return stringPriceWithPlaceholder(value, getString(placeholder))
     }
+
     fun saveData(key: String, data: String) {
         val prefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
         prefs.edit().putString(key, data).apply()
@@ -105,15 +118,19 @@ companion object {
         prefs.edit().putBoolean(key, data).apply()
     }
 
-    fun loadData(key: String, default: Boolean = false) : Boolean {
+    fun loadData(key: String, default: Boolean = false): Boolean {
         return getSharedPreferences(packageName, Context.MODE_PRIVATE).getBoolean(key, default)
     }
-    fun loadAuthData() : AuthData {
+
+    fun loadAuthData(): AuthData {
         val prefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
-        return AuthData(prefs.getString(SAVED_LOGIN,"")?:"",
-            prefs.getString(SAVED_PASSWORD, "")?:"")
+        return AuthData(
+            prefs.getString(SAVED_LOGIN, "") ?: "",
+            prefs.getString(SAVED_PASSWORD, "") ?: ""
+        )
     }
-    fun clearAuthData(){
+
+    fun clearAuthData() {
         val prefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
         prefs.edit()
             .putString(SAVED_LOGIN, "")
@@ -121,7 +138,8 @@ companion object {
             .apply()
 
     }
-    fun saveAuthData(authData: AuthData){
+
+    fun saveAuthData(authData: AuthData) {
         val prefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
         prefs.edit()
             .putString(SAVED_LOGIN, authData.login)
@@ -136,4 +154,32 @@ companion object {
             this.resources.getColor(colorRes)
         }
     }
+
+    class InvalidSavingData(message: String) : RuntimeException(message)
+
+    inline fun <reified T> checkToSave(view: InputView): T {
+        if (view.validationCheck()) {
+           return when (T::class) {
+                Int::class -> {
+                    view.getIntValue() as T
+                }
+                String::class -> {
+                    view.getText() as T
+                } else ->{
+                   throw InvalidSavingData(getString(R.string.input_error, view.getHint()))
+               }
+            }
+        }
+        throw InvalidSavingData(getString(R.string.input_error, view.getHint()))
+
+    }
+
+    fun fastToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    fun fastToast(dataCheckFailed: InvalidSavingData) {
+        dataCheckFailed.message?.let { fastToast(it) }
+    }
+
 }

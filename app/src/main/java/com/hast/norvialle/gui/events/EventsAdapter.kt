@@ -270,13 +270,13 @@ class EventsAdapter(val allItems: ArrayList<Event>, private val context: Context
                 itemView.studioPhone.setTextColor(context.resources.getColor(R.color.blue))
                 itemView.studioPhone.setOnClickListener { dial(event.studioPhone) }
             } else {
-                itemView.studioPhone.visibility = View.VISIBLE
+                itemView.studioPhone.visibility = View.GONE
 
             }
             if (event.orderAssistant) {
                 itemView.assistant.setImageResource(R.drawable.assistent)
                 itemView.assistantData.visibility = View.VISIBLE
-                itemView.assistantData.setText(context.resources.getText(R.string.assistant_label, event.assistantName))
+                itemView.assistantData.setText(context.resources.getString(R.string.assistant_label, event.assistantName))
                 if(!event.assistantPhone.isEmpty()){
                     itemView.assistantData.setTextColor(context.resources.getColor(R.color.blue))
                     itemView.assistantData.setOnClickListener { dial(event.assistantPhone) }

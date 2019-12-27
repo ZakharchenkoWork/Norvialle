@@ -11,6 +11,7 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Assistant
@@ -69,38 +70,26 @@ class AddAssistantActivity : BaseActivity() {
     override
     fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
-            android.R.id.home -> {
-                finish()
-            }
             R.id.save -> {
+                try {
+
                 if (assistant == null) {
                     assistant = Assistant("",0,"")
                 }
 
+                    assistant.name = checkToSave(name)
+                    assistant.phone = checkToSave(phone)
+                    assistant.defaultPrice = checkToSave(price)
 
-                if (name.getText().equals("")) {
-                    assistant.name = name.getText()
-                } else {
-                    return true
-                }
-
-                if (phone.validationCheck()) {
-                    assistant.phone = phone.getText()
-                } else {
-
-                    return true
-                }
-
-                if (price.validationCheck()) {
-                    assistant.defaultPrice = price.getIntValue()
-                } else {
-                    return true
-                }
 
                     MainPresenter.addAssistent(assistant)
                 setResult(Activity.RESULT_OK)
                 finish()
+            } catch (dataCheckFailed : InvalidSavingData){
+                    fastToast(dataCheckFailed)
+                    return true
             }
+        }
 
         }
         return super.onOptionsItemSelected(item);

@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Contact
+import com.hast.norvialle.gui.BaseActivity
 import com.hast.norvialle.gui.MainPresenter
 import kotlinx.android.synthetic.main.activity_add_contact.*
 
@@ -22,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_add_contact.*
 /**
  * Created by Konstantyn Zakharchenko on 29.11.2019.
  */
-class AddContactActivity : AppCompatActivity() {
+class AddContactActivity : BaseActivity() {
     companion object {
         val EDIT: Int = 111
         val DATA_TYPE = "CONTACT"
@@ -37,12 +38,6 @@ class AddContactActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_contact)
         setSupportActionBar(toolbar)
-        var actionBar = getSupportActionBar()
-        if (actionBar != null) {
-            getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar()?.setHomeAsUpIndicator(R.drawable.back);
-            getSupportActionBar()?.setTitle(R.string.adding_contact);
-        }
 
         contact = intent?.extras?.getSerializable(DATA_TYPE) as Contact
 
@@ -52,7 +47,6 @@ class AddContactActivity : AppCompatActivity() {
             name.setText(contact.name)
             phone.setText(contact.phone)
             link.setText(contact.link)
-
         }
 
         paste.setOnClickListener{
@@ -74,40 +68,42 @@ class AddContactActivity : AppCompatActivity() {
         contactsList.setOnClickListener { openContactsList() }
     }
 
-
-    override
-    fun onCreateOptionsMenu(menu: Menu): Boolean {
-        getMenuInflater().inflate(R.menu.menu_save, menu);
-        return true
-    }
-
     override
     fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
-            android.R.id.home -> {
-                finish()
-            }
+
             R.id.save -> {
-                if (contact == null) {
-                    contact = Contact("","","")
-                }
+                try {
+                    if (contact == null) {
+                        contact = Contact("", "", "")
+                    }
 
 
-                if (name.validationCheck()) {
-                    contact.name = name.getText()
-                } else {
-                    return true
-                }
-                    contact.phone = phone.getText()
-                    contact.link= link.getText()
+
+                        contact.name = checkToSave(name)
+
+                        contact.phone = checkToSave(phone)
+                        contact.link = link.getText()
 
 
                     MainPresenter.addContact(contact)
-                finish()
+                    finish()
+                }catch (dataCheckFailed : InvalidSavingData){
+                    fastToast(dataCheckFailed)
+                    return true
+                }
             }
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    override fun getMenuRes(): Int {
+      return R.menu.menu_save
+    }
+
+    override fun getMenuTitleRes(): Int {
+        return R.string.adding_contact
     }
 
     private fun openContactsList() {

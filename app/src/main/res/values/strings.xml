@@ -118,6 +118,8 @@
     <string name="restore_password_message">Введите Электронную почту, указанную при регистрации, и мы отправим на нее пароль.</string>
     <string name="exit_warning">Вы действительно хотите выйти?</string>
     <string name="insta_hint">Вставьте ссылку на профиль</string>
+    <string name="no_rooms_errors">Добавьте хотя бы один зал</string>
+    <string name="input_error">Необходимо ввести: %1$s</string>
 
     <plurals name="plurals_shoot">
         <item quantity="zero">нет съемок</item>

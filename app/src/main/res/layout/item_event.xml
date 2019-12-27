@@ -16,6 +16,7 @@
             android:layout_marginLeft="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_small"
+
             android:background="@drawable/background_plate">
 
         <ImageView
@@ -78,10 +79,14 @@
 
         <TextView
                 android:id="@+id/contact"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
                 android:text="Контакт"
+                app:layout_constraintEnd_toStartOf="@id/dressesListLayout"
+                app:layout_constraintStart_toStartOf="@id/delete"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toLeftOf="@id/delete"
                 app:layout_constraintRight_toLeftOf="@id/dressesListLayout"
@@ -89,10 +94,14 @@
 
         <TextView
                 android:id="@+id/phone"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
                 android:text="Телефон"
+                app:layout_constraintEnd_toStartOf="@id/dressesListLayout"
+                app:layout_constraintStart_toStartOf="@id/delete"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toLeftOf="@id/delete"
                 app:layout_constraintRight_toLeftOf="@id/dressesListLayout"
@@ -100,11 +109,15 @@
 
         <TextView
                 android:id="@+id/location"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
                 android:layout_marginBottom="@dimen/margin_standard"
                 android:text="Локация"
+                app:layout_constraintEnd_toStartOf="@id/dressesListLayout"
+                app:layout_constraintStart_toStartOf="@id/delete"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toLeftOf="@id/delete"
                 app:layout_constraintRight_toLeftOf="@id/dressesListLayout"
@@ -112,26 +125,37 @@
 
         <TextView
                 android:id="@+id/address"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
-                android:text="Адресс"
+                android:text="Адреc"
+                app:layout_constraintEnd_toStartOf="@id/dressesListLayout"
+                app:layout_constraintStart_toStartOf="@id/delete"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintLeft_toLeftOf="@id/delete"
                 app:layout_constraintRight_toLeftOf="@id/dressesListLayout"
-                app:layout_constraintTop_toBottomOf="@+id/location" />
+                app:layout_constraintTop_toBottomOf="@+id/location"
+                />
 
         <TextView
                 android:id="@+id/studioPhone"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_small"
                 android:layout_marginBottom="@dimen/margin_standard"
                 android:text="Телефон студии"
+                app:layout_constraintEnd_toStartOf="@id/dressesListLayout"
+                app:layout_constraintStart_toStartOf="@id/delete"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="@id/delete"
                 app:layout_constraintRight_toLeftOf="@id/dressesListLayout"
-                app:layout_constraintTop_toBottomOf="@+id/address" />
+                app:layout_constraintTop_toBottomOf="@+id/address"
+                />
 <RelativeLayout
         android:id="@+id/dressesListLayout"
         android:layout_width="wrap_content"
@@ -167,8 +191,9 @@
             android:id="@+id/foregroundLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+android:visibility="gone"
             android:layout_margin="@dimen/margin_small"
+
             android:background="@drawable/background_plate">
 
         <LinearLayout
@@ -332,7 +357,7 @@
                 android:id="@+id/moneyLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/margin_standard"
                 android:text="@string/monyLeft"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_normal"
@@ -364,7 +389,7 @@
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_standard"
                 android:layout_marginRight="@dimen/margin_standard"
                 android:text="16:30"
                 android:textSize="@dimen/text_big"
