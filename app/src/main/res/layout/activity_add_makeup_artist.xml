@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+                name="viewModel"
+                type="com.hast.norvialle.domain.AddMakeupArtistViewModel" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/standard_layout_background">
@@ -28,13 +34,14 @@
 <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.hast.norvialle.gui.utils.InputView
+        <com.hast.norvialle.presenataion.utils.InputView
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/contactsList"
                 android:layout_marginRight="@dimen/margin_standard"
                 app:expectedInputType="name"
+                app:text="@{viewModel.makeupArtistLiveData.name}"
                 app:hint="@string/name_makeup_artist" />
     <ImageView
             android:id="@+id/contactsList"
@@ -47,22 +54,25 @@
             />
 </RelativeLayout>
 
-        <com.hast.norvialle.gui.utils.InputView
+        <com.hast.norvialle.presenataion.utils.InputView
                 android:id="@+id/phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hint="@string/phone"
+                app:text="@{viewModel.makeupArtistLiveData.phone}"
                 app:expectedInputType="phone"
                 />
 
-        <com.hast.norvialle.gui.utils.InputView
+        <com.hast.norvialle.presenataion.utils.InputView
                 android:id="@+id/price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:expectedInputType="price"
+                app:text="@{viewModel.putValueOrNothing(viewModel.makeupArtistLiveData.defaultPrice)}"
                 app:hint="@string/makeupPrice"
                 />
 
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

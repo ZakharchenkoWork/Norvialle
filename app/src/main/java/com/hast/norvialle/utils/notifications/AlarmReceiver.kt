@@ -10,7 +10,7 @@ import android.util.Log
 import com.google.gson.Gson
 import com.hast.norvialle.data.Event
 import com.hast.norvialle.data.Settings
-import com.hast.norvialle.gui.MainPresenter
+import com.hast.norvialle.domain.MainPresenter
 import com.hast.norvialle.utils.getDateInMillis
 import com.hast.norvialle.utils.getDateLocal
 import com.hast.norvialle.utils.getTimeLocal

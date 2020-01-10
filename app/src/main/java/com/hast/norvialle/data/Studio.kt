@@ -3,7 +3,7 @@ package com.hast.norvialle.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.hast.norvialle.db.StudioDataConverter
+import com.hast.norvialle.repository.database.StudioDataConverter
 import java.io.Serializable
 
 /**

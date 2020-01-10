@@ -22,7 +22,7 @@
             android:supportsRtl="true"
             android:name=".App"
             android:theme="@style/AppTheme">
-        <activity android:name=".gui.auth.AuthActivity">
+        <activity android:name="com.hast.norvialle.presenataion.base.auth.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN"/>
@@ -30,15 +30,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".gui.main.MainActivity"/>
-        <activity android:name=".gui.SettingsActivity"/>
-        <activity android:name=".gui.events.AddEventActivity"/>
-        <activity android:name=".gui.makeup.AddAssistantActivity"/>
-        <activity android:name=".gui.dresses.AddDressActivity"/>
-        <activity android:name=".gui.utils.FullScreenPictureActivity"/>
-        <activity android:name=".gui.contacts.AddContactActivity"/>
-        <activity android:name=".gui.makeup.AddMakeupArtistActivity"/>
-        <activity android:name=".gui.studio.AddStudioActivity">
+        <activity android:name="com.hast.norvialle.presenataion.base.main.MainActivity"/>
+        <activity android:name="com.hast.norvialle.presenataion.base.settings.SettingsActivity"/>
+        <activity android:name="com.hast.norvialle.presenataion.base.events.AddEventActivity"/>
+        <activity android:name="com.hast.norvialle.presenataion.base.makeup.AddAssistantActivity"/>
+        <activity android:name="com.hast.norvialle.presenataion.base.dresses.AddDressActivity"/>
+        <activity android:name="com.hast.norvialle.presenataion.utils.FullScreenPictureActivity"/>
+        <activity android:name="com.hast.norvialle.presenataion.base.contacts.AddContactActivity"/>
+        <activity android:name="com.hast.norvialle.presenataion.base.makeup.AddMakeupArtistActivity"/>
+        <activity android:name="com.hast.norvialle.presenataion.base.studio.AddStudioActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />

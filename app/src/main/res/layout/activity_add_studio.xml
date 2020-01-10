@@ -15,7 +15,7 @@
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize" />
 
-    <com.hast.norvialle.gui.utils.InputView
+    <com.hast.norvialle.presenataion.utils.InputView
             android:id="@+id/studioName"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             app:hint="@string/studioName"
@@ -23,14 +23,14 @@
             app:minRequiredSymbols="2"
             style="@style/full_width_constrained_view" />
 
-    <com.hast.norvialle.gui.utils.InputView
+    <com.hast.norvialle.presenataion.utils.InputView
             android:id="@+id/studioAddress"
             app:layout_constraintTop_toBottomOf="@id/studioName"
             app:hint="Адрес"
             app:expectedInputType="text"
             app:minRequiredSymbols="5"
             style="@style/full_width_constrained_view"/>
-    <com.hast.norvialle.gui.utils.InputView
+    <com.hast.norvialle.presenataion.utils.InputView
             android:id="@+id/studioPhone"
             app:layout_constraintTop_toBottomOf="@id/studioAddress"
             app:hint="@string/studioPhone"

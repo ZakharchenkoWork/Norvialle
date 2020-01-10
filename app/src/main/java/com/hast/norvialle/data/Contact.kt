@@ -1,5 +1,8 @@
 package com.hast.norvialle.data
 
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import androidx.databinding.library.baseAdapters.BR
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
@@ -9,6 +12,41 @@ import java.io.Serializable
  */
 
 
-@Entity class Contact (var name : String, var link : String, var phone : String) : Serializable{
-    @PrimaryKey var id = ""
+@Entity
+class Contact (
+    name: String,
+    link: String,
+    phone: String
+) : BaseObservable(), Serializable {
+
+    @PrimaryKey
+    var id = ""
+    @Bindable
+    var name: String = ""
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.name)
+        }
+
+    @Bindable
+    var link: String = ""
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.link)
+        }
+
+    @Bindable
+    var phone: String = ""
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.phone)
+        }
+
+    init{
+        this.name = name
+        this.link = link
+        this.phone = phone
+    }
+
+
 }

@@ -54,7 +54,7 @@
             android:padding="5dp"
             app:layout_constraintRight_toRightOf="parent" />
 
-    <com.hast.norvialle.gui.utils.InputView
+    <com.hast.norvialle.presenataion.utils.InputView
             android:id="@+id/comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
             />
 
 
-    <com.hast.norvialle.gui.utils.InputView
+    <com.hast.norvialle.presenataion.utils.InputView
             android:id="@+id/price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

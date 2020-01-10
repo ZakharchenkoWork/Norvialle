@@ -17,7 +17,13 @@ class ApiImpl : Api {
     override fun register(authData: AuthData): Observable<DataUpdatesResponce> {
         return norvialleApi.register(authData)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
+
+    }
+    @Deprecated("Do not use directly", ReplaceWith("norvialleApi.signIn()"))
+    override fun login(authData: AuthData): Observable<DataUpdatesResponce> {
+        return norvialleApi.login(authData)
+            .observeOn(AndroidSchedulers.mainThread())
+
     }
 
     fun registration(authData: AuthData): Observable<DataUpdates> {
@@ -27,5 +33,11 @@ class ApiImpl : Api {
             }
         }
     }
-
+    fun signIn(authData: AuthData): Observable<DataUpdates> {
+        return login(authData).flatMap { responce: DataUpdatesResponce ->
+            return@flatMap ObservableSource<DataUpdates>{
+                responce.updates
+            }
+        }
+    }
 }

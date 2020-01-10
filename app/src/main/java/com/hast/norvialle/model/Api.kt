@@ -19,6 +19,11 @@ interface Api {
 
     @POST("/rest/v1/register")
     fun register(@Body authData: AuthData) : Observable<DataUpdatesResponce>
+    @POST("/rest/v1/login")
+    fun login(@Body authData: AuthData) : Observable<DataUpdatesResponce>
+
+
+
 
     companion object Factory {
         fun create(): Api {
@@ -36,7 +41,7 @@ interface Api {
                 .client(httpClient.build())
                 .build()
 
-            return retrofit.create(Api::class.java);
+            return retrofit.create(Api::class.java)
         }
     }
 }

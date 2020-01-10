@@ -4,8 +4,7 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.hast.norvialle.db.DressDataConverter
-import com.hast.norvialle.db.StudioDataConverter
+import com.hast.norvialle.repository.database.DressDataConverter
 import java.io.Serializable
 
 /**

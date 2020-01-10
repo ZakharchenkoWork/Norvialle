@@ -21,6 +21,7 @@
           expected input type. Expected positive value.
           Affects expectedInputType: text, name, password, phone  -->
         <attr name="minRequiredSymbols" format="integer"/>
+        <attr name="text" format="string"/>
     </declare-styleable>
 
 

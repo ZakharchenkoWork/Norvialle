@@ -10,10 +10,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Event
-import com.hast.norvialle.gui.main.MainActivity
-import com.hast.norvialle.utils.getTime
+import com.hast.norvialle.presenataion.base.main.MainActivity
 import com.hast.norvialle.utils.getTimeLocal
-import java.io.Serializable
 
 /**
  * Created by Konstantyn Zakharchenko on 05.12.2019.

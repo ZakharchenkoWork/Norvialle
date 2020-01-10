@@ -39,14 +39,14 @@
             android:animateLayoutChanges="true"
             android:orientation="vertical">
 
-        <com.hast.norvialle.gui.utils.InputView
+        <com.hast.norvialle.presenataion.utils.InputView
                 android:id="@+id/signLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:expectedInputType="email"
                 app:hint="@string/login"
                 />
-  <com.hast.norvialle.gui.utils.InputView
+  <com.hast.norvialle.presenataion.utils.InputView
                 android:id="@+id/signPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
             android:orientation="vertical">
 
 
-        <com.hast.norvialle.gui.utils.InputView
+        <com.hast.norvialle.presenataion.utils.InputView
                 android:id="@+id/regLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,14 +89,14 @@
                 app:hint="@string/login"
                 />
 
-        <com.hast.norvialle.gui.utils.InputView
+        <com.hast.norvialle.presenataion.utils.InputView
                 android:id="@+id/regPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:expectedInputType="password"
                 app:hint="@string/password"
                 />
-        <com.hast.norvialle.gui.utils.InputView
+        <com.hast.norvialle.presenataion.utils.InputView
                 android:id="@+id/regConfirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

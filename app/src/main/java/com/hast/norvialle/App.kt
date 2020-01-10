@@ -3,7 +3,7 @@ package com.hast.norvialle
 import android.app.Application
 import androidx.room.Room
 
-import com.hast.norvialle.db.AppDatabase
+import com.hast.norvialle.repository.database.AppDatabase
 
 
 /**
@@ -12,14 +12,16 @@ import com.hast.norvialle.db.AppDatabase
 
 class App : Application() {
 
+
     companion object {
         lateinit var db : AppDatabase
+        lateinit var instance : App
     }
 
 
     override fun onCreate() {
         super.onCreate()
-
+        instance = this
         db = Room.databaseBuilder(this, AppDatabase::class.java, "database")
             .addMigrations(AppDatabase.MIGRATION_1_2)
             .addMigrations(AppDatabase.MIGRATION_2_3)

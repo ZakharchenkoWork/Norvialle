@@ -30,7 +30,7 @@
             app:layout_constraintStart_toEndOf="@id/delete"
             app:layout_constraintTop_toTopOf="@id/delete">
 
-        <com.hast.norvialle.gui.utils.InputView
+        <com.hast.norvialle.presenataion.utils.InputView
                 android:id="@+id/roomName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

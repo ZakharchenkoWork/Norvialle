@@ -5,6 +5,8 @@ import android.widget.TextView
 /**
  * Created by Konstantyn Zakharchenko on 02.12.2019.
  */
+
+
 fun getIntValue(view: TextView): Int {
     var value = 0
     try {
