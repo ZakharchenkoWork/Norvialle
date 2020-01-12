@@ -11,6 +11,7 @@ import com.hast.norvialle.R
 import com.hast.norvialle.databinding.ActivityAddContactBinding
 import com.hast.norvialle.domain.AddContactViewModel
 import com.hast.norvialle.presenataion.base.BaseActivity
+import com.hast.norvialle.presenataion.base.openContactsList
 import kotlinx.android.synthetic.main.activity_add_contact.*
 
 
@@ -50,7 +51,7 @@ class AddContactActivity : BaseActivity() {
                 fastToast(getString(R.string.insta_hint))
             }
         }
-        contactsList.setOnClickListener { openContactsList() }
+        contactsList.setOnClickListener { openContactsList(PICK_CONTACT) }
     }
 
     override
@@ -62,8 +63,7 @@ class AddContactActivity : BaseActivity() {
                     checkField(phone)
 
                     viewModel.save()
-                    setResult(Activity.RESULT_OK)
-                    finish()
+                    finishWithOkResult()
                 } catch (dataCheckFailed: InvalidSavingData) {
                     fastToast(dataCheckFailed)
                     return true
@@ -72,12 +72,6 @@ class AddContactActivity : BaseActivity() {
 
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun openContactsList() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = Phone.CONTENT_TYPE
-        startActivityForResult(intent, PICK_CONTACT)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

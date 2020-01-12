@@ -2,6 +2,7 @@ package com.hast.norvialle.utils.bindings.extensions
 
 import android.content.ContextWrapper
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
 /**

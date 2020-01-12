@@ -155,7 +155,10 @@ object MainPresenter {
         makeupArtists.remove(makeupArtist)
     }
 
-    fun addDress(dress: Dress) {
+    fun addDress(dress: Dress?) {
+        if (dress == null){
+            return
+        }
         if (dress.id.equals("")) {
             dress.id = UUID.randomUUID().toString()
 
@@ -192,7 +195,10 @@ object MainPresenter {
         MainPresenter.settings = settings
     }
 
-    fun addAssistent(assistant: Assistant) {
+    fun addAssistant(assistant: Assistant?) {
+        if(assistant == null){
+            return
+        }
         if (assistant.id.equals("")) {
             assistant.id = UUID.randomUUID().toString()
 

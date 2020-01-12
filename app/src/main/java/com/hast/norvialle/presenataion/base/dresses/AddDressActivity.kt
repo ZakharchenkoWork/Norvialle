@@ -1,7 +1,6 @@
 package com.hast.norvialle.presenataion.base.dresses
 
 import android.Manifest
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.ContextWrapper
@@ -9,28 +8,26 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Matrix
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.hast.norvialle.R
-import com.hast.norvialle.data.Dress
+import com.hast.norvialle.databinding.ActivityAddDressBinding
+import com.hast.norvialle.domain.AddDressViewModel
 import com.hast.norvialle.presenataion.base.BaseActivity
-import com.hast.norvialle.domain.MainPresenter
 import com.hast.norvialle.presenataion.utils.FullScreenPictureActivity
 import com.hast.norvialle.presenataion.utils.dialogs.priceInputDialog
-import com.hast.norvialle.utils.*
+import com.hast.norvialle.utils.deleteFile
+import com.hast.norvialle.utils.saveFile
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_add_dress.*
-import kotlinx.android.synthetic.main.activity_add_dress.price
-import kotlinx.android.synthetic.main.activity_add_dress.toolbar
 import java.io.File
 import java.io.IOException
-import java.lang.ref.WeakReference
 import java.util.*
 
 
@@ -39,45 +36,39 @@ import java.util.*
  */
 class AddDressActivity : BaseActivity() {
     companion object {
-        val EDIT: Int = 1
-        val DRESS: String = "DRESS"
-        val REQUEST_PICK_GALLERY: Int = 198
-        val REQUEST_TAKE_PHOTO: Int = 208
-        val REQUEST_CAMERA_PERMISSION: Int = 168
-        val REQUEST_STORAGE_PERMISSION: Int = 121
-        val PNG = ".png"
+        const val EDIT: Int = 1
+        const val DATA_TYPE: String = "DRESS"
+        const val REQUEST_PICK_GALLERY: Int = 198
+        const val REQUEST_TAKE_PHOTO: Int = 208
+        const val REQUEST_CAMERA_PERMISSION: Int = 168
+        const val REQUEST_STORAGE_PERMISSION: Int = 121
+        const val PNG = ".png"
     }
 
-    val presenter: MainPresenter =
-        MainPresenter
 
+    private val tempFileName = UUID.randomUUID().toString() + PNG
+    private var isTempUploaded = false
+    private var isSaving = false
+    private var oldFileName :String? = ""
 
-    var bitmap = WeakReference<Bitmap>(null)
-    var dress: Dress = Dress("", "", 0)
-    val tempFileName = UUID.randomUUID().toString() + PNG
-    var isTempUploaded = false
+    private lateinit var viewModel: AddDressViewModel
+    private lateinit var binding: ActivityAddDressBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_dress)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_add_dress)
         setSupportActionBar(toolbar)
 
-        dress = intent?.extras?.getSerializable(DRESS) as Dress
+        viewModel = ViewModelProviders.of(this).get(AddDressViewModel::class.java)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        viewModel.setDress(getIntentData(DATA_TYPE))
+        oldFileName = viewModel.dressLiveData.value?.fileName
+        plusIcon.visibility = View.GONE
 
-        if (dress == null) {
-            dress = Dress("", "", 0)
-        } else {
-            loadPicture(dress.fileName)
-            comment.setText(dress.comment)
-            price.setText("" + dress.price)
-            plusIcon.visibility = View.GONE
-
-        }
         dressPhoto.setOnClickListener {
             selectImage()
         }
-
-        rotate.setOnClickListener { rotate() }
         price.setOnClickListener {
             priceInputDialog(
                 this,
@@ -90,12 +81,13 @@ class AddDressActivity : BaseActivity() {
                 }, 100)
             }
         }
+
     }
 
-    fun selectImage() {
+    private fun selectImage() {
 
 
-        val items = if (bitmap.get() != null) arrayOf<CharSequence>(
+        val items = if (viewModel.hasPicture()) arrayOf<CharSequence>(
             getString(R.string.view),
             getString(R.string.take_photo),
             getString(R.string.from_gallery),
@@ -110,9 +102,10 @@ class AddDressActivity : BaseActivity() {
             when (items[which]) {
 
                 getString(R.string.view) -> {
-                    if(bitmap.get() != null) {
-                        openPictureFullScreen(if (!isTempUploaded)dress.fileName else tempFileName, comment.getText())
-                    }
+                    openPictureFullScreen(
+                        viewModel.dressLiveData.value?.fileName,
+                        comment.getText()
+                    )
                 }
                 getString(R.string.take_photo) -> {
                     takePhoto()
@@ -131,8 +124,8 @@ class AddDressActivity : BaseActivity() {
         builder.show()
     }
 
-    fun openPictureFullScreen(pictureFileName: String?, comment: String) {
-        if (pictureFileName != null && !pictureFileName.equals("")) {
+    private fun openPictureFullScreen(pictureFileName: String?, comment: String) {
+        if (!pictureFileName.isNullOrEmpty()) {
             val intent = Intent(this, FullScreenPictureActivity::class.java)
             intent.putExtra(FullScreenPictureActivity.PICTURE_FILE_NAME, pictureFileName)
             intent.putExtra(FullScreenPictureActivity.COMMENT, comment)
@@ -143,26 +136,17 @@ class AddDressActivity : BaseActivity() {
 
     override
     fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        when (item.itemId) {
             R.id.save -> {
-                if (bitmap.get() != null) {
-                    if(isTempUploaded) {
-                        if (!dress.fileName.equals("")) {
-                            deleteFile(this, dress.fileName).subscribeBy(onComplete = {
-                                Log.d("AddDressActivity", "deleted: " +dress.fileName)
-                            })
-                        }
-                        dress.fileName = tempFileName
-                    }
-                    dress.comment = comment.getText()
-                    dress.price = price.getIntValue()
-                    presenter.addDress(dress)
-                    finish()
+                if (!oldFileName.isNullOrEmpty() && oldFileName.equals(viewModel.getPictureFileName())){
+                    deleteFile(this, tempFileName).subscribeBy(onError = {}, onNext = {}, onComplete = {})
                 }
+                isSaving = true
+                viewModel.save()
+                finishWithOkResult()
             }
-
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
     override fun getMenuRes(): Int {
@@ -175,47 +159,23 @@ class AddDressActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (!dress.fileName.equals(tempFileName) && isTempUploaded){
-            deleteFile(this, tempFileName).subscribeBy(onComplete = {})
+        if (!isSaving && isTempUploaded) {
+            deleteFile(this, tempFileName).subscribeBy(onError = {}, onNext = {}, onComplete = {})
         }
     }
 
-
-    fun loadPicture(fileName: String) {
-        loadPicture(this, fileName).subscribeBy(onNext = {
-            bitmap = WeakReference(it)
-            rotate.visibility = View.VISIBLE
-            dressPhoto.setImageBitmap(bitmap.get()) }, onError = {})
-    }
-
-    fun rotate() {
-        val bitmapOrg = bitmap.get()
-        if (bitmapOrg != null) {
-            val matrix = Matrix()
-            matrix.postRotate(90f)
-            val rotatedBitmap = Bitmap.createBitmap(
-                bitmapOrg,
-                0,
-                0,
-                bitmapOrg.getWidth(),
-                bitmapOrg.getHeight(),
-                matrix,
-                true
-            )
-            bitmap = WeakReference(rotatedBitmap)
-            dressPhoto.setImageBitmap(bitmap.get())
-            isTempUploaded = true
-            savePictureToInnerStorage(bitmap.get(), tempFileName)
-        }
-    }
-
-    fun savePictureToInnerStorage(bitmap: Bitmap?, fileName: String) {
+    private fun savePictureToInnerStorage(bitmap: Bitmap?, fileName: String, action: () -> Unit) {
         if (bitmap != null) {
             progress.visibility = View.VISIBLE
             saveFile(this, fileName, bitmap).subscribeBy(
-                onError = { progress.visibility = View.GONE
-                    it.printStackTrace() },
-                onComplete = { progress.visibility = View.GONE}
+                onError = {
+                    viewModel.loadingVisibility.value = false
+                    it.printStackTrace()
+                },
+                onComplete = {
+                    action.invoke()
+                    viewModel.loadingVisibility.value = false
+                }
 
             )
         }
@@ -223,7 +183,7 @@ class AddDressActivity : BaseActivity() {
     }
 
 
-    fun createImageFile(): File {
+    private fun createImageFile(): File {
         val cw = ContextWrapper(applicationContext)
         val directory: File = cw.getDir("dresses", Context.MODE_PRIVATE)
         if (!directory.exists()) {
@@ -232,47 +192,52 @@ class AddDressActivity : BaseActivity() {
         return File(directory, tempFileName)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_PICK_GALLERY && data != null && data.data != null) {
-                val imageStream = getContentResolver().openInputStream(data.data)
-                val selectedImage = BitmapFactory.decodeStream(imageStream)
-                bitmap = WeakReference(selectedImage)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intent)
+        if (isResultDataOk(resultCode, requestCode, REQUEST_PICK_GALLERY)) {
+            intent?.let {
+                val data = it.data
+                if (data != null) {
+                    val imageStream = contentResolver.openInputStream(data)
+                    val selectedImage = BitmapFactory.decodeStream(imageStream)
 
-                dressPhoto.setImageBitmap(selectedImage)
-              savePictureToInnerStorage(bitmap.get(), tempFileName)
-                isTempUploaded = true
-                    rotate.visibility = View.VISIBLE
-                    plusIcon.visibility = View.GONE
+                    dressPhoto.setImageBitmap(selectedImage)
+                    savePictureToInnerStorage(selectedImage, tempFileName) {
+                        viewModel.setPicture(tempFileName)
+                        isTempUploaded = true
+                        plusIcon.visibility = View.GONE
+                    }
+                }
+            }
+        } else if (isResultDataOk(resultCode, requestCode, REQUEST_TAKE_PHOTO)) {
+            intent?.let {
+                val data = it.extras
+                if (data != null) {
+                    val bitmap = data.get("data") as Bitmap
 
-            } else if (requestCode == REQUEST_TAKE_PHOTO && data != null && data.extras != null) {
-
-                bitmap = WeakReference(data.extras?.get("data") as Bitmap)
-                isTempUploaded = true
-                savePictureToInnerStorage(bitmap.get(), tempFileName)
-                dressPhoto.setImageBitmap(bitmap.get())
-                rotate.visibility = View.VISIBLE
-                plusIcon.visibility = View.GONE
-
-
+                    savePictureToInnerStorage(bitmap, tempFileName) {
+                        viewModel.setPicture(tempFileName)
+                        isTempUploaded = true
+                        plusIcon.visibility = View.GONE
+                    }
+                }
             }
         }
     }
 
 
-    fun pickFromGallery() {
+    private fun pickFromGallery() {
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_DENIED
         ) {
             val intent = Intent(Intent.ACTION_PICK)
-            intent.setType("image/*")
+            intent.type = "image/*"
             val mimeTypes = arrayOf("image/jpeg", "image/png")
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
             startActivityForResult(intent, REQUEST_PICK_GALLERY)
-        }else{
+        } else {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
@@ -288,11 +253,11 @@ class AddDressActivity : BaseActivity() {
             ) != PackageManager.PERMISSION_DENIED
         ) {
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            if (takePictureIntent.resolveActivity(packageManager) != null) {
                 try {
                     val photoFile = createImageFile()
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile.toURI())
-                        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFile.toURI())
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
                 } catch (ex: IOException) {
                     ex.printStackTrace()
 
@@ -312,11 +277,9 @@ class AddDressActivity : BaseActivity() {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CAMERA_PERMISSION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                takePhoto()
-
+            takePhoto()
         } else if (requestCode == REQUEST_STORAGE_PERMISSION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             pickFromGallery()
         }

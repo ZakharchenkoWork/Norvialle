@@ -97,7 +97,7 @@ class DressesListFragment : BaseFragment() {
     private fun openAddDressActivity(dress: Dress) {
         context?.let {
         var intent = Intent(it, AddDressActivity::class.java)
-        intent.putExtra(AddDressActivity.DRESS, dress)
+        intent.putExtra(AddDressActivity.DATA_TYPE, dress)
         startActivityForResult(intent, AddDressActivity.EDIT)
         }
     }

@@ -10,7 +10,9 @@ import com.hast.norvialle.R
 import com.hast.norvialle.data.Assistant
 import com.hast.norvialle.presenataion.base.BaseFragment
 import com.hast.norvialle.domain.MainPresenter
-import com.hast.norvialle.presenataion.base.makeup.AddAssistantActivity.Companion.MAKEUP_ARTIST
+import com.hast.norvialle.presenataion.base.assistent.AddAssistantActivity
+import com.hast.norvialle.presenataion.base.assistent.AddAssistantActivity.Companion.DATA_TYPE
+
 import com.hast.norvialle.utils.getSearchTextWatcher
 import com.hast.norvialle.presenataion.utils.dialogs.showDeleteDialog
 import kotlinx.android.synthetic.main.activity_search_list.view.*
@@ -105,7 +107,7 @@ class AssistantListFragment : BaseFragment() {
     private fun openAssistentEditor(assistant: Assistant) {
         context?.let {
             var intent = Intent(context, AddAssistantActivity::class.java)
-            intent.putExtra(MAKEUP_ARTIST, assistant)
+            intent.putExtra(DATA_TYPE, assistant)
             startActivityForResult(intent, AddAssistantActivity.EDIT)
         }
     }

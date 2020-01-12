@@ -11,6 +11,7 @@ import com.hast.norvialle.R
 import com.hast.norvialle.databinding.ActivityAddMakeupArtistBinding
 import com.hast.norvialle.domain.AddMakeupArtistViewModel
 import com.hast.norvialle.presenataion.base.BaseActivity
+import com.hast.norvialle.presenataion.base.openContactsList
 import com.hast.norvialle.presenataion.utils.dialogs.priceInputDialog
 import com.hast.norvialle.utils.getIntValue
 import kotlinx.android.synthetic.main.activity_add_makeup_artist.*
@@ -29,19 +30,17 @@ class AddMakeupArtistActivity : BaseActivity() {
     private lateinit var viewModel: AddMakeupArtistViewModel
     private lateinit var binding: ActivityAddMakeupArtistBinding
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_makeup_artist)
         setSupportActionBar(toolbar)
+
         viewModel = ViewModelProviders.of(this).get(AddMakeupArtistViewModel::class.java)
-
-
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         viewModel.setMakeupArtist(getIntentData(DATA_TYPE))
 
-        contactsList.setOnClickListener { openContactsList() }
+        contactsList.setOnClickListener { openContactsList(PICK_CONTACT) }
         price.setOnClickListener {
             priceInputDialog(
                 this,
@@ -64,14 +63,12 @@ class AddMakeupArtistActivity : BaseActivity() {
 
             R.id.save -> {
                 try {
-
                     checkField(name)
                     checkField(phone)
                     checkField(price)
 
                     viewModel.save()
-                    setResult(Activity.RESULT_OK)
-                    finish()
+                    finishWithOkResult()
                 } catch (dataCheckFailed: InvalidSavingData) {
                     fastToast(dataCheckFailed)
                     return true
@@ -82,6 +79,13 @@ class AddMakeupArtistActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (isResultDataOk(resultCode, requestCode, PICK_CONTACT)) {
+            data?.let { viewModel.setPhoneContact(extractContact(data)) }
+        }
+        return super.onActivityResult(requestCode, resultCode, data)
+    }
+
     override fun getMenuRes(): Int {
         return R.menu.menu_save
     }
@@ -90,16 +94,4 @@ class AddMakeupArtistActivity : BaseActivity() {
         return R.string.adding_makeup_artist
     }
 
-    private fun openContactsList() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = Phone.CONTENT_TYPE
-        startActivityForResult(intent, PICK_CONTACT)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (isResultDataOk(resultCode, requestCode, PICK_CONTACT)) {
-            data?.let { viewModel.setPhoneContact(extractContact(data)) }
-        }
-        return super.onActivityResult(requestCode, resultCode, data)
-    }
 }

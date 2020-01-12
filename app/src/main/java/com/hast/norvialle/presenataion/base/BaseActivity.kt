@@ -255,8 +255,12 @@ abstract class BaseActivity : AppCompatActivity() {
         }
         return PhoneContact("", "")
     }
-    fun isResultDataOk(resultCode : Int, recievedCode : Int, requestCode : Int): Boolean{
-        return resultCode == Activity.RESULT_OK && recievedCode == requestCode
+    fun isResultDataOk(resultCode : Int, receivedCode : Int, requestCode : Int): Boolean{
+        return resultCode == Activity.RESULT_OK && receivedCode == requestCode
     }
 
+    fun finishWithOkResult() {
+        setResult(Activity.RESULT_OK)
+        finish()
+    }
 }

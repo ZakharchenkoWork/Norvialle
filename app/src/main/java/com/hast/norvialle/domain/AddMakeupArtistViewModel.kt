@@ -36,11 +36,5 @@ class AddMakeupArtistViewModel(application : Application) : BaseViewModel(applic
         makeupArtistLiveData.value?.defaultPrice = price
     }
 
-    fun putValueOrNothing(value: Int): String {
-        return if (value != 0) {
-            "$value"
-        } else {
-            ""
-        }
-    }
+
 }

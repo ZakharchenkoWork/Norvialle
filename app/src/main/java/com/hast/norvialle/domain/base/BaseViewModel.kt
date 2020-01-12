@@ -37,4 +37,12 @@ abstract class BaseViewModel(application: Application) : AndroidViewModel(applic
         }
 
     }
+
+    fun putValueOrNothing(value: Int): String {
+        return if (value != 0) {
+            "$value"
+        } else {
+            ""
+        }
+    }
 }

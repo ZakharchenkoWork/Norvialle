@@ -21,10 +21,10 @@ import java.lang.ref.WeakReference
  */
 class FullScreenPictureActivity : AppCompatActivity() {
     companion object {
-        val PICTURE_FILE_NAME = "PICTURE_FILE_NAME"
-        val DRESS = "DRESS"
-        val COMMENT = "COMMENT"
-        val EDIT_AND_DELETE = "EDIT_AND_DELETE"
+        const val PICTURE_FILE_NAME = "PICTURE_FILE_NAME"
+        const val DRESS = "DRESS"
+        const val COMMENT = "COMMENT"
+        const val EDIT_AND_DELETE = "EDIT_AND_DELETE"
     }
 
     var bitmap = WeakReference<Bitmap>(null)
@@ -99,7 +99,7 @@ class FullScreenPictureActivity : AppCompatActivity() {
 
     private fun openDressEditor(dress: Dress) {
         var intent = Intent(this, AddDressActivity::class.java)
-        intent.putExtra(AddDressActivity.DRESS, dress)
+        intent.putExtra(AddDressActivity.DATA_TYPE, dress)
         startActivityForResult(intent, AddDressActivity.EDIT)
         finish()
     }

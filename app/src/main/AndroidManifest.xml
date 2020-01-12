@@ -33,7 +33,7 @@
         <activity android:name="com.hast.norvialle.presenataion.base.main.MainActivity"/>
         <activity android:name="com.hast.norvialle.presenataion.base.settings.SettingsActivity"/>
         <activity android:name="com.hast.norvialle.presenataion.base.events.AddEventActivity"/>
-        <activity android:name="com.hast.norvialle.presenataion.base.makeup.AddAssistantActivity"/>
+        <activity android:name="com.hast.norvialle.presenataion.base.assistent.AddAssistantActivity"/>
         <activity android:name="com.hast.norvialle.presenataion.base.dresses.AddDressActivity"/>
         <activity android:name="com.hast.norvialle.presenataion.utils.FullScreenPictureActivity"/>
         <activity android:name="com.hast.norvialle.presenataion.base.contacts.AddContactActivity"/>

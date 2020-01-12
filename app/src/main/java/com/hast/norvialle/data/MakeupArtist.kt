@@ -12,32 +12,33 @@ import java.io.Serializable
  * Created by Konstantyn Zakharchenko on 02.12.2019.
  */
 @Entity
-class MakeupArtist(name : String, defaultPrice : Int, phone : String) : BaseObservable(), Serializable{
+class MakeupArtist(name: String, defaultPrice: Int, phone: String) : BaseObservable(),
+    Serializable {
     @PrimaryKey
     var id = ""
 
     @Bindable
-    var name : String = ""
+    var name: String = ""
         set(value) {
             field = value
             notifyPropertyChanged(BR.name)
         }
 
     @Bindable
-    var defaultPrice : Int = 0
+    var defaultPrice: Int = 0
         set(value) {
             field = value
             notifyPropertyChanged(BR.defaultPrice)
         }
 
     @Bindable
-    var phone : String = ""
+    var phone: String = ""
         set(value) {
             field = value
             notifyPropertyChanged(BR.phone)
         }
 
-    init{
+    init {
         this.name = name
         this.defaultPrice = defaultPrice
         this.phone = phone
