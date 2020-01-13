@@ -14,11 +14,8 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import com.hast.norvialle.R
 import com.hast.norvialle.data.AuthData
-import com.hast.norvialle.data.Contact
 import com.hast.norvialle.data.PhoneContact
-import com.hast.norvialle.presenataion.base.contacts.AddContactActivity
 import com.hast.norvialle.presenataion.base.events.EventsListFragment
-import com.hast.norvialle.presenataion.base.makeup.AddMakeupArtistActivity
 import com.hast.norvialle.presenataion.utils.InputView
 import com.hast.norvialle.utils.SAVED_LOGIN
 import com.hast.norvialle.utils.SAVED_PASSWORD
@@ -29,11 +26,10 @@ import com.hast.norvialle.utils.SAVED_PASSWORD
  */
 abstract class BaseActivity : AppCompatActivity() {
     companion object {
-        val NO_VIEW = 0
+        const val NO_VIEW = 0
     }
 
     fun openEventsList(dateToScroll: Long = 0L) {
-
         showFragment(EventsListFragment.newInstance(dateToScroll))
     }
 
@@ -51,12 +47,12 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override
     fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.getItemId()) {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
             }
         }
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onBackPressed() {
@@ -84,14 +80,22 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        getMenuInflater().inflate(getMenuRes(), menu)
+
+        val menuRes = getMenuRes()
+        if (menuRes != 0) {
+            menuInflater.inflate(menuRes, menu)
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        menu.clear()
-        getMenuInflater().inflate(getMenuRes(), menu)
-        setToolBarTitle(getMenuTitleRes())
+        val title = getMenuTitleRes()
+        if (title != 0) {
+            menu.clear()
+            menuInflater.inflate(getMenuRes(), menu)
+
+            setToolBarTitle(title)
+        }
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -104,7 +108,7 @@ abstract class BaseActivity : AppCompatActivity() {
     abstract fun getMenuTitleRes(): Int
 
     fun stringPriceWithPlaceholder(value: String, placeholder: String): String {
-        return if (!value.equals("") && !value.equals("0")) {
+        return if (value.isNotEmpty() && value != "0") {
             value
         } else {
             placeholder
@@ -115,10 +119,10 @@ abstract class BaseActivity : AppCompatActivity() {
         return stringPriceWithPlaceholder(value, getString(placeholder))
     }
 
-    fun saveData(key: String, data: String) {
+    /*fun saveData(key: String, data: String) {
         val prefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)
         prefs.edit().putString(key, data).apply()
-    }
+    }*/
 
     fun saveData(key: String, data: Boolean) {
         val prefs = getSharedPreferences(packageName, Context.MODE_PRIVATE)

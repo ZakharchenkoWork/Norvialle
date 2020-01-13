@@ -104,7 +104,7 @@ class DressesListFragment : BaseFragment() {
     fun openPictureFullScreen(dress : Dress) {
         context?.let {
             val intent = Intent(it, FullScreenPictureActivity::class.java)
-            intent.putExtra(FullScreenPictureActivity.DRESS, dress)
+            intent.putExtra(FullScreenPictureActivity.DATA_TYPE, dress)
             intent.putExtra(FullScreenPictureActivity.EDIT_AND_DELETE, true)
             startActivity(intent)
         }

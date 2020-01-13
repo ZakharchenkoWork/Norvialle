@@ -64,8 +64,7 @@ class AddEventActivity : BaseActivity() {
     fun openPictureFullScreen(dress: Dress) {
 
         val intent = Intent(this, FullScreenPictureActivity::class.java)
-        intent.putExtra(FullScreenPictureActivity.PICTURE_FILE_NAME, dress.fileName)
-        intent.putExtra(FullScreenPictureActivity.COMMENT, dress.comment)
+        intent.putExtra(FullScreenPictureActivity.DATA_TYPE, dress)
         startActivity(intent)
 
     }

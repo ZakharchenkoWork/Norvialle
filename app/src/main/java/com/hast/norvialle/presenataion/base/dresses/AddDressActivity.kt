@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.hast.norvialle.R
+import com.hast.norvialle.data.Dress
 import com.hast.norvialle.databinding.ActivityAddDressBinding
 import com.hast.norvialle.domain.AddDressViewModel
 import com.hast.norvialle.presenataion.base.BaseActivity
@@ -63,6 +64,7 @@ class AddDressActivity : BaseActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         viewModel.setDress(getIntentData(DATA_TYPE))
+
         oldFileName = viewModel.dressLiveData.value?.fileName
         plusIcon.visibility = View.GONE
 
@@ -102,10 +104,7 @@ class AddDressActivity : BaseActivity() {
             when (items[which]) {
 
                 getString(R.string.view) -> {
-                    openPictureFullScreen(
-                        viewModel.dressLiveData.value?.fileName,
-                        comment.getText()
-                    )
+                    openPictureFullScreen(viewModel.dressLiveData.value)
                 }
                 getString(R.string.take_photo) -> {
                     takePhoto()
@@ -124,11 +123,10 @@ class AddDressActivity : BaseActivity() {
         builder.show()
     }
 
-    private fun openPictureFullScreen(pictureFileName: String?, comment: String) {
-        if (!pictureFileName.isNullOrEmpty()) {
+    private fun openPictureFullScreen(dress: Dress?) {
+        if (dress != null) {
             val intent = Intent(this, FullScreenPictureActivity::class.java)
-            intent.putExtra(FullScreenPictureActivity.PICTURE_FILE_NAME, pictureFileName)
-            intent.putExtra(FullScreenPictureActivity.COMMENT, comment)
+            intent.putExtra(FullScreenPictureActivity.DATA_TYPE, dress)
             startActivity(intent)
         }
     }

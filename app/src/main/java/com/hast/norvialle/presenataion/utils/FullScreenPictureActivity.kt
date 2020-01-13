@@ -1,17 +1,19 @@
 package com.hast.norvialle.presenataion.utils
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.hast.norvialle.R
 import com.hast.norvialle.data.Dress
+import com.hast.norvialle.databinding.ActivityFullPictureBinding
+import com.hast.norvialle.domain.FullScreenPictureViewModel
 import com.hast.norvialle.domain.MainPresenter
+import com.hast.norvialle.presenataion.base.BaseActivity
 import com.hast.norvialle.presenataion.base.dresses.AddDressActivity
 import com.hast.norvialle.presenataion.utils.dialogs.showDeleteDialog
 import com.hast.norvialle.utils.loadPicture
-import com.hast.norvialle.utils.rotatePictureFile
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_full_picture.*
 import java.lang.ref.WeakReference
@@ -19,22 +21,28 @@ import java.lang.ref.WeakReference
 /**
  * Created by Konstantyn Zakharchenko on 04.12.2019.
  */
-class FullScreenPictureActivity : AppCompatActivity() {
+class FullScreenPictureActivity : BaseActivity() {
     companion object {
-        const val PICTURE_FILE_NAME = "PICTURE_FILE_NAME"
-        const val DRESS = "DRESS"
-        const val COMMENT = "COMMENT"
+        const val DATA_TYPE = "DRESS"
         const val EDIT_AND_DELETE = "EDIT_AND_DELETE"
     }
+    private lateinit var viewModel: FullScreenPictureViewModel
+    private lateinit var binding: ActivityFullPictureBinding
 
-    var bitmap = WeakReference<Bitmap>(null)
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_full_picture)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_full_picture)
+        viewModel = ViewModelProviders.of(this).get(FullScreenPictureViewModel::class.java)
+
+
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        viewModel.setDress(getIntentData(DATA_TYPE))
+
         back.setOnClickListener { finish() }
 
-        var fileName = intent?.let { it.extras?.getString(PICTURE_FILE_NAME)}
-        val comment = intent?.extras?.getString(COMMENT)
 
         val hasControls = intent?.let { it.extras?.getBoolean(EDIT_AND_DELETE, false)}
 
@@ -79,22 +87,6 @@ class FullScreenPictureActivity : AppCompatActivity() {
             finish()
         }
 
-
-
-        rotate.setOnClickListener {
-            progress.visibility = View.VISIBLE
-            rotatePictureFile(bitmap.get()).subscribeBy(onNext = {
-                photo.setImageBitmap(it)
-                bitmap = WeakReference(it)
-
-            },
-                onError = {
-                    progress.visibility = View.GONE
-                    it.printStackTrace()
-                }
-                , onComplete = { progress.visibility = View.GONE }
-            )
-        }
     }
 
     private fun openDressEditor(dress: Dress) {
@@ -102,6 +94,14 @@ class FullScreenPictureActivity : AppCompatActivity() {
         intent.putExtra(AddDressActivity.DATA_TYPE, dress)
         startActivityForResult(intent, AddDressActivity.EDIT)
         finish()
+    }
+
+    override fun getMenuRes(): Int {
+        return 0
+    }
+
+    override fun getMenuTitleRes(): Int {
+        return 0
     }
 
 }
